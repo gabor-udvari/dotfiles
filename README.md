@@ -7,6 +7,13 @@ This is a [homeshick](https://github.com/andsens/homeshick) castle, you can use 
 
 `homeshick clone gabor-udvari/dotfiles`
 
+Added features of bash
+----------------------
+
+- launching an ssh-agent session
+- customizing the prompt
+- adding terminal logging as seen on [launchpad](https://answers.launchpad.net/ubuntu/+source/gnome-terminal/+question/7131#comment-6)
+
 Content of bin
 --------------
 

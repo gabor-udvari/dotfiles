@@ -138,6 +138,20 @@ else
      start_agent;
 fi
 
+# Terminal logging
+if [[ $- =~ i ]]; then
+    if [ -z "$UNDER_SCRIPT" ]; then
+	logdir=$HOME/terminal-logs
+	if [ ! -d $logdir ]; then
+	    mkdir $logdir
+	fi
+	find $logdir -type f -name "*.log" -mtime +30 -exec gzip {} \;
+	logfile=$logdir/$(date +%F_%T).$$.log
+	export UNDER_SCRIPT=$logfile
+	script -f -q $logfile
+    fi
+fi
+
 # setup customized promp command
 export PROMPT_COMMAND='PS1X=$(p="${PWD#${HOME}}"; [ "${PWD}" != "${p}" ] && printf "~";IFS=/; for q in ${p:1}; do printf /${q:0:1}; done; printf "${q:1}")'
 export PS1='[\u@\[\e[0;34m\]\h\[\e[m\]:$PS1X]\$ '
