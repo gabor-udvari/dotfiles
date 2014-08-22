@@ -1,0 +1,30 @@
+#!/bin/bash
+
+## http://www.techrepublic.com/blog/opensource/how-to-search-for-text-inside-many-opendocument-files/3696
+
+FILE=$1
+
+shift
+
+EXT=`echo ${FILE##*.}`
+COMMAND=""
+
+case $EXT in
+
+ odt|ods|odp)
+
+	COMMAND="unzip -p \"$FILE\" content.xml | tidy -q -xml 2> /dev/null | grep \"$@\""
+	echo "$COMMAND"
+	eval "$COMMAND"
+	#if [ -n `$COMMAND` ]; then echo $FILE; fi
+	;;
+
+    txt|t2t)
+
+        grep  "$@" "$FILE" ;;
+
+   *) echo "Sorry, I don't know what to do with $FILE"
+
+   ;;
+
+ esac
