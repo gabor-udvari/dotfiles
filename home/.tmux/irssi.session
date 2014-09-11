@@ -1,0 +1,10 @@
+# Irssi session
+# cat the nicklist fifo
+# neww -n irssi "cat $HOME/.irssi/nicklistfifo"
+neww -n irssi "irssi"
+# start irssi
+# splitw -h -p 80 -t 0 "irssi"
+# set remain-on-exit on
+#splitw -h -p 20 -t 0 "tail -n +1 -f $HOME/.irssi/nicklistfifo"
+#selectw -t 0 
+#selectp -t 1
