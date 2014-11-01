@@ -19,4 +19,5 @@ Content of bin
 
 - odfgrep: search in Open Document Format files (requires tidy)
 - sync-ssh2local.sh: sync a remote and local folder with rsync
+- todo.sh: [todo.txt-cli](https://github.com/ginatrapani/todo.txt-cli) version 2.10
 
