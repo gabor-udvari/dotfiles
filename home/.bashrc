@@ -152,9 +152,14 @@ if [[ $- =~ i ]]; then
     fi
 fi
 
+# PATH settings
+PATH=$PATH:$HOME/bin
+export PATH
+
 # setup customized promp command
 export PROMPT_COMMAND='PS1X=$(p="${PWD#${HOME}}"; [ "${PWD}" != "${p}" ] && printf "~";IFS=/; for q in ${p:1}; do printf /${q:0:1}; done; printf "${q:1}")'
 export PS1='[\u@\[\e[0;34m\]\h\[\e[m\]:$PS1X]\$ '
 
 # sourcing different files
 source "$HOME/.homesick/repos/homeshick/homeshick.sh"
+source "$HOME/.homesick/repos/dotfiles/todo.txt_cli-2.10/todo_completion"
