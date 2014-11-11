@@ -54,7 +54,7 @@ own_window_transparent yes
 own_window_hints undecorated,below,sticky,skip_taskbar,skip_pager
 
 # Intervals
-update_interval 1.0
+update_interval 2.0
 cpu_avg_samples 2
 net_avg_samples 2
 
@@ -68,7 +68,7 @@ out_to_stderr no
 # variable is given either in format $variable or in ${variable}. Latter
 # allows characters right after the variable and must be used in network
 # stuff because of an argument
-# ${font Dungeon:style=Bold:pixelsize=10}I can change the font as well
+# ${font Dungeon:style=bold:pixelsize=10}I can change the font as well
 # ${font Verdana:size=10}as many times as I choose
 # ${font Perry:size=10}Including UTF-8,
 
@@ -96,20 +96,20 @@ ${font FontAwesome:pixelsize=36}${goto 50}${voffset -18}${font Ubuntu Mono:st
 # Top CPU
 ${offset 50}${color grey}Name              PID   CPU%   MEM%
 ${offset 50}${color}Highest CPU:
-${offset 50}${color lightgrey}${top name 1} ${top pid 1} ${top cpu 1} ${top mem 1}
-${offset 50}${color lightgrey}${top name 2} ${top pid 2} ${top cpu 2} ${top mem 2}
-${offset 50}${color lightgrey}${top name 3} ${top pid 3} ${top cpu 3} ${top mem 3}
-${offset 50}${color lightgrey}${top name 4} ${top pid 4} ${top cpu 4} ${top mem 4}${color}
+${offset 50}${color grey}${top name 1} ${top pid 1} ${top cpu 1} ${top mem 1}
+${offset 50}${color grey}${top name 2} ${top pid 2} ${top cpu 2} ${top mem 2}
+${offset 50}${color grey}${top name 3} ${top pid 3} ${top cpu 3} ${top mem 3}
+${offset 50}${color grey}${top name 4} ${top pid 4} ${top cpu 4} ${top mem 4}${color}
 # Top MEM
 ${offset 50}${color}Highest MEM:
-${offset 50}${color lightgrey}${top_mem name 1} ${top_mem pid 1} ${top_mem cpu 1} ${top_mem mem 1}
-${offset 50}${color lightgrey}${top_mem name 2} ${top_mem pid 2} ${top_mem cpu 2} ${top_mem mem 2}
-${offset 50}${color lightgrey}${top_mem name 3} ${top_mem pid 3} ${top_mem cpu 3} ${top_mem mem 3}
-${offset 50}${color lightgrey}${top_mem name 4} ${top_mem pid 4} ${top_mem cpu 4} ${top_mem mem 4}
+${offset 50}${color grey}${top_mem name 1} ${top_mem pid 1} ${top_mem cpu 1} ${top_mem mem 1}
+${offset 50}${color grey}${top_mem name 2} ${top_mem pid 2} ${top_mem cpu 2} ${top_mem mem 2}
+${offset 50}${color grey}${top_mem name 3} ${top_mem pid 3} ${top_mem cpu 3} ${top_mem mem 3}
+${offset 50}${color grey}${top_mem name 4} ${top_mem pid 4} ${top_mem cpu 4} ${top_mem mem 4}${color}
 
 # FÁJLRENDSZER
 ${font FontAwesome:pixelsize=36}${goto 50}${voffset -18}${font Ubuntu Mono:style=bold:pixelsize=18}FÁJLRENDSZER${font} $hr
-${offset 50}$color/boot ${alignr}${fs_used /boot}/${fs_size /boot}
+${offset 50}$color/boot ${alignr}${fs_used /boot} / ${fs_size /boot}
 ${offset 50}${fs_bar 6 /boot}
-${offset 50}$color/ ${alignr}${fs_used /}/${fs_size /}
+${offset 50}$color/ ${alignr}${fs_used /} / ${fs_size /}
 ${offset 50}${fs_bar 6 /}
