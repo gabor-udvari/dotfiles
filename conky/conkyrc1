@@ -15,15 +15,14 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-# alignment
+# Alignment
 alignment top_right
-background no
 gap_x 20 # inner margin: 50px
 gap_y 44 # inner margin: 50px, top panel height: 24px
 # minimum_size 240 5
 # max_text_width 200
 
-# colors and fonts
+# Colors and fonts
 stippled_borders 0
 default_color white
 default_outline_color white
@@ -42,6 +41,7 @@ draw_graph_borders yes
 draw_outline no
 
 # Own (transparent) window
+background no
 no_buffers yes
 double_buffer yes
 draw_shades yes
