@@ -1,0 +1,83 @@
+# Gabor Udvari's conky config
+#
+# All rights reserved.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+# Alignment
+alignment top_right
+gap_x 420 # inner margin: 50px
+gap_y 44 # inner margin: 50px, top panel height: 24px
+minimum_size 400 5
+max_text_width 200
+maximum_width 400
+
+# Colors and fonts
+stippled_borders 0
+default_color white
+default_outline_color white
+default_shade_color black
+use_xft yes
+xftfont Ubuntu Mono:pixelsize=18
+uppercase no
+extra_newline no
+
+# Borders
+border_width 0
+border_inner_margin 0 # for visible negative offsets
+border_outer_margin 0
+draw_borders no
+draw_graph_borders yes
+draw_outline no
+
+# Own (transparent) window
+background no
+no_buffers yes
+double_buffer yes
+draw_shades yes
+own_window yes
+own_window_class Conky
+own_window_type normal
+own_window_argb_visual true
+own_window_argb_value 0
+own_window_transparent yes
+own_window_hints undecorated,below,sticky,skip_taskbar,skip_pager
+
+# Intervals
+update_interval 2.0
+cpu_avg_samples 2
+net_avg_samples 2
+
+# Misc
+use_spacer none
+show_graph_scale no
+show_graph_range no
+out_to_console no
+out_to_stderr no
+
+# variable is given either in format $variable or in ${variable}. Latter
+# allows characters right after the variable and must be used in network
+# stuff because of an argument
+# ${font Dungeon:style=bold:pixelsize=10}I can change the font as well
+# ${font Verdana:size=10}as many times as I choose
+# ${font Perry:size=10}Including UTF-8,
+
+TEXT
+# TO DO
+${font FontAwesome:pixelsize=36}${goto 50}${voffset -18}${font Ubuntu Mono:style=bold:pixelsize=18}TODO${font} $hr
+${offset 50}${execpi 10 todo.sh -p ls | fold -w 38 -s}
+
+# Calendar
+${font FontAwesome:pixelsize=36}${goto 50}${voffset -18}${font Ubuntu Mono:style=bold:pixelsize=18}NAPTÁR${font} $hr
+${color grey}${offset 120}${execp DJS=`date +%_d`; cal | sed s/"\(^\|[^0-9]\)$DJS"'\b'/'\1${font Ubuntu Mono:style=bold}${color}'"$DJS"'$font${color grey}'/}
