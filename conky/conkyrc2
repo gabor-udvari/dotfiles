@@ -17,11 +17,11 @@
 
 # Alignment
 alignment top_right
-gap_x 420 # inner margin: 50px
-gap_y 44 # inner margin: 50px, top panel height: 24px
-minimum_size 400 5
+gap_x 390 # margin left 20px + previous conky width 350px + 20px margin
+gap_y 44 # top panel height: 24px + 20px margin
+minimum_size 350 5 # minimum size (300 + 50 offset)
+maximum_width 350 # maximum
 max_text_width 200
-maximum_width 400
 
 # Colors and fonts
 stippled_borders 0
@@ -35,7 +35,7 @@ extra_newline no
 
 # Borders
 border_width 0
-border_inner_margin 0 # for visible negative offsets
+border_inner_margin 0
 border_outer_margin 0
 draw_borders no
 draw_graph_borders yes
