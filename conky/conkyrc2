@@ -80,4 +80,4 @@ ${offset 50}${execpi 10 todo.sh -p ls | fold -w 38 -s}
 
 # Calendar
 ${font FontAwesome:pixelsize=36}${goto 50}${voffset -18}${font Ubuntu Mono:style=bold:pixelsize=18}NAPTÁR${font} $hr
-${color grey}${offset 120}${execp DJS=`date +%_d`; cal | sed s/"\(^\|[^0-9]\)$DJS"'\b'/'\1${font Ubuntu Mono:style=bold}${color}'"$DJS"'$font${color grey}'/}
+${color grey}${offset 120}${execp DJS=`date +%_d`; ncal -M -C -h | sed s/"\(^\|[^0-9]\)$DJS"'\b'/'\1${font Ubuntu Mono:style=bold}${color}'"$DJS"'$font${color grey}'/}
