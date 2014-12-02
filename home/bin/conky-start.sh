@@ -1,12 +1,27 @@
-#!/bin/sh
+#!/bin/bash
 
-WAIT=120
-# WAIT=0
+# check for pause parameter
+while [[ $# > 1 ]]; do
+  key="$1"
+  shift
+
+  case $key in
+    -p|--pause)
+      PAUSE="$1"
+      shift
+      ;;
+  esac
+done
+
+if [ -z $PAUSE ]; then
+  # default PAUSE value
+  PAUSE=60
+fi
 
 # launch all conkyrc# scripts
 i=0
 for rcfile in $(ls -1 ~/.conky/conkyrc*); do
-  conky -p $WAIT -c ${rcfile} &
+  conky -p $PAUSE -c ${rcfile} &
   # store process number
   PROCESSES[$i]=$( echo $! )
   i=$((i+1))
