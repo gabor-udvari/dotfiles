@@ -97,7 +97,6 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 # You may want to put all your additions into a separate file like
 # ~/.bash_aliases, instead of adding them here directly.
 # See /usr/share/doc/bash-doc/examples in the bash-doc package.
-
 if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
@@ -163,9 +162,16 @@ EDITOR=vim
 export PROMPT_COMMAND='PS1X=$(p="${PWD#${HOME}}"; [ "${PWD}" != "${p}" ] && printf "~";IFS=/; for q in ${p:1}; do printf /${q:0:1}; done; printf "${q:1}")'
 export PS1='[\u@\[\e[0;34m\]\h\[\e[m\]:$PS1X]\$ '
 
-# sourcing different files
+#
+# SOURCING
+# 
+
+# source homeshick
 source "$HOME/.homesick/repos/homeshick/homeshick.sh"
 
-# completion
+# source all functions in .bash_functions folder
+for f in $HOME/.bash_functions.d/*; do source $f; done
+
+# completions
 source "$HOME/.homesick/repos/homeshick/completions/homeshick-completion.bash"
 source "$HOME/.homesick/repos/dotfiles/todo.txt_cli-2.10/todo_completion"
