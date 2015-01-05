@@ -32,6 +32,7 @@ use_xft yes
 xftfont Ubuntu Mono:pixelsize=18
 uppercase no
 extra_newline no
+text_buffer_size 512
 
 # Borders
 border_width 0
@@ -73,6 +74,9 @@ out_to_stderr no
 # ${font Verdana:size=10}as many times as I choose
 # ${font Perry:size=10}Including UTF-8,
 
+# load lua calendar
+lua_load calendar.lua
+
 TEXT
 # TO DO
 ${font FontAwesome:pixelsize=36}${goto 50}${voffset -18}${font Ubuntu Mono:style=bold:pixelsize=18}TODO${font} $hr
@@ -80,4 +84,5 @@ ${offset 50}${execpi 10 todo.sh -p ls | fold -w 38 -s}
 
 # Calendar
 ${font FontAwesome:pixelsize=36}${goto 50}${voffset -18}${font Ubuntu Mono:style=bold:pixelsize=18}NAPTÁR${font} $hr
-${color grey}${offset 120}${execp DJS=`date +%_d`; ncal -M -C -h | sed s/"\(^\|[^0-9]\)$DJS"'\b'/'\1${font Ubuntu Mono:style=bold}${color}'"$DJS"'$font${color grey}'/}
+# ${color grey}${offset 120}${execp DJS=`date +%_d`; ncal -M -C -h | sed s/"\(^\|[^0-9]\)$DJS"'\b'/'\1${font Ubuntu Mono:style=bold}${color}'"$DJS"'$font${color grey}'/}
+${lua_parse calendar}
