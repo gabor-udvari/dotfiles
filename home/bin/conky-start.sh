@@ -18,13 +18,11 @@ if [ -z $PAUSE ]; then
   PAUSE=60
 fi
 
-# use sleep instead of the pause switch of conky
-sleep $PAUSE
-
 # launch all conkyrc# scripts
-i=0
+i=1
 for rcfile in $(ls -1 ~/.conky/conkyrc*); do
-  conky -c ${rcfile} &
+  # conky -c ${rcfile} >>~/.conky/conky-${i}.log 2>&1 &
+  conky -p ${PAUSE} -c ${rcfile} &
   # store process number
   PROCESSES[$i]=$( echo $! )
   i=$((i+1))
