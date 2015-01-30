@@ -75,12 +75,12 @@ out_to_stderr no
 # ${font Perry:size=10}Including UTF-8,
 
 # load lua calendar
-lua_load calendar.lua
+lua_load ~/.conky/calendar.lua
 
 TEXT
 # TO DO
 ${font FontAwesome:pixelsize=36}${goto 50}${voffset -18}${font Ubuntu Mono:style=bold:pixelsize=18}TODO${font} $hr
-${offset 50}${execpi 10 todo.sh -p ls | fold -w 38 -s}
+${offset 50}${execpi 10 $HOME/bin/todo.sh -p ls | fold -w 38 -s}
 
 # Calendar
 ${font FontAwesome:pixelsize=36}${goto 50}${voffset -18}${font Ubuntu Mono:style=bold:pixelsize=18}NAPTÁR${font} $hr

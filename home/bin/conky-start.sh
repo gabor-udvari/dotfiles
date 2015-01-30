@@ -18,10 +18,14 @@ if [ -z $PAUSE ]; then
   PAUSE=60
 fi
 
+# set CONKYDIR and export for later usage
+CONKYDIR="$HOME/.conky"
+export CONKYDIR
+
 # launch all conkyrc# scripts
 i=1
-for rcfile in $(ls -1 ~/.conky/conkyrc*); do
-  # conky -c ${rcfile} >>~/.conky/conky-${i}.log 2>&1 &
+for rcfile in $(ls -1 $CONKYDIR/conkyrc*); do
+  # conky -c ${rcfile} >>$CONKYDIR/conky-${i}.log 2>&1 &
   conky -p ${PAUSE} -c ${rcfile} &
   # store process number
   PROCESSES[$i]=$( echo $! )

@@ -34,18 +34,20 @@ function conky_calendar ()
 	            -- right_space   = 78,
 	            right_space   = 0,
 	            -- left_space    = 123,
-	            left_space    = 0,
+	            left_space    = 50,
 	            -- back_voffset  = -113,
 	            back_voffset  = 0,
-	            draw_spin     = true,
+	            -- draw_spin     = true,
+	            draw_spin     = false,
 	            normal_font   = "Droid Sans:style=Bold:pixelsize=12",
 	            big_font      = "Droid Sans:style=Bold:pixelsize=48",
-	            grid_font     = "Droid Sans Mono:pixelsize=12",
+	            grid_font     = "Ubuntu Mono:pixelsize=18",
 	            weekend_color = "0075B0",
 	            spin_color    = "5C8599", }
 	local m, y = os.date("%m"), os.date("%Y")
 	return displayCalendar(m, y, 2, t) -- Month, Year, Start of Week (1 = Sunday, 2 = Monday)
 	                                   -- and parameters table :-)
+	-- return ""
 end
 
 -- Display the calendar
@@ -71,23 +73,25 @@ function displayCalendar(month, year, weekStart, params)
 
 	local result = "\n"
 
-	result = result .. nf .. rs .. mths[tonumber(month)] .. df .. "\n\n${voffset -10}"
+	if params.draw_spin then
+		-- display month with big text
+		result = result .. nf .. rs .. mths[tonumber(month)] .. df .. "\n\n${voffset -10}"
 
-	if wd == 1 or wd == 7 then
-		result = result .. bf .. rs .. wc .. os.date("%d") .. "${color}" .. df .. "\n\n${voffset -2}"
-		result = result .. nf .. rs ..wc ..  wdsf[wd] .. "${color}" .. df .. "\n\n"
-	else
-		result = result .. bf .. rs .. os.date("%d") .. df .. "\n\n${voffset -2}"
-		result = result .. nf .. rs .. wdsf[wd] .. df .. "\n\n"
+		if wd == 1 or wd == 7 then
+			-- display weekday with big text
+			result = result .. bf .. rs .. wc .. os.date("%d") .. "${color}" .. df .. "\n\n${voffset -2}"
+			result = result .. nf .. rs ..wc ..  wdsf[wd] .. "${color}" .. df .. "\n\n"
+		else
+			result = result .. bf .. rs .. os.date("%d") .. df .. "\n\n${voffset -2}"
+			result = result .. nf .. rs .. wdsf[wd] .. df .. "\n\n"
+		end
 	end
 
 	if params.draw_spin then
 		result = result .. bv .. sc .. "${voffset -15}${goto 1}${hr 15}${color}\n\n${voffset -13}"
 	else
-		result = result .. bv .. "${voffset 2}"
+		result = result .. bv .. "${voffset 3}" .. ls
 	end
-
-	result = result .. ls .. gf
 
 	for x=0,6 do
 		wd = (x + wkSt) <= 7 and x + wkSt or 1
@@ -99,7 +103,7 @@ function displayCalendar(month, year, weekStart, params)
 		result = result .. wds[wd] .. " "
 
 		if wd == 1 or wd == 7 then
-			result = result .. "${color}"
+			result = result .. "${color grey}"
 		end
 	end
 
@@ -119,7 +123,7 @@ function displayCalendar(month, year, weekStart, params)
 		result = result .. x .. " "
 
 		if wd == 1 or wd == 7 then
-			result = result .. "${color}"
+			result = result .. "${color grey}"
 		end
 
 		if (x+stDay)%7==0 then
