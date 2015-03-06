@@ -32,7 +32,7 @@ function conky_calendar ()
                                     -- for into the tables named 'months', 'weekDays'
                                     -- and 'weekDaseFull' at top of this file
 	            -- right_space   = 78,
-	            right_space   = 0,
+	            right_space   = 80,
 	            -- left_space    = 123,
 	            left_space    = 50,
 	            -- back_voffset  = -113,
@@ -90,7 +90,7 @@ function displayCalendar(month, year, weekStart, params)
 	if params.draw_spin then
 		result = result .. bv .. sc .. "${voffset -15}${goto 1}${hr 15}${color}\n\n${voffset -13}"
 	else
-		result = result .. bv .. "${voffset 3}" .. ls
+		result = result .. bv .. ls
 	end
 
 	for x=0,6 do
@@ -107,7 +107,8 @@ function displayCalendar(month, year, weekStart, params)
 		end
 	end
 
-	result = result .. "\n\n${voffset -13}" .. ls .. string.rep("   ", stDay)
+	-- divider between weekday labels and dates
+	result = result .. "\n " .. ls .. string.rep("   ", stDay)
 
 	for x = 1, mthDays do
 		wd = os.date("%w", os.time{year = year, month = month, day = x}) + 1
@@ -127,7 +128,7 @@ function displayCalendar(month, year, weekStart, params)
 		end
 
 		if (x+stDay)%7==0 then
-			result = result .. "\n\n${voffset -14}" .. ls
+			result = result .. "\n " .. ls
 		end
 	end
 

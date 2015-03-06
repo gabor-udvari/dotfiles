@@ -81,6 +81,7 @@ TEXT
 # TO DO
 ${font FontAwesome:pixelsize=36}${goto 50}${voffset -18}${font Ubuntu Mono:style=bold:pixelsize=18}TODO${font} $hr
 ${offset 50}${execpi 10 $HOME/bin/todo.sh -p ls | fold -w 38 -s}
+${color}
 
 # Calendar
 ${font FontAwesome:pixelsize=36}${goto 50}${voffset -18}${font Ubuntu Mono:style=bold:pixelsize=18}NAPTÁR${font} $hr
