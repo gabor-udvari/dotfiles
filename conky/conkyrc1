@@ -93,7 +93,7 @@ ${offset 50}${color grey}Processes:$color $processes  ${color grey}Running:$colo
 ${offset 50}${color grey}Networking: Up:$color ${upspeed eth0} ${color grey} - Down:$color ${downspeed eth0}
 
 # ERŐFORRÁSOK
-${font FontAwesome:pixelsize=36}${goto 50}${voffset -18}${font Ubuntu Mono:style=bold:pixelsize=18}Erőforrások${font} $hr
+${font FontAwesome:pixelsize=36}${goto 50}${voffset -18}${font Ubuntu Mono:style=bold:pixelsize=18}ERŐFORRÁSOK${font} $hr
 # Top CPU
 ${offset 50}${color}Highest CPU      PID     CPU%
 ${offset 50}${color grey}${top name 1} ${top pid 1} ${top cpu 1}
