@@ -137,18 +137,24 @@ else
      start_agent;
 fi
 
-# Terminal logging
+# Terminal logging for interactive shells
 if [[ $- =~ i ]]; then
-    if [ -z "$UNDER_SCRIPT" ]; then
-	logdir=$HOME/terminal-logs
-	if [ ! -d $logdir ]; then
-	    mkdir $logdir
-	fi
-	find $logdir -type f -name "*.log" -mtime +30 -exec gzip {} \;
-	logfile=$logdir/$(date +%F_%T).$$.log
-	export UNDER_SCRIPT=$logfile
-	script -f -q $logfile
+  # check if not yet under script
+  if [ -z "$UNDER_SCRIPT" ]; then
+    # set the logdir
+    logdir=$HOME/terminal-logs
+    if [ ! -d $logdir ]; then
+	mkdir $logdir
     fi
+    # compress the logs older than 30 days
+    find $logdir -type f -name "*.log" -mtime +30 -exec gzip {} \;
+    # set the new logfile and start the interactive terminal with scrip
+    logfile=$logdir/$(date +%F_%T).$$.log
+    export UNDER_SCRIPT=$logfile
+    script -f -q $logfile
+    # exit the parent shell when script is finished
+    exit
+  fi
 fi
 
 # PATH settings
