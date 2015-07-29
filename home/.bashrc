@@ -8,6 +8,26 @@ case $- in
       *) return;;
 esac
 
+# Terminal logging for interactive shells
+if [[ $- =~ i ]]; then
+  # check if not yet under script
+  if [ -z "$UNDER_SCRIPT" ]; then
+    # set the logdir
+    logdir=$HOME/terminal-logs
+    if [ ! -d $logdir ]; then
+	mkdir $logdir
+    fi
+    # compress the logs older than 30 days
+    find $logdir -type f -name "*.log" -mtime +30 -exec gzip {} \;
+    # set the new logfile and start the interactive terminal with scrip
+    logfile=$logdir/$(date +%F_%T).$$.log
+    export UNDER_SCRIPT=$logfile
+    script -f -q $logfile
+    # exit the parent shell when script is finished
+    exit
+  fi
+fi
+
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
 HISTCONTROL=ignoreboth
@@ -137,26 +157,6 @@ else
      start_agent;
 fi
 
-# Terminal logging for interactive shells
-if [[ $- =~ i ]]; then
-  # check if not yet under script
-  if [ -z "$UNDER_SCRIPT" ]; then
-    # set the logdir
-    logdir=$HOME/terminal-logs
-    if [ ! -d $logdir ]; then
-	mkdir $logdir
-    fi
-    # compress the logs older than 30 days
-    find $logdir -type f -name "*.log" -mtime +30 -exec gzip {} \;
-    # set the new logfile and start the interactive terminal with scrip
-    logfile=$logdir/$(date +%F_%T).$$.log
-    export UNDER_SCRIPT=$logfile
-    script -f -q $logfile
-    # exit the parent shell when script is finished
-    exit
-  fi
-fi
-
 # PATH settings
 PATH=$PATH:$HOME/bin
 export PATH
@@ -164,7 +164,7 @@ export PATH
 # EDITOR settings
 EDITOR=vim
 
-# setup customized promp command
+# setup customized prompt command
 export PROMPT_COMMAND='PS1X=$(p="${PWD#${HOME}}"; [ "${PWD}" != "${p}" ] && printf "~";IFS=/; for q in ${p:1}; do printf /${q:0:1}; done; printf "${q:1}")'
 export PS1='[\u@\[\e[0;34m\]\h\[\e[m\]:$PS1X]\$ '
 
