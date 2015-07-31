@@ -177,8 +177,10 @@ source "$HOME/.shell_prompt.sh"
 # source homeshick
 source "$HOME/.homesick/repos/homeshick/homeshick.sh"
 
-# source all functions in .bash_functions folder
-for f in $HOME/.bash_functions.d/*; do source $f; done
+# source all functions in .bashrc.d folder
+if [ -d $HOME/.bashrc.d ]; then
+  for f in $HOME/.bashrc.d/*; do source $f; done
+fi
 
 # completions
 source "$HOME/.homesick/repos/homeshick/completions/homeshick-completion.bash"
