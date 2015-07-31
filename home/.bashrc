@@ -15,7 +15,7 @@ if [[ $- =~ i ]]; then
     # set the logdir
     logdir=$HOME/terminal-logs
     if [ ! -d $logdir ]; then
-	mkdir $logdir
+      mkdir $logdir
     fi
     # compress the logs older than 30 days
     find $logdir -type f -name "*.log" -mtime +30 -exec gzip {} \;
@@ -87,7 +87,7 @@ function start_agent {
 # Source SSH settings, if applicable
 if [ -f "${SSH_ENV}" ]; then
      . "${SSH_ENV}" > /dev/null
-     #ps ${SSH_AGENT_PID} doesn't work under cywgin
+     # ps ${SSH_AGENT_PID} doesn't work under cywgin
      ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
          start_agent;
      }
