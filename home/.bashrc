@@ -73,7 +73,7 @@ fi
 #
 # ssh-agent (not on cygwin)
 #
-if ! uname | grep CYGWIN /dev/null; then
+if ! uname | grep CYGWIN >/dev/null; then
   SSH_ENV="$HOME/.ssh/environment"
 
   function start_agent {
