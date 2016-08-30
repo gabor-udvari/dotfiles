@@ -71,9 +71,9 @@ if ! shopt -oq posix; then
 fi
 
 #
-# ssh-agent (not on cygwin)
+# Start ssh-agent (if exists)
 #
-if ! uname | grep CYGWIN >/dev/null; then
+if [ -x /usr/bin/ssh-agent ]; then
   SSH_ENV="$HOME/.ssh/environment"
 
   function start_agent {
