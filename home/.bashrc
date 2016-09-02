@@ -8,24 +8,32 @@ case $- in
       *) return;;
 esac
 
+#
 # Terminal logging for interactive shells
-if [[ $- =~ i ]]; then
-  # check if not yet under script
-  if [ -z "$UNDER_SCRIPT" ]; then
-    # set the logdir
-    logdir=$HOME/terminal-logs
-    if [ ! -d $logdir ]; then
-      mkdir $logdir
-    fi
-    # compress the logs older than 30 days
-    find $logdir -type f -name "*.log" -mtime +30 -exec gzip {} \;
-    # set the new logfile and start the interactive terminal with scrip
-    logfile=$logdir/$(date +%F_%T).$$.log
-    export UNDER_SCRIPT=$logfile
-    script -f -q $logfile
-    # exit the parent shell when script is finished
-    exit
+#
+# Check if not yet under script
+if [ -z "$UNDER_SCRIPT" ]; then
+  # set the logdir
+  logdir=$HOME/terminal-logs
+  if [ ! -d $logdir ]; then
+    mkdir $logdir
   fi
+  # find the logs older than 30 days
+  old_logs=($(find $logdir -type f -name "*.log" -mtime +30))
+  if [ ${#old_logs[@]} -gt 0 ]; then
+    echo -n "Compressing old logs..."
+    for i in "${old_logs[@]}"; do
+      # compress the logs older than 30 days
+      gzip $i
+    done
+    echo " Done"
+  fi
+  # set the new logfile and start the interactive terminal with script
+  logfile="$logdir/$(date +%F_%T).$$.log"
+  export UNDER_SCRIPT="$logfile"
+  script -f -q $logfile
+  # exit the parent shell when script is finished
+  exit
 fi
 
 # don't put duplicate lines or lines starting with space in the history.
@@ -50,15 +58,6 @@ shopt -s checkwinsize
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
-# If this is an xterm set the title to user@host:dir
-case "$TERM" in
-xterm*|rxvt*)
-    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
-    ;;
-*)
-    ;;
-esac
-
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
 # sources /etc/bash.bashrc).
@@ -77,9 +76,9 @@ if [ -x /usr/bin/ssh-agent ]; then
   SSH_ENV="$HOME/.ssh/environment"
 
   function start_agent {
-       echo "Initialising new SSH agent..."
+       echo -n "Initialising new SSH agent..."
        /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
-       echo succeeded
+       echo " Done"
        chmod 600 "${SSH_ENV}"
        . "${SSH_ENV}" > /dev/null
        /usr/bin/ssh-add;
