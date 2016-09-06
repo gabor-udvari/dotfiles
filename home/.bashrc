@@ -73,6 +73,11 @@ fi
 # Start ssh-agent (if exists)
 #
 if [ -x /usr/bin/ssh-agent ]; then
+  # Create .ssh if not exists
+  if [ ! -d "$HOME/.ssh" ]; then
+    mkdir "$HOME/.ssh"
+  fi
+
   SSH_ENV="$HOME/.ssh/environment"
 
   function start_agent {
