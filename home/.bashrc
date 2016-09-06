@@ -96,6 +96,13 @@ if [ -x /usr/bin/ssh-agent ]; then
   fi
 fi 
 
+#
+# Concat SSH config scripts if any
+#
+if [ -d "$HOME/.ssh/config.d" ]; then
+  cat $HOME/.ssh/config.d/*.config >$HOME/.ssh/config
+fi
+
 # PATH settings
 PATH=$PATH:$HOME/bin
 export PATH
@@ -119,7 +126,7 @@ source "$HOME/.shell_prompt.sh"
 source "$HOME/.homesick/repos/homeshick/homeshick.sh"
 
 # source all .bash scripts in .bashrc.d folder
-if [ -d $HOME/.bashrc.d ]; then
+if [ -d "$HOME/.bashrc.d" ]; then
   for f in $HOME/.bashrc.d/*.bash; do source $f; done
 fi
 
