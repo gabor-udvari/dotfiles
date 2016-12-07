@@ -22,7 +22,7 @@ if [ "$color_prompt" = yes ]; then
     alias fgrep='fgrep --color=auto'
     alias egrep='egrep --color=auto'
 
-    alias tmux='tmux -2'
+    alias tmux='tmux -2 -S $HOME/.tmux.sock'
 fi
 unset color_prompt
 
