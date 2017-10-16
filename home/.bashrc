@@ -107,7 +107,7 @@ fi
 #
 # Concat SSH config scripts if any
 #
-if [ -d "$HOME/.ssh/config.d" ]; then
+if [ -d "$HOME/.ssh/config.d" ] && [ "$(ls -A "$HOME/.ssh/config.d")" ]; then
   cat $HOME/.ssh/config.d/*.config >$HOME/.ssh/config
 fi
 
