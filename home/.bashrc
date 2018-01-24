@@ -113,7 +113,7 @@ if [ -d "$HOME/.ssh/config.d" ] && [ "$(ls -A "$HOME/.ssh/config.d")" ]; then
 fi
 
 # PATH settings
-PATH=$PATH:$HOME/bin
+PATH=$PATH:$HOME/bin:$HOME/.local/bin
 export PATH
 
 # EDITOR settings
