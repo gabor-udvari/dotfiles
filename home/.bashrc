@@ -122,7 +122,7 @@ EDITOR=vim
 # source default ubuntu prompt
 # source "$HOME/.bashrc.d/default_prompt.bash"
 # setup customized prompt command
-export PROMPT_COMMAND='PS1X=$(p="${PWD#${HOME}}"; [ "${PWD}" != "${p}" ] && printf "~";IFS=/; for q in ${p:1}; do printf /${q:0:1}; done; printf "${q:1}")'
+export PROMPT_COMMAND='PS1X=$(p="${PWD#${HOME}}"; [ "${PWD}" != "${p}" ] && printf "~";IFS=/; for q in ${p:1}; do printf "%s" "/${q:0:1}"; done; printf "%s" "${q:1}")'
 export PS1='[\u@\[\e[0;34m\]\h\[\e[m\]:$PS1X]\$ '
 
 #
