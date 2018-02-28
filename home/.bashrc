@@ -31,9 +31,15 @@ if [ -z "$UNDER_SCRIPT" ]; then
   # set the new logfile and start the interactive terminal with script
   logfile="$logdir/$(date +%F_%T).$$.log"
   export UNDER_SCRIPT="$logfile"
-  script -f -q $logfile
-  # exit the parent shell when script is finished
-  exit
+  if which script; then
+    if script -f -q $logfile; then
+      # exit the parent shell when script is finished
+      exit
+    else
+      # there was a problem running script, reset the terminal
+      reset
+    fi
+  fi
 fi
 
 # don't put duplicate lines or lines starting with space in the history.
@@ -102,7 +108,7 @@ if [ -x /usr/bin/ssh-agent ]; then
   else
        start_agent;
   fi
-fi 
+fi
 
 #
 # Concat SSH config scripts if any
