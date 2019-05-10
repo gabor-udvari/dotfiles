@@ -119,8 +119,11 @@ if [ -d "$HOME/.ssh/config.d" ] && [ "$(ls -A "$HOME/.ssh/config.d")" ]; then
   cat $HOME/.ssh/config.d/{*.conf,*.config} >>$HOME/.ssh/config 2>/dev/null
 fi
 
+# Install Ruby Gems to ~/gems
+export GEM_HOME="$HOME/gems"
+
 # PATH settings
-PATH=$PATH:$HOME/bin:$HOME/.local/bin:$HOME/.composer/vendor/bin
+PATH="$PATH:$HOME/bin:$HOME/.local/bin:$HOME/.composer/vendor/bin:$HOME/gems/bin"
 export PATH
 
 # EDITOR settings
