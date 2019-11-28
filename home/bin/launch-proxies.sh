@@ -3,7 +3,7 @@
 ssh_keys="$(sed -n '/IdentityFile/ s/^[[:space:]]*IdentityFile \(.*\)$/\1/p' "$HOME/.ssh/config" | sort -n | uniq)"
 
 # Add SSH key
-echo "$ssh_keys" | parallel 'ssh-add -l | grep -F $(basename {}) || ssh-add {}'
+echo "$ssh_keys" | sed "s#^~#$HOME#" | while read -r k; do echo "Checking key $k"; ssh-add -l | grep -F "$k" || ssh-add "$k"; done
 
 proxies="$(sed -n '/ProxyJump/ s/^[[:space:]]*ProxyJump \(.*\)$/\1/p' "$HOME/.ssh/config" | sort -n | uniq)"
 
