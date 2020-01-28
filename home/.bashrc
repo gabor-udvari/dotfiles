@@ -144,6 +144,9 @@ if [ -d "$HOME/.bashrc.d" ]; then
   for f in $HOME/.bashrc.d/*.bash; do source "$f"; done
 fi
 
+# source sync-history
+source "$HOME/.sync-history.sh"
+
 #
 # COMPLETIONS
 
