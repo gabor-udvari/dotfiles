@@ -112,7 +112,7 @@ export TIME_STYLE="long-iso"
 export GEM_HOME="$HOME/gems"
 
 # PATH settings
-export PATH="$PATH:$HOME/bin:$HOME/.local/bin:$HOME/.composer/vendor/bin:$HOME/gems/bin"
+export PATH="$PATH:$HOME/bin:$HOME/.local/bin:$HOME/.composer/vendor/bin:$HOME/gems/bin:$HOME/lutris/bin"
 
 # EDITOR settings
 export EDITOR='vim'
@@ -146,6 +146,9 @@ fi
 
 # source sync-history
 source "$HOME/.sync-history.sh"
+
+# source Abevjava profile
+[ -f "$HOME/.profabevjava" ] source "$HOME/.profabevjava"
 
 #
 # COMPLETIONS
