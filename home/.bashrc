@@ -148,7 +148,7 @@ fi
 source "$HOME/.sync-history.sh"
 
 # source Abevjava profile
-[ -f "$HOME/.profabevjava" ] source "$HOME/.profabevjava"
+[ -f "$HOME/.profabevjava" ] && source "$HOME/.profabevjava"
 
 #
 # COMPLETIONS
