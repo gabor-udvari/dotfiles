@@ -67,6 +67,21 @@ checks[7,0]='Sov24'
 checks[7,1]='https://sov24.hu/'
 checks[7,2]='.our_price_display span text{}'
 checks[7,3]='html'
+# Laptop Bázis
+checks[8,0]='Laptop Bázis'
+checks[8,1]='https://laptopbazis.hu/lenovo-thinkpad-t440p-intel-core-i7-4600m-nvidia-geforce-gt-730m'
+checks[8,2]='#price_akcio_brutto_LB170328 text{}'
+checks[8,3]='html'
+# PC Boss
+checks[9,0]='PC Boss'
+checks[9,1]='https://pcboss.hu/lenovo-thinkpad-t440p-hasznalt-laptop-892'
+checks[9,2]='.middle div:nth-child(2) .price_row .price text{}'
+checks[9,3]='html'
+# NDR
+checks[10,0]='NDR'
+checks[10,1]='https://nrd.hu/lenovo_thinkpad_t440p_8gb_128ssd_hdp.php'
+checks[10,2]='.tnev span text{}'
+checks[10,3]='html'
 
 function get_price_from_url {
   price=0
@@ -75,6 +90,8 @@ function get_price_from_url {
     wget "$url" -O "$tmp"
     if [ "${checks[$1,3]}" == "html" ]; then
       price="$(pup "${checks[$1,2]}" < "$tmp"| chomp_price)"
+    elif [ "${checks[$1,3]}" == "null" ]; then
+      price=0
     else
       regex="regex_${checks[$1,3]}"
       price=$(grep -F "${checks[$1,2]}" "$tmp" | sed -n "${!regex}")
@@ -104,7 +121,7 @@ function chomp_price {
   else
     input="$1"
   fi
-  echo "$input" | tr -d '[:space:][:alpha:]' | sed -n 's/^[^0-9]*\([0-9]\+\).*$/\1/p'
+  echo "$input" | tr -d '[:space:][:alpha:].,' | sed -n 's/^[^0-9]*\([0-9]\+\).*$/\1/p'
 }
 
 function cleanup {
