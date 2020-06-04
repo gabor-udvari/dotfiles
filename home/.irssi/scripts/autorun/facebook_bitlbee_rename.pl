@@ -1,1 +1,0 @@
-../../../../../../../.irssi/scripts/facebook_bitlbee_rename.pl

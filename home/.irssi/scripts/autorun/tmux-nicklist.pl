@@ -1,1 +1,0 @@
-../../../../../../../.irssi/scripts/tmux-nicklist.pl
