@@ -53,14 +53,14 @@ if [ -x /usr/bin/ssh-agent ]; then
   # Taken from: https://stackoverflow.com/a/48509425
   /usr/bin/ssh-add -l &>/dev/null
   add_retval="$?"
-  if [ ! -f "$SSH_ENV" ] || [ "$add_retval" -eq 2 ]; then
+  if [ ! -f "$SSH_ENV" ] || ! ps -p "$(sed -n 's/^SSH_AGENT_PID=\([0-9]\+\).*$/\1/p' "$SSH_ENV")" &>/dev/null || [ "$add_retval" -eq 2 ]; then
     echo -n "Initialising new SSH agent..."
     /usr/bin/ssh-agent > "$SSH_ENV"
     echo " Done"
     chmod 600 "$SSH_ENV"
   fi
 
-  if [ -z "$SSH_AGENT_PID" ]; then
+  if [ -z "$SSH_AGENT_PID" ] || ! ps -p "$SSH_AGENT_PID" &>/dev/null; then
     source "$SSH_ENV" >/dev/null
   fi
 fi
