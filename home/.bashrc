@@ -5,12 +5,15 @@
 # If not running interactively, don't do anything
 echo $- | grep -F i >/dev/null || return
 
+# Configure XDG_DATA_HOME if not set
+export XDG_DATA_HOME="${XDG_DATA_HOME:="$HOME/.local/share"}"
+
 # Terminal logging for interactive shells
 #
 # Check if not yet under script
 if [ -z "$UNDER_SCRIPT" ]; then
   # set the logdir
-  logdir="$HOME/terminal-logs"
+  logdir="$XDG_DATA_HOME/terminal-logs"
   if [ ! -d "$logdir" ]; then
     mkdir "$logdir"
   fi
@@ -141,7 +144,7 @@ source "$HOME/.homesick/repos/homeshick/homeshick.sh"
 
 # source all .bash scripts in .bashrc.d folder
 if [ -d "$HOME/.bashrc.d" ]; then
-  for f in $HOME/.bashrc.d/*.bash; do source "$f"; done
+  for f in "$HOME/.bashrc.d/"*.bash; do source "$f"; done
 fi
 
 # source sync-history
