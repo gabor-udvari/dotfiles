@@ -25,18 +25,18 @@ regex_json='s/^.*"price": *"*\([0-9]*\)"*.*$/\1/p'
 
 # Multidimensional array as seen in https://stackoverflow.com/a/16487733
 declare -A checks
-checks_len=8
+checks_len=13
 # Array structure: 0=portal name, 1=URL to check, 2=filter, 3=regex type, 4=price
 # Aqua
 checks[0,0]='Aqua'
 checks[0,1]='https://www.aqua.hu/'
-checks[0,2]='Kedvezményes ár (bruttó)'
-checks[0,3]='tags'
+checks[0,2]='.product attr{data-product-price}'
+checks[0,3]='html'
 # MySoft
 checks[1,0]='MySoft'
 checks[1,1]='http://www.mysoft.hu/'
-checks[1,2]='MainContent_LabelNagyBrutto'
-checks[1,3]='tags'
+checks[4,2]='#MainContent_HiddenAr attr{value}'
+checks[4,3]='html'
 # Emag
 checks[2,0]='Emag'
 checks[2,1]='https://www.emag.hu/'
@@ -45,7 +45,7 @@ checks[2,3]='json'
 # Ipon
 checks[3,0]='Ipon'
 checks[3,1]='https://ipon.hu/'
-checks[3,2]="'"'products'"'"':'
+checks[3,2]=' "price":'
 checks[3,3]='json'
 # PCX
 checks[4,0]='PCX'
@@ -83,6 +83,26 @@ checks[10,1]='https://nrd.hu/lenovo_thinkpad_t440p_8gb_128ssd_hdp.php'
 checks[10,2]='.tnev span text{}'
 checks[10,3]='html'
 
+checks[11,0]='Laptopozz'
+checks[11,1]='https://laptopozz.hu/termek/lenovo-thinkpad-t440p-ssd-vel/'
+checks[11,2]='.summary .woocommerce-Price-amount text{}'
+checks[11,3]='html'
+
+checks[12,0]='Marseus'
+checks[12,1]='https://www.marseus.hu/hu/notebook---laptop-quotaquot-kategoria/core-i/core-i5/14quot/lenovo-thinkpad-t440p-i5-4300m8gb128-ssdcamhdr.html'
+checks[12,2]='.brutto .number .price text{}'
+checks[12,3]='html'
+
+checks[2,0]='Mall.hu'
+checks[2,1]='https://www.mall.hu/'
+checks[2,2]='.price-wrapper b text{}'
+checks[2,3]='html'
+
+checks[3,0]='Oázis'
+checks[3,1]='https://oaziscomputer.hu/'
+checks[3,2]='meta[property="product:price:amount"] attr{content}'
+checks[3,3]='html'
+
 function get_price_from_url {
   price=0
   url="${checks[$1,1]}"
@@ -111,6 +131,8 @@ function get_all_prices {
 
   # echo $header
   echo "$row" >>"$log"
+
+  sed -i '1s/.*/'"$header"'/' "$log"
 }
 
 # shellcheck disable=SC2120
