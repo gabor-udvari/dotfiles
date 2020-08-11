@@ -8,4 +8,6 @@ echo "$ssh_keys" | sed "s#^~#$HOME#" | while read -r k; do echo "Checking key $k
 proxies="$(sed -n '/ProxyJump/ s/^[[:space:]]*ProxyJump \(.*\)$/\1/p' "$HOME/.ssh/config" | sort -n | uniq)"
 
 # Launch SSH tunnels
-echo "$proxies" | parallel -j 2 'echo "Checking proxy {}"; pgrep -f "^ssh -f -N {}" || ssh -f -N {}'
+if [ -n "$proxies" ]; then
+  echo "$proxies" | parallel -j 2 'echo "Checking proxy {}"; pgrep -f "^ssh -f -N {}" || ssh -f -N {}'
+fi
