@@ -16,7 +16,25 @@ if [ -n "$BASH_VERSION" ]; then
   fi
 fi
 
-# set PATH so it includes user's private bin if it exists
-if [ -d "$HOME/bin" ] ; then
-  PATH="$HOME/bin:$PATH"
-fi
+# Set timeformat to ISO 8601
+export TIME_STYLE="long-iso"
+
+# Install Ruby Gems to ~/gems
+export GEM_HOME="$HOME/gems"
+
+# PATH settings
+export PATH="$PATH:$HOME/bin:$HOME/.local/bin:$HOME/.composer/vendor/bin:$HOME/gems/bin:$HOME/lutris/bin"
+
+# EDITOR settings
+export EDITOR='vim'
+
+# Configure XDG_DATA_HOME if not set
+export XDG_DATA_HOME="${XDG_DATA_HOME:="$HOME/.local/share"}"
+# Configure the default XDG_DATA_DIRS if not set
+export XDG_DATA_DIRS="${XDG_DATA_DIRS:="/usr/local/share:/usr/share"}"
+# Add the .local to the XDG_DATA_DIRS
+export XDG_DATA_DIRS="$XDG_DATA_DIRS:$HOME/.local/share"
+
+# For packaging
+export DEBFULLNAME="Gabor Udvari"
+export DEBEMAIL="gabor.udvari@gmail.com"

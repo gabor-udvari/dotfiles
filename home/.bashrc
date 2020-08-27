@@ -5,9 +5,6 @@
 # If not running interactively, don't do anything
 echo $- | grep -F i >/dev/null || return
 
-# Configure XDG_DATA_HOME if not set
-export XDG_DATA_HOME="${XDG_DATA_HOME:="$HOME/.local/share"}"
-
 # Terminal logging for interactive shells
 #
 # Check if not yet under script
@@ -108,27 +105,11 @@ shopt -s checkwinsize
 # match all files and zero or more directories and subdirectories.
 #shopt -s globstar
 
-# Set timeformat to ISO 8601
-export TIME_STYLE="long-iso"
-
-# Install Ruby Gems to ~/gems
-export GEM_HOME="$HOME/gems"
-
-# PATH settings
-export PATH="$PATH:$HOME/bin:$HOME/.local/bin:$HOME/.composer/vendor/bin:$HOME/gems/bin:$HOME/lutris/bin"
-
-# EDITOR settings
-export EDITOR='vim'
-
 # source default ubuntu prompt
 # source "$HOME/.bashrc.d/default_prompt.bash"
 # setup customized prompt command
 export PROMPT_COMMAND='PS1X=$(p="${PWD#${HOME}}"; [ "${PWD}" != "${p}" ] && printf "~";IFS=/; for q in ${p:1}; do printf "%s" "/${q:0:1}"; done; printf "%s" "${q:1}")'
 export PS1='[\u@\[\e[0;34m\]\h\[\e[m\]:$PS1X]\$ '
-
-# For packaging
-export DEBFULLNAME="Gabor Udvari"
-export DEBEMAIL="gabor.udvari@gmail.com"
 
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
