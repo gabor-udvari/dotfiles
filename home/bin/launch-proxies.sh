@@ -1,9 +1,16 @@
 #!/bin/bash
 
+# Check for parallel
+if ! which parallel >/dev/null; then
+  echo 'ERROR: parallel is required for this script'
+  exit 1
+fi
+
 ssh_keys="$(sed -n '/IdentityFile/ s/^[[:space:]]*IdentityFile \(.*\)$/\1/p' "$HOME/.ssh/config" | sort -n | uniq)"
 
 # Add SSH key
-echo "$ssh_keys" | sed "s#^~#$HOME#" | while read -r k; do echo "Checking key $k"; ssh-add -l | grep -F "$k" || ssh-add "$k"; done
+# Use parallel so that tty can be used for ssh-add password input
+echo "$ssh_keys" | sed "s#^~#$HOME#" | parallel --tty --env SSH_AUTH_SOCK --env SSH_AGENT_PID --env SSH_ENV 'echo "Checking key {}"; ssh-add -l | grep -F {} || ssh-add {}'
 
 proxies="$(sed -n '/ProxyJump/ s/^[[:space:]]*ProxyJump \(.*\)$/\1/p' "$HOME/.ssh/config" | sort -n | uniq)"
 
