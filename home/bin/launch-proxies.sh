@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Check for parallel
-if ! which parallel >/dev/null; then
+if ! command -v parallel >/dev/null; then
   echo 'ERROR: parallel is required for this script'
   exit 1
 fi
@@ -16,5 +16,5 @@ proxies="$(sed -n '/ProxyJump/ s/^[[:space:]]*ProxyJump \(.*\)$/\1/p' "$HOME/.ss
 
 # Launch SSH tunnels
 if [ -n "$proxies" ]; then
-  echo "$proxies" | parallel -j 2 'echo "Checking proxy {}"; pgrep -f "^ssh -f -N {}" || ssh -f -N {}'
+  echo "$proxies" | parallel -j 2 'echo "Checking proxy {}"; pgrep -f "^ssh -f -N -o .* {}" || ssh -f -N -o ConnectTimeout=10 {}'
 fi
