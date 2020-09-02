@@ -8,6 +8,13 @@
 # for ssh logins, install and configure the libpam-umask package.
 #umask 022
 
+# Configure XDG_DATA_HOME if not set
+export XDG_DATA_HOME="${XDG_DATA_HOME:="$HOME/.local/share"}"
+# Configure the default XDG_DATA_DIRS if not set
+export XDG_DATA_DIRS="${XDG_DATA_DIRS:="/usr/local/share:/usr/share"}"
+# Add the .local to the XDG_DATA_DIRS
+export XDG_DATA_DIRS="$XDG_DATA_DIRS:$HOME/.local/share"
+
 # if running bash
 if [ -n "$BASH_VERSION" ]; then
   # include .bashrc if it exists
@@ -27,13 +34,6 @@ export PATH="$PATH:$HOME/bin:$HOME/.local/bin:$HOME/.composer/vendor/bin:$HOME/g
 
 # EDITOR settings
 export EDITOR='vim'
-
-# Configure XDG_DATA_HOME if not set
-export XDG_DATA_HOME="${XDG_DATA_HOME:="$HOME/.local/share"}"
-# Configure the default XDG_DATA_DIRS if not set
-export XDG_DATA_DIRS="${XDG_DATA_DIRS:="/usr/local/share:/usr/share"}"
-# Add the .local to the XDG_DATA_DIRS
-export XDG_DATA_DIRS="$XDG_DATA_DIRS:$HOME/.local/share"
 
 # For packaging
 export DEBFULLNAME="Gabor Udvari"
