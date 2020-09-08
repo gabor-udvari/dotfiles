@@ -15,14 +15,6 @@ export XDG_DATA_DIRS="${XDG_DATA_DIRS:="/usr/local/share:/usr/share"}"
 # Add the .local to the XDG_DATA_DIRS
 export XDG_DATA_DIRS="$XDG_DATA_DIRS:$HOME/.local/share"
 
-# if running bash
-if [ -n "$BASH_VERSION" ]; then
-  # include .bashrc if it exists
-  if [ -f "$HOME/.bashrc" ]; then
-    . "$HOME/.bashrc"
-  fi
-fi
-
 # Set timeformat to ISO 8601
 export TIME_STYLE="long-iso"
 
@@ -38,3 +30,11 @@ export EDITOR='vim'
 # For packaging
 export DEBFULLNAME="Gabor Udvari"
 export DEBEMAIL="gabor.udvari@gmail.com"
+
+# if running bash
+if [ -n "$BASH_VERSION" ]; then
+  # include .bashrc if it exists
+  if [ -f "$HOME/.bashrc" ]; then
+    . "$HOME/.bashrc"
+  fi
+fi
