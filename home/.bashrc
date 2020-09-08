@@ -12,7 +12,7 @@ if [ -z "$UNDER_SCRIPT" ]; then
   # set the logdir
   logdir="$XDG_DATA_HOME/terminal-logs"
   if [ ! -d "$logdir" ]; then
-    mkdir "$logdir"
+    mkdir -p "$logdir"
   fi
   # find the logs older than 30 days
   old_logs=($(find "$logdir" -type f -name "*.log" -mtime +30))
