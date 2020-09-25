@@ -1,0 +1,46 @@
+#!/bin/bash
+
+# Check if the file exists
+if [ ! -f "$1" ]; then
+  echo "$1 does not exist"
+  exit 1
+fi
+bn=$(basename "$1" .adoc)
+
+# Create a template which will print out Header 0
+tmp="$(mktemp).tpl"
+cat << 'EOF' >"$tmp"
+$if(titleblock)$
+$titleblock$
+$else$
+# $title$
+$endif$
+
+$for(header-includes)$
+$header-includes$
+
+$endfor$
+$for(include-before)$
+$include-before$
+
+$endfor$
+$if(toc)$
+$table-of-contents$
+
+$endif$
+$body$
+$for(include-after)$
+
+$include-after$
+$endfor$
+EOF
+
+# Asciidoc to Docbook
+asciidoctor --backend docbook5 "$1"
+
+# Docbook to Github Flavoured Markdown
+pandoc -f docbook -t gfm --template "$tmp" --shift-heading-level-by 1 "${bn}.xml" -o "${bn}.md"
+
+# Cleanup
+rm "${bn}.xml"
+rm "$tmp"
