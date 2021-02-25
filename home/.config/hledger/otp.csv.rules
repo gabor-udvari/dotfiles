@@ -1,0 +1,223 @@
+#############################
+# General OTP configurations
+#############################
+
+separator ;
+
+# type = J: plus (jóváírás), T: minus (terhelés)
+fields local_account, type, quantity, curr, date, , , transfer_account, transfer_name, comm1, comm2, , desc
+
+# Change description based on desc
+if %desc ÁTUTALÁS
+  description %transfer_name %desc %transfer_account
+
+description %transfer_name %desc
+
+# Add currency symbol on the right:
+amount %quantity %curr
+
+comment %comm1%comm2
+
+# Specify the date field's format
+date-format %Y%m%d
+
+############################
+# Custom categorizations
+############################
+
+# Default accounts
+account1 Eszközök:Közös folyószámla
+account2 Kiadások:Ismeretlen
+
+# Set account1 based on the local_account field
+if
+%local_account 1177348701065057
+  account1 Eszközök:Közös takarékszámla
+
+if
+%local_account 1177148551877138
+  account1 Eszközök:Gábor netkártya
+
+# Set account2 based on the transfer_accout field
+if
+%transfer_account 1177348750250712
+& Boldog szülinapot
+  account2 Bevételek:Ajándék
+
+if
+%transfer_account 1177348701065057
+  account2 Eszközök:Közös takarékszámla
+
+if
+%transfer_account 1177148551877138
+  account2 Eszközök:Gábor netkártya
+
+if
+%transfer_account 1177348751877138
+  account2 Eszközök:Közös folyószámla
+
+# General regex rules
+if
+MUNKABER
+& SAP
+  account2 Bevételek:Gábor fizetés
+
+if
+Kincstár
+Székesfehérvári Tankerületi
+  account2 Bevételek:Edina fizetés
+
+if
+KAMATJÓVÁÍRÁS
+  account2 Bevételek:Banki kamat
+
+if
+IDŐSZAKOS KÖLTSÉGEK
+HITELKAMAT
+HITEL KÖLTSÉGE
+HAVI CSOMAGDÍJ
+ESETI MEGBÍZÁSOK KÖLTSÉGE
+ÜZENETDÍJ
+KP.FELVÉT/-BEFIZ. DÍJA
+BANKKÁRTYÁVAL KAPCS. DÍJ
+  account2 Kiadások:Banki költségek
+
+if
+BENU
+BALESETBIZTOSÍTÁS
+PATIKAPLUS
+PREMIUM EP
+OTPMOBL\*PREMI
+Alba-Gel Kft
+DECATHLON
+OPTIC WORLD
+Dr. Szenai Laszlo
+Alpha Human Patika
+KEDVENCWEBARUHAZ
+GYOGYSZERTAR
+  account2 Kiadások:Egészség
+
+if NEMZETI DOHÁNYBOLT
+  account2 Kiadások:Cigi
+
+if
+AUCHAN
+OÁZIS
+OBI
+PENNY
+DM
+POSTA
+LIDL
+SPAR
+PERCENT Kft
+WD_STYLEHUB
+PRAKTIKER
+TESCO
+BRENDON
+TOP-GRADUS Kft
+SZÉKESFEHÉRVÁR EURO
+emag.hu
+PAPIRDEPO.HU
+ALDI
+ALIEXPRESS
+  account2 Kiadások:Bevásárlás
+
+if
+PEPCO
+KIK
+TRENDY BANDY
+HÁDA
+FEHÉRVÁR ÁRUHÁZ
+H\&M
+  account2 Kiadások:Ruha
+
+if
+BARION
+KFC
+Sutikucko
+MCD
+Kilato Bufe Falatozo
+KISKAKAS VENDÉGLŐ
+FORNETTI
+  account2 Kiadások:Étel
+
+if
+DotRoll
+PCX Kereskedelmi Kft.
+Aqua Webaruhaz
+ANTHROPICS SOFTWARE
+AWS EMEA
+MM SZÉKESFEHÉRVÁR
+  account2 Kiadások:Informatika
+
+if
+OTPMOBL\*TELEKOM
+BARION\*TELENOR
+Telenor
+OTPMOBL\*VODAFONE.HU
+  account2 Kiadások:Telefon
+
+if
+MOL
+  account2 Kiadások:Autó:Tankolás
+
+if
+120230080015431800100001
+WWW.UNIQA.HU
+ONKORMANYZATI BEFIZ
+  account2 Kiadások:Autó
+
+if
+dijnet.hu
+UPC
+OTPMOBL\*EON\.HU
+NKM ENERGIA
+NKM FÖLDGÁZSZOLGÁLTATÓ
+VÍZDÍJ
+NHKV
+VODAFONE MAGYARORSZÁG ZRT. EGYÉB ELŐFIZETÉSI DÍJ
+  account2 Kiadások:Ingatlan:Rezsi
+
+if
+1003200001070044
+1003200001076985
+  account2 Kiadások:Ingatlan:Vagyonszerzési
+
+if
+www.e-kert.hu
+ALBA-TEXTILHÁZ
+IKEA
+WWW.MENTAVILL.HU
+GROUPAMA BIZTOSITÓ
+  account2 Kiadások:Ingatlan
+
+if
+DÍJNET FIZETÉS DÍJÁNAK JÓVÁÍRÁSA
+  account2 Kiadások:Banki költségek
+
+if
+HITELTÖRLESZTÉS EGYÉB
+  account2 Kiadások:Hitel
+
+if
+SZEMÉLYI KÖLCSÖN TÖRLESZTÉS
+BABAVÁRÓ KÖLCSÖN KEZ. VÁLL. DÍJ
+  account2 Kiadások:Hitel:Babaváró
+
+if
+KÉSZPÉNZFELVÉT
+  account2 Kiadások:Készpénz
+
+if
+Perfekt Zrt
+Perfekt Gazdasági Tanácsadó
+Dunaújvárosi Egyetem
+BEST-WORK Kft
+  account2 Kiadások:Oktatás
+
+if
+GOG.COM
+GOG sp
+RÉGIO JÁTÉK
+okosjatek.hu
+  account2 Kiadások:Szórakozás
