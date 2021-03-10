@@ -65,6 +65,7 @@ MUNKABER
 if
 Kincstár
 Székesfehérvári Tankerületi
+%transfer_account 101029526414390001000004
   account2 Bevételek:Edina fizetés
 
 if
@@ -95,6 +96,7 @@ Dr. Szenai Laszlo
 Alpha Human Patika
 KEDVENCWEBARUHAZ
 GYOGYSZERTAR
+RUB-INT
   account2 Kiadások:Egészség
 
 if NEMZETI DOHÁNYBOLT
@@ -111,6 +113,7 @@ LIDL
 SPAR
 PERCENT Kft
 WD_STYLEHUB
+STYLEHUB\.COM
 PRAKTIKER
 TESCO
 BRENDON
@@ -129,6 +132,7 @@ TRENDY BANDY
 HÁDA
 FEHÉRVÁR ÁRUHÁZ
 H\&M
+www\.bonprix\.hu
   account2 Kiadások:Ruha
 
 if
@@ -163,8 +167,9 @@ MOL
 
 if
 120230080015431800100001
-WWW.UNIQA.HU
+WWW\.UNIQA\.HU
 ONKORMANYZATI BEFIZ
+HU-GO\.HU
   account2 Kiadások:Autó
 
 if
@@ -175,7 +180,7 @@ NKM ENERGIA
 NKM FÖLDGÁZSZOLGÁLTATÓ
 VÍZDÍJ
 NHKV
-VODAFONE MAGYARORSZÁG ZRT. EGYÉB ELŐFIZETÉSI DÍJ
+VODAFONE MAGYARORSZÁG ZRT\. EGYÉB ELŐFIZETÉSI DÍJ
   account2 Kiadások:Ingatlan:Rezsi
 
 if
