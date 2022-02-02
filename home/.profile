@@ -22,7 +22,7 @@ export TIME_STYLE="long-iso"
 export GEM_HOME="$HOME/gems"
 
 # PATH settings
-export PATH="$PATH:$HOME/bin:$HOME/.local/bin:$HOME/.composer/vendor/bin:$HOME/gems/bin:$HOME/lutris/bin"
+export PATH="$PATH:$HOME/bin:$HOME/.local/bin:$HOME/.composer/vendor/bin:$HOME/gems/bin:$HOME/lutris/bin:${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 
 # EDITOR settings
 export EDITOR='vim'
