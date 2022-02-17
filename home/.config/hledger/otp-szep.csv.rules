@@ -30,4 +30,4 @@ account2 Kiadások:Étel
 
 # Set account1 if there is a transaction to (less frequent)
 if %quant_to [1-9]
-  account2 Bevételek:Gábor fizetés
+  account2 Bevételek:Gábor cafeteria

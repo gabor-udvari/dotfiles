@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# Check if the file exists
+if [ ! -f "$1" ]; then
+    echo "$1 does not exist"
+      exit 1
+fi
+
+# https://wiki.documentfoundation.org/ReleaseNotes/7.2#Document_Conversion
+# https://wiki.openoffice.org/wiki/Documentation/DevGuide/Spreadsheets/Filter_Options
+
+libreoffice --headless --convert-to csv:"Text - txt - csv (StarCalc)":59,34,UTF8,1,,0,false,true,false,false,false,-1 "$1"
