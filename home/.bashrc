@@ -53,14 +53,19 @@ if [ -x /usr/bin/ssh-agent ]; then
   # Taken from: https://stackoverflow.com/a/48509425
   /usr/bin/ssh-add -l &>/dev/null
   add_retval="$?"
-  if [ ! -f "$SSH_ENV" ] || ! ps -p "$(sed -n 's/^SSH_AGENT_PID=\([0-9]\+\).*$/\1/p' "$SSH_ENV")" &>/dev/null || [ "$add_retval" -eq 2 ]; then
+
+  # Only launch a new ssh-agent if ssh-add gives return code 3
+  # GNOME keyring only sets SSH_AGENT_LAUNCHER and SSH_AUTH_SOCK,
+  # so only check for SSH_AUTH_SOCK
+  if [ "$add_retval" -eq 3 ] || [ -z "$SSH_AUTH_SOCK" ] ||  [ ! -S "$SSH_AUTH_SOCK" ]; then
     echo -n "Initialising new SSH agent..."
     /usr/bin/ssh-agent > "$SSH_ENV"
     echo " Done"
     chmod 600 "$SSH_ENV"
   fi
 
-  if [ -z "$SSH_AGENT_PID" ] || ! ps -p "$SSH_AGENT_PID" &>/dev/null; then
+  # Check if SSH_ENV exists, and if the SSH_AGENT_PID inside it is still running
+  if [ -f "$SSH_ENV" ] && ps -p "$(sed -n 's/^SSH_AGENT_PID=\([0-9]\+\).*$/\1/p' "$SSH_ENV" &>/dev/null)" &>/dev/null; then
     source "$SSH_ENV" >/dev/null
   fi
 fi
