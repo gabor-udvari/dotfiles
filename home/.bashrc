@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # ~/.bashrc: executed by bash(1) for non-login shells.
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
@@ -27,7 +29,7 @@ if [ -z "$UNDER_SCRIPT" ]; then
   # set the new logfile and start the interactive terminal with script
   logfile="$logdir/$(date +%F_%T).$$.log"
   export UNDER_SCRIPT="$logfile"
-  if which script >/dev/null; then
+  if command -v script >/dev/null; then
     if script -f -q "$logfile"; then
       # exit the parent shell when script is finished
       exit
@@ -49,6 +51,11 @@ if [ -x /usr/bin/ssh-agent ]; then
 
   export SSH_ENV="$HOME/.ssh/environment"
 
+  # Check if SSH_ENV exists, and if the SSH_AGENT_PID inside it is still running
+  if [ -f "$SSH_ENV" ] && [ 'ssh-agent' == "$(ps -q "$(sed -n 's/^SSH_AGENT_PID=\([0-9]\+\).*$/\1/p' "$SSH_ENV")" -o comm=)" ]; then
+    source "$SSH_ENV" >/dev/null
+  fi
+
   # Check if ssh-agent is already running
   # Taken from: https://stackoverflow.com/a/48509425
   /usr/bin/ssh-add -l &>/dev/null
@@ -62,10 +69,6 @@ if [ -x /usr/bin/ssh-agent ]; then
     /usr/bin/ssh-agent > "$SSH_ENV"
     echo " Done"
     chmod 600 "$SSH_ENV"
-  fi
-
-  # Check if SSH_ENV exists, and if the SSH_AGENT_PID inside it is still running
-  if [ -f "$SSH_ENV" ] && ps -p "$(sed -n 's/^SSH_AGENT_PID=\([0-9]\+\).*$/\1/p' "$SSH_ENV" &>/dev/null)" &>/dev/null; then
     source "$SSH_ENV" >/dev/null
   fi
 fi
