@@ -157,5 +157,4 @@ if ! shopt -oq posix; then
   fi
 
   source "$HOME/.homesick/repos/homeshick/completions/homeshick-completion.bash"
-  source "$HOME/.homesick/repos/dotfiles/todo.txt_cli-2.10/todo_completion"
 fi
