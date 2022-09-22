@@ -125,6 +125,7 @@ PRAXISPONT
 WHITELAB\.HU
 SZEMÉSZET
 SZFV SZUPERMARKET GYOG
+OTP EP MOBIL APP
   account2 Kiadások:Egészség
 
 if NEMZETI DOHÁNYBOLT
@@ -133,7 +134,7 @@ if NEMZETI DOHÁNYBOLT
 if
 AUCHAN
 OÁZIS
-OBI
+OBI 038 SZÉKESFEHÉRV
 PENNY
 DM
 POSTA
@@ -158,6 +159,8 @@ BESTSTUFF\.HU
 MINDIGVÁR NONSTOP
 EUROKO
 CDRMARKET\.HU
+RÓ-RA MARKET
+OFFICE DEPOT
   account2 Kiadások:Bevásárlás
 
 if
@@ -190,18 +193,25 @@ PASA KEBAB
   account2 Kiadások:Étel
 
 if
-DotRoll
+Székesfehérvár Napsugár Óvoda
+  account2 Kiadások:Étel:Óvoda
+
+if
 PCX Kereskedelmi Kft.
 Aqua Webaruhaz
 ANTHROPICS SOFTWARE
-AWS EMEA
 MM SZÉKESFEHÉRVÁR
 EURONICS
 MEDIAMARKT.HU
 V-TEL GSM
 PHILIPS ESHOP
+  account2 Kiadások:Műszaki cikk
+
+if
+AWS EMEA
+DotRoll
 RACKHOST KFT
-  account2 Kiadások:Informatika
+  account2 Kiadások:Szolgáltatók:Webtárhely
 
 if
 LINDT MASTER CHOCOLAT
@@ -211,17 +221,6 @@ MINI-MANO KFT
   account2 Kiadások:Ajándék
 
 if
-OTPMOBL\*TELEKOM
-BARION\*TELENOR
-Telenor
-OTPMOBL\*VODAFONE\.HU
-  account2 Kiadások:Telefon
-
-if
-MOL
-  account2 Kiadások:Autó:Tankolás
-
-if
 120230080015431800100001
 UNIQA\.HU
 ONKORMANYZATI BEFIZ
@@ -229,20 +228,44 @@ HU-GO\.HU
 NAV belföldi gépjárműadó
 PARKOLÓ
 TOYOTA MAYER
+KOZPONT PARKOLASI CSOP
   account2 Kiadások:Autó
 
 if
-dijnet.hu
-UPC
+MOL Nyrt
+  account2 Kiadások:Autó:Tankolás
+
+if
 OTPMOBL\*EON\.HU
+  account2 Kiadások:Szolgáltatók:Áram
+
+if
+UPC
+VODAFONE MAGYARORSZÁG ZRT
+  account2 Kiadások:Szolgáltatók:TV, internet
+
+if
+OTPMOBL\*TELEKOM
+BARION\*TELENOR
+Telenor
+OTPMOBL\*VODAFONE\.HU
+  account2 Kiadások:Szolgáltatók:Mobil
+
+if
+NHKV
+  account2 Kiadások:Szolgáltatók:Hulladék
+
+if
 NKM ENERGIA
 NKM FÖLDGÁZSZOLGÁLTATÓ
+MVM NEXT
+  account2 Kiadások:Szolgáltatók:Gáz
+
+if
+dijnet.hu
 VÍZDÍJ
 Fejérvíz Zrt
-NHKV
-VODAFONE MAGYARORSZÁG ZRT
-MVM NEXT
-  account2 Kiadások:Ingatlan:Rezsi
+  account2 Kiadások:Szolgáltatók:Víz
 
 if
 1003200001070044
@@ -280,7 +303,25 @@ LAKÁS/JELZÁLOG HITEL
   account2 Kiadások:Hitel
 
 if
+LAKÁS/JELZÁLOG HITEL
+& 9806500002242835
+  account2 Kiadások:Hitel:Lakáshitel 26m
+  account3 (Tartozások:Lakáshitel 16m)
+  amount3 -%quantity %curr
+
+if
+LAKÁS/JELZÁLOG HITEL
+& 9806500002243300
+  account2 Kiadások:Hitel:Lakáshitel 16m
+  account3 (Tartozások:Lakáshitel 16m)
+  amount3 -%quantity %curr
+
+if
 SZEMÉLYI KÖLCSÖN TÖRLESZTÉS
+& 9801804039405960BIZT
+  account2 Kiadások:Hitel:Babaváró hitelbiztosítás
+
+if
 BABAVÁRÓ KÖLCSÖN KEZ. VÁLL. DÍJ
   account2 Kiadások:Hitel:Babaváró
 

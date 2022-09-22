@@ -6,7 +6,9 @@ if [ ! -f "$1" ]; then
       exit 1
 fi
 
+dir="$(dirname "$1")"
+
 # https://wiki.documentfoundation.org/ReleaseNotes/7.2#Document_Conversion
 # https://wiki.openoffice.org/wiki/Documentation/DevGuide/Spreadsheets/Filter_Options
 
-libreoffice --headless --convert-to csv:"Text - txt - csv (StarCalc)":59,34,UTF8,1,,0,false,true,false,false,false,-1 "$1"
+libreoffice --headless --convert-to csv:"Text - txt - csv (StarCalc)":59,34,UTF8,1,,0,false,true,false,false,false,-1 --outdir "$dir" "$1"
