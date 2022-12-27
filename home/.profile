@@ -38,3 +38,10 @@ if [ -n "$BASH_VERSION" ]; then
     . "$HOME/.bashrc"
   fi
 fi
+
+# GUIX
+if [ -e "$HOME/.config/guix/current" ]; then
+  export GUIX_PROFILE="$HOME/.config/guix/current"
+  export GUIX_LOCPATH="$HOME/.guix-profile/lib/locale"
+  . "$GUIX_PROFILE/etc/profile"
+fi
