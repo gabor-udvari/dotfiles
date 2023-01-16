@@ -45,3 +45,9 @@ if [ -e "$HOME/.config/guix/current" ]; then
   export GUIX_LOCPATH="$HOME/.guix-profile/lib/locale"
   . "$GUIX_PROFILE/etc/profile"
 fi
+
+# Nix
+# If not on NixOS, set the local archive to the native distro
+if command -v nix >/dev/null && [ "$(sed -n 's/^NAME=\"\?\(.*\)\"\?$/\1/p' /etc/os-release)" != "NixOS" ]; then
+  export LOCALE_ARCHIVE="/usr/lib/locale/locale-archive"
+fi
