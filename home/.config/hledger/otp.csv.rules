@@ -208,7 +208,7 @@ HAZISARKANY KFT
   account2 Kiadások:Étel
 
 if
-Székesfehérvár Napsugár Óvoda
+Székesfehérvári Napsugár Óvoda
   account2 Kiadások:Étel:Óvoda
 
 if
@@ -264,6 +264,10 @@ if
 UPC
 VODAFONE MAGYARORSZÁG ZRT
   account2 Kiadások:Szolgáltatók:TV, internet
+
+if
+NETFLIX\.COM
+	account2 Kiadások:Szolgáltatók:Netflix
 
 if
 OTPMOBL\*TELEKOM
