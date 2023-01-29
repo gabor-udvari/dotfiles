@@ -161,3 +161,12 @@ if ! shopt -oq posix; then
 
   source "$HOME/.homesick/repos/homeshick/completions/homeshick-completion.bash"
 fi
+
+# The Guix install script checks for GUIX_ENVIRONMENT, add
+# this here so that the install script does not add it again
+# https://guix-install.sh/
+if [ -n "$GUIX_ENVIRONMENT" ]; then
+  if [[ $PS1 =~ (.*)"\\$" ]]; then
+    PS1="${BASH_REMATCH[1]} [env]\\\$ "
+  fi
+fi
