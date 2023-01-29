@@ -31,14 +31,6 @@ export EDITOR='vim'
 export DEBFULLNAME="Gabor Udvari"
 export DEBEMAIL="gabor.udvari@gmail.com"
 
-# if running bash
-if [ -n "$BASH_VERSION" ]; then
-  # include .bashrc if it exists
-  if [ -f "$HOME/.bashrc" ]; then
-    . "$HOME/.bashrc"
-  fi
-fi
-
 # GUIX
 if [ -e "$HOME/.config/guix/current" ]; then
   export GUIX_PROFILE="$HOME/.config/guix/current"
@@ -50,4 +42,12 @@ fi
 # If not on NixOS, set the local archive to the native distro
 if command -v nix >/dev/null && [ "$(sed -n 's/^NAME=\"\?\([a-zA-Z0-9\/\ ]*\)\"\?$/\1/p' /etc/os-release)" != "NixOS" ]; then
   export LOCALE_ARCHIVE="/usr/lib/locale/locale-archive"
+fi
+
+# if running bash
+if [ -n "$BASH_VERSION" ]; then
+  # include .bashrc if it exists
+  if [ -f "$HOME/.bashrc" ]; then
+    . "$HOME/.bashrc"
+  fi
 fi
