@@ -132,7 +132,9 @@ source "$HOME/.shell_prompt.sh"
 command -v direnv >/dev/null && eval "$(direnv hook bash)"
 
 # source homeshick
-source "$HOME/.homesick/repos/homeshick/homeshick.sh"
+if [ -d $HOME/.homesick/repos/homeshick ]; then
+  source "$HOME/.homesick/repos/homeshick/homeshick.sh"
+fi
 
 # source all .bash scripts in .bashrc.d folder
 if [ -d "$HOME/.bashrc.d" ]; then
@@ -159,7 +161,9 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 
-  source "$HOME/.homesick/repos/homeshick/completions/homeshick-completion.bash"
+  if [ -d $HOME/.homesick/repos/homeshick ]; then
+    source "$HOME/.homesick/repos/homeshick/completions/homeshick-completion.bash"
+  fi
 fi
 
 # The Guix install script checks for GUIX_ENVIRONMENT, add
