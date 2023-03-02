@@ -18,9 +18,6 @@ export XDG_DATA_DIRS="$XDG_DATA_DIRS:$HOME/.local/share"
 # Set timeformat to ISO 8601
 export TIME_STYLE="long-iso"
 
-# Install Ruby Gems to ~/gems
-export GEM_HOME="$HOME/gems"
-
 # PATH settings
 export PATH="$HOME/bin:$HOME/.local/bin:$HOME/.composer/vendor/bin:$HOME/gems/bin:$HOME/lutris/bin:${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 

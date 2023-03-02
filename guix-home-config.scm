@@ -24,6 +24,7 @@
                                             "shellcheck"
                                             "grep"
                                             "findutils"
+                                            "direnv"
                                             )))
 
   ;; Below is the list of Home services.  To search for available
@@ -44,6 +45,6 @@
                           home-files-service-type
                               `((".shell_prompt.sh"
                                   ,(local-file "home/.shell_prompt.sh" "shell_prompt"))
-				(".sync-history.sh"
+                                (".sync-history.sh"
                                   ,(local-file "home/.sync-history.sh" "sync-history")))
                    ))))
