@@ -25,6 +25,8 @@
                                             "grep"
                                             "findutils"
                                             "direnv"
+                                            "tmux"
+                                            "vim"
                                             )))
 
   ;; Below is the list of Home services.  To search for available
