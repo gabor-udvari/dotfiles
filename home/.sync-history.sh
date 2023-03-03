@@ -57,7 +57,7 @@ merge_orphaned_history() {
       *)
         local fpid
         fpid=$(echo "$f" | grep -o '[0-9]*$')
-        if ! ps -p "$fpid" -o pid= >/dev/null; then
+        if ! ps -p "$fpid" -o pid= >/dev/null && [ -f "$f" ]; then
           echo -n "Merging orphaned history file:"
           echo -n " $(basename "$f")"
           cat "$f" >> "$HISTFILE"
