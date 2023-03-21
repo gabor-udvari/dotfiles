@@ -21,6 +21,7 @@
   ;; Below is the list of packages that will show up in your
   ;; Home profile, under ~/.guix-home/profile.
   (packages (specifications->packages (list "glibc-locales"
+                                            "emacs"
                                             "shellcheck"
                                             "grep"
                                             "findutils"
@@ -48,5 +49,7 @@
                               `((".shell_prompt.sh"
                                   ,(local-file "home/.shell_prompt.sh" "shell_prompt"))
                                 (".sync-history.sh"
-                                  ,(local-file "home/.sync-history.sh" "sync-history")))
+                                  ,(local-file "home/.sync-history.sh" "sync-history"))
+                                (".emacs.d/init.el"
+                                  ,(local-file "home/.emacs.d/init.el" "emacs-init")))
                    ))))
