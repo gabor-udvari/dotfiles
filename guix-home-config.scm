@@ -57,8 +57,8 @@
                                   ,(local-file "home/.shell_prompt.sh" "shell_prompt"))
                                 (".sync-history.sh"
                                   ,(local-file "home/.sync-history.sh" "sync-history"))
-                                (".emacs.d/init.el"
-                                  ,(local-file "home/.emacs.d/init.el" "emacs-init"))))
+                                (".config/emacs/init.el"
+                                  ,(local-file "home/.config/emacs/init.el" "emacs-init"))))
           (simple-service 'my-home-services
                     home-shepherd-service-type
                     (list (shepherd-service
