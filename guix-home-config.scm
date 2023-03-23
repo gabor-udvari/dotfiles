@@ -7,7 +7,9 @@
 (use-modules (gnu home)
              (gnu home services)
              (gnu home services shells)
+             (gnu home services shepherd)
              (gnu packages)
+             (gnu packages emacs)
              (gnu services)
              (guix gexp))
 
@@ -16,6 +18,11 @@
          (string-append (getenv "HOME") "/software/guix-home/" path)
             name
                #:recursive? #t))
+
+(define (home-log name)
+        #~(string-append (or (getenv "XDG_LOG_HOME")
+                             (string-append (getenv "HOME") "/.log"))
+                         "/" #$name ".log"))
 
 (home-environment
   ;; Below is the list of packages that will show up in your
@@ -51,5 +58,16 @@
                                 (".sync-history.sh"
                                   ,(local-file "home/.sync-history.sh" "sync-history"))
                                 (".emacs.d/init.el"
-                                  ,(local-file "home/.emacs.d/init.el" "emacs-init")))
-                   ))))
+                                  ,(local-file "home/.emacs.d/init.el" "emacs-init"))))
+          (simple-service 'my-home-services
+                    home-shepherd-service-type
+                    (list (shepherd-service
+                           (provision '(emacs))
+                           (documentation "Run `emacs --daemon'")
+                           (start #~(make-forkexec-constructor
+                                     (list #$(file-append emacs "/bin/emacs")
+                                           "--fg-daemon")
+                                     #:log-file #$(home-log "emacs")))
+                           (stop #~(make-system-destructor "emacsclient -e '(kill-emacs)'"))
+                           (respawn? #f))))
+          )))
