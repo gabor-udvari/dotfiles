@@ -29,6 +29,11 @@
   ;; Home profile, under ~/.guix-home/profile.
   (packages (specifications->packages (list "glibc-locales"
                                             "emacs"
+                                            "emacs-evil"
+                                            "emacs-evil-collection"
+                                            "emacs-evil-commentary"
+                                            "emacs-org"
+                                            "emacs-org-roam"
                                             "shellcheck"
                                             "grep"
                                             "findutils"
