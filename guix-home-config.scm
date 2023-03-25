@@ -34,6 +34,7 @@
                                             "emacs-evil-commentary"
                                             "emacs-org"
                                             "emacs-org-roam"
+                                            "emacs-vterm"
                                             "shellcheck"
                                             "grep"
                                             "findutils"

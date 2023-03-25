@@ -21,7 +21,8 @@
 (dolist (mode '(org-mode-hook
                 term-mode-hook
                 shell-mode-hook
-                eshell-mode-hook))
+                eshell-mode-hook
+                vterm-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
 ;; Move customization variables to separate file and load it
@@ -43,7 +44,8 @@
   (dolist (mode '(custom-mode
                   eshell-mode
                   git-rebase-mode
-                  term-mode))
+                  term-mode
+                  vterm-mode))
   (add-to-list 'evil-emacs-state-modes mode)))
 
 (require 'evil)
