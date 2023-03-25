@@ -13,6 +13,27 @@
 
 (load-theme 'wombat)
 
+;; Enable line numbers globally
+(column-number-mode)
+(global-display-line-numbers-mode t)
+
+;; Disable line numbers for some modes
+(dolist (mode '(org-mode-hook
+                term-mode-hook
+                shell-mode-hook
+                eshell-mode-hook))
+  (add-hook mode (lambda () (display-line-numbers-mode 0))))
+
+;; Move customization variables to separate file and load it
+(setq custom-file (locate-user-emacs-file "customer-vars.el"))
+(load custom-file 'noerror 'nomessage)
+
+;; Prevent GUI dialogs
+(setq use-dialog-box nil)
+
+;; Automatically revert buffers
+(global-auto-revert-mode 1)
+
 ;; Guix home already installed the packages for us,
 ;; no need to use package.el or use-package
 
