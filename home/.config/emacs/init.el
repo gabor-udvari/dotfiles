@@ -61,3 +61,14 @@
 
 ;; Configure evil-collection
 (evil-collection-init)
+
+;; Configure hunspell
+(setq ispell-program-name "hunspell")
+(setq ispell-hunspell-dict-paths-alist
+  '(("hu_HU" "~/.guix-home/profile/share/hunspell/hu_HU.aff")
+    ("en_US" "~/.guix-home/profile/share/hunspell/en_US.aff")
+   ))
+(setq ispell-local-dictionary-alist
+  '(("Hungarian" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "hu_HU") nil utf-8)
+    ("English"   "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US") nil utf-8)
+   ))

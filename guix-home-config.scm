@@ -41,6 +41,9 @@
                                             "direnv"
                                             "tmux"
                                             "vim"
+					    "hunspell"
+					    "hunspell-dict-hu"
+					    "hunspell-dict-en"
                                             )))
 
   ;; Below is the list of Home services.  To search for available
