@@ -10,18 +10,23 @@
              (gnu home services shepherd)
              (gnu packages)
              (gnu packages emacs)
+             (gnu packages containers)
              (gnu services)
              (guix gexp))
 
 (define (make-file path name)
-    (local-file
-         (string-append (getenv "HOME") "/software/guix-home/" path)
-            name
-               #:recursive? #t))
+         (local-file
+           (string-append (getenv "HOME") "/software/guix-home/" path)
+           name
+           #:recursive? #t))
 
+;; Put logs into XDG_LOG_HOME/#$name.log
+;; Or $HOME/.local/var/log/$#name.log
 (define (home-log name)
-        #~(string-append (or (getenv "XDG_LOG_HOME")
-                             (string-append (getenv "HOME") "/.log"))
+        #~(string-append (format #f "~a"
+                                 (or (getenv "XDG_LOG_HOME")
+                                     (format #f "~a/.local/var/log"
+                                             (getenv "HOME"))))
                          "/" #$name ".log"))
 
 (home-environment
@@ -41,9 +46,11 @@
                                             "direnv"
                                             "tmux"
                                             "vim"
-					    "hunspell"
-					    "hunspell-dict-hu"
-					    "hunspell-dict-en"
+                                            "hunspell"
+                                            "hunspell-dict-hu"
+                                            "hunspell-dict-en"
+                                            "podman"
+                                            "docker-compose"
                                             )))
 
   ;; Below is the list of Home services.  To search for available
@@ -60,6 +67,16 @@
                      (bash-logout (list (local-file
                                          "home/.bash_logout"
                                          "bash_logout")))))
+
+          (simple-service 'env-vars-service
+                          home-environment-variables-service-type
+                          `(("DOCKER_HOST" .  ,(string-append "unix://"
+                                                              (or (getenv "XDG_RUNTIME_DIR")
+                                                                     (format #f "/run/user/~a"
+                                                                       (getuid)))
+                                                              "/podman/podman.sock"))
+                                ))
+
           (simple-service 'dotfiles-symlinking-service
                           home-files-service-type
                               `((".shell_prompt.sh"
@@ -68,7 +85,8 @@
                                   ,(local-file "home/.sync-history.sh" "sync-history"))
                                 (".config/emacs/init.el"
                                   ,(local-file "home/.config/emacs/init.el" "emacs-init"))))
-          (simple-service 'my-home-services
+
+          (simple-service 'emacsdaemon
                     home-shepherd-service-type
                     (list (shepherd-service
                            (provision '(emacs))
@@ -79,4 +97,24 @@
                                      #:log-file #$(home-log "emacs")))
                            (stop #~(make-system-destructor "emacsclient -e '(kill-emacs)'"))
                            (respawn? #f))))
+
+          ;; Socket activated podman, you can compare with the systemd unit files here:
+          ;; https://github.com/containers/podman/issues/9633
+          (simple-service 'podman-socket
+                    home-shepherd-service-type
+                    (list (shepherd-service
+                            (provision '(podman))
+                            (documentation "Start a systemd like podman.socket")
+                            (start #~(make-systemd-constructor
+                                      (list #$(file-append podman "/bin/podman")
+                                            "system" "service" "-t" "0")
+                                      (list (endpoint
+                                              (make-socket-address
+                                                AF_UNIX
+                                                (string-append (or (getenv "XDG_RUNTIME_DIR")
+                                                                   (format #f "/run/user/~a"
+                                                                     (getuid)))
+                                                 "/podman/podman.sock"))))
+                                      #:log-file #$(home-log "podman")))
+                            (stop #~(make-systemd-destructor)))))
           )))
