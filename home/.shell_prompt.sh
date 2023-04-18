@@ -186,7 +186,7 @@ function __promptline {
       __promptline_ps1
     fi
   else
-    PS1="$(__promptline_ps1)"
+    PS1="$(__promptline_ps1)"'\[$(vterm_prompt_end)\]'
   fi
 }
 

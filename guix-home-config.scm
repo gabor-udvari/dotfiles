@@ -34,13 +34,18 @@
   ;; Home profile, under ~/.guix-home/profile.
   (packages (specifications->packages (list "glibc-locales"
                                             "emacs"
+                                            "emacs-doom-modeline"
                                             "emacs-evil"
                                             "emacs-evil-collection"
                                             "emacs-evil-commentary"
                                             "emacs-org"
+                                            "emacs-org-superstar"
                                             "emacs-org-roam"
+                                            "emacs-visual-fill-column"
                                             "emacs-vterm"
                                             "shellcheck"
+                                            "jq"
+                                            "python-yamllint"
                                             "grep"
                                             "findutils"
                                             "direnv"
@@ -115,6 +120,10 @@
                                                                    (format #f "/run/user/~a"
                                                                      (getuid)))
                                                  "/podman/podman.sock"))))
+                                      #:environment-variables (append (default-environment-variables)
+                                                                        (list (string-append "CONTAINERS_REGISTRIES_CONF="
+                                                                                             (getenv "HOME")
+                                                                                             "/.config/containers/registries.conf")))
                                       #:log-file #$(home-log "podman")))
                             (stop #~(make-systemd-destructor)))))
           )))
