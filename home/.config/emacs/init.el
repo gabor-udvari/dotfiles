@@ -25,10 +25,6 @@
                 vterm-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
-;; Move customization variables to separate file and load it
-(setq custom-file (locate-user-emacs-file "customer-vars.el"))
-(load custom-file 'noerror 'nomessage)
-
 ;; Prevent GUI dialogs
 (setq use-dialog-box nil)
 
@@ -37,6 +33,55 @@
 
 ;; Guix home already installed the packages for us,
 ;; no need to use package.el or use-package
+
+;; Configure no-littering
+(require 'no-littering)
+;; Move auto-save files to var
+(setq auto-save-file-name-transforms
+      `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
+;; Store custom-file in etc
+(setq custom-file (no-littering-expand-etc-file-name "custom.el"))
+(load custom-file 'noerror 'nomessage)
+
+;; Load all the icons before the dashboard
+(require 'all-the-icons)
+
+;; Configure dashboard
+(defun myhooks/dashboard-font-setup ()
+  (dolist (face '((dashboard-banner-logo-title . 1.4)
+                  (dashboard-text-banner . 1.2)
+                  (dashboard-heading . 1.1)
+                  (dashboard-items-face . 1.0)))
+    (set-face-attribute (car face) nil :font "Cantarell" :weight 'regular :height (cdr face))))
+
+(require 'dashboard)
+(add-hook 'dashboard-setup-startup-hook #'myhooks/dashboard-font-setup)
+(dashboard-setup-startup-hook)
+;; Allow emacsclient -c to show dashboard as well
+(setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
+;; Set the banner
+(setq dashboard-startup-banner 'logo)
+;; Content is not centered by default. To center, set
+(setq dashboard-center-content t)
+;; Configure widgets
+(setq dashboard-items '((recents  . 5)
+                        (bookmarks . 5)
+                        (projects . 5)
+                        (agenda . 5)
+                        (registers . 5)))
+(setq dashboard-set-heading-icons t)
+(setq dashboard-set-file-icons t)
+(setq dashboard-set-footer nil)
+
+;; Configure ivy
+(ivy-mode)
+(setq ivy-use-virtual-buffers t)
+(setq enable-recursive-minibuffers t)
+
+;; Configure Projectile
+(projectile-mode +1)
+;; Recommended keymap prefix on Windows/Linux
+(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
 
 ;; Configure evil
 ;; For certain modes start in Emacs mode by default
@@ -48,7 +93,6 @@
                   vterm-mode))
   (add-to-list 'evil-emacs-state-modes mode)))
 
-(require 'all-the-icons)
 (require 'doom-modeline)
 (doom-modeline-mode 1)
 
@@ -132,3 +176,10 @@
 
 (require 'visual-fill-column)
 (add-hook 'org-mode-hook #'myhooks/org-mode-visual-fill)
+
+;; In case of dashboard mode do a dashboard-refresh-buffer
+;; As seen in https://github.com/emacs-dashboard/emacs-dashboard/issues/433#issuecomment-1468060398
+(add-hook 'server-after-make-frame-hook
+            (lambda ()
+              (when (eq (buffer-local-value 'major-mode (current-buffer)) 'dashboard-mode)
+                (dashboard-refresh-buffer))))

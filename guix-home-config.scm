@@ -35,9 +35,14 @@
   (packages (specifications->packages (list "glibc-locales"
                                             "emacs"
                                             "emacs-doom-modeline"
+                                            "emacs-dashboard"
                                             "emacs-evil"
                                             "emacs-evil-collection"
                                             "emacs-evil-commentary"
+                                            "emacs-ivy"
+                                            "emacs-no-littering"
+                                            "emacs-magit"
+                                            "emacs-projectile"
                                             "emacs-org"
                                             "emacs-org-superstar"
                                             "emacs-org-roam"
@@ -100,7 +105,7 @@
                                      (list #$(file-append emacs "/bin/emacs")
                                            "--fg-daemon")
                                      #:log-file #$(home-log "emacs")))
-                           (stop #~(make-system-destructor "emacsclient -e '(kill-emacs)'"))
+                           (stop #~(make-system-destructor "emacsclient -e '(client-save-kill-emacs)'"))
                            (respawn? #f))))
 
           ;; Socket activated podman, you can compare with the systemd unit files here:

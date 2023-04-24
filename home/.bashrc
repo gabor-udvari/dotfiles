@@ -91,6 +91,8 @@ if [ ! -d "$HOME/.screen" ]; then
 fi
 export SCREENDIR=$HOME/.screen
 
+export PATH="$PATH:$HOME/bin"
+
 #
 # EXPORTS
 
