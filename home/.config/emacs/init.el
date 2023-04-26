@@ -22,7 +22,9 @@
                 term-mode-hook
                 shell-mode-hook
                 eshell-mode-hook
-                vterm-mode-hook))
+                vterm-mode-hook
+                markdown-mode-hook
+                ))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
 ;; Prevent GUI dialogs
@@ -183,3 +185,28 @@
             (lambda ()
               (when (eq (buffer-local-value 'major-mode (current-buffer)) 'dashboard-mode)
                 (dashboard-refresh-buffer))))
+
+;; Configure markdown-mode
+(defun myhooks/markdown-font-setup ()
+  ;; Set faces for heading levels
+  (dolist (face '((markdown-header-face-1 . 1.2)
+                  (markdown-header-face-2 . 1.1)
+                  (markdown-header-face-3 . 1.05)
+                  (markdown-header-face-4 . 1.0)
+                  (markdown-header-face-5 . 1.1)
+                  (markdown-header-face-6 . 1.1)
+                  (markdown-markup-face . 1.0)
+                  ))
+    (set-face-attribute (car face) nil :font "Cantarell" :weight 'regular :height (cdr face)))
+  )
+
+(autoload 'markdown-mode "markdown-mode"
+   "Major mode for editing Markdown files" t)
+(add-to-list 'auto-mode-alist
+             '("\\.\\(?:md\\|markdown\\|mkd\\|mdown\\|mkdn\\|mdwn\\)\\'" . markdown-mode))
+
+(autoload 'gfm-mode "markdown-mode"
+   "Major mode for editing GitHub Flavored Markdown files" t)
+(add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode))
+
+(add-hook 'markdown-mode-hook #'myhooks/markdown-font-setup)

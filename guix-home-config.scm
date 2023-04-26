@@ -42,6 +42,7 @@
                                             "emacs-ivy"
                                             "emacs-no-littering"
                                             "emacs-magit"
+                                            "emacs-markdown-mode"
                                             "emacs-projectile"
                                             "emacs-org"
                                             "emacs-org-superstar"
