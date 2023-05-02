@@ -47,6 +47,7 @@
                                             "emacs-org"
                                             "emacs-org-superstar"
                                             "emacs-org-roam"
+                                            "emacs-yaml-mode"
                                             "emacs-visual-fill-column"
                                             "emacs-vterm"
                                             "shellcheck"

@@ -210,3 +210,7 @@
 (add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode))
 
 (add-hook 'markdown-mode-hook #'myhooks/markdown-font-setup)
+
+;; Configure yaml-mode
+(require 'yaml-mode)
+(add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
