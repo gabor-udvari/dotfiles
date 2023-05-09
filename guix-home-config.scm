@@ -9,16 +9,17 @@
              (gnu home services shells)
              (gnu home services shepherd)
              (gnu packages)
+             (gnu packages base)
              (gnu packages emacs)
              (gnu packages containers)
              (gnu services)
              (guix gexp))
 
-(define (make-file path name)
-         (local-file
-           (string-append (getenv "HOME") "/software/guix-home/" path)
-           name
-           #:recursive? #t))
+(define my-glibc-locales
+  (make-glibc-utf8-locales
+   glibc
+   #:locales (list "hu_HU" "en_US")
+   #:name "glibc-hungarian-utf8-locales"))
 
 ;; Put logs into XDG_LOG_HOME/#$name.log
 ;; Or $HOME/.local/var/log/$#name.log
@@ -32,7 +33,8 @@
 (home-environment
   ;; Below is the list of packages that will show up in your
   ;; Home profile, under ~/.guix-home/profile.
-  (packages (specifications->packages (list "glibc-locales"
+  (packages (append
+              (specifications->packages (list "glibc-locales"
                                             "emacs"
                                             "emacs-doom-modeline"
                                             "emacs-dashboard"
@@ -52,18 +54,23 @@
                                             "emacs-vterm"
                                             "shellcheck"
                                             "jq"
-                                            "python-yamllint"
+                                            ;; "python-yamllint"
                                             "grep"
                                             "findutils"
                                             "direnv"
                                             "tmux"
                                             "vim"
+                                            "pdfgrep"
+                                            "qpdf"
                                             "hunspell"
                                             "hunspell-dict-hu"
                                             "hunspell-dict-en"
                                             "podman"
                                             "docker-compose"
-                                            )))
+                                            ))
+              (list my-glibc-locales)
+              )
+            )
 
   ;; Below is the list of Home services.  To search for available
   ;; services, run 'guix home search KEYWORD' in a terminal.

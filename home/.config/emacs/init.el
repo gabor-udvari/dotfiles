@@ -33,6 +33,9 @@
 ;; Automatically revert buffers
 (global-auto-revert-mode 1)
 
+;; Make ESC quit prompts
+(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+
 ;; Guix home already installed the packages for us,
 ;; no need to use package.el or use-package
 
@@ -50,30 +53,39 @@
 
 ;; Configure dashboard
 (defun myhooks/dashboard-font-setup ()
-  (dolist (face '((dashboard-banner-logo-title . 1.4)
-                  (dashboard-text-banner . 1.2)
-                  (dashboard-heading . 1.1)
-                  (dashboard-items-face . 1.0)))
+  (dolist (face '((dashboard-text-banner . 1.4)
+                  (dashboard-banner-logo-title . 1.4)
+                  (dashboard-heading . 1.2)
+                  (dashboard-items-face . 1.0)
+                  (dashboard-no-items-face . 1.0)))
     (set-face-attribute (car face) nil :font "Cantarell" :weight 'regular :height (cdr face))))
 
 (require 'dashboard)
-(add-hook 'dashboard-setup-startup-hook #'myhooks/dashboard-font-setup)
-(dashboard-setup-startup-hook)
+(setq dashboard-set-heading-icons t)
+(myhooks/dashboard-font-setup)
 ;; Allow emacsclient -c to show dashboard as well
 (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
 ;; Set the banner
 (setq dashboard-startup-banner 'logo)
+;; Disable emacs title
+(setq dashboard-banner-logo-title "")
 ;; Content is not centered by default. To center, set
 (setq dashboard-center-content t)
 ;; Configure widgets
 (setq dashboard-items '((recents  . 5)
-                        (bookmarks . 5)
                         (projects . 5)
                         (agenda . 5)
                         (registers . 5)))
-(setq dashboard-set-heading-icons t)
 (setq dashboard-set-file-icons t)
 (setq dashboard-set-footer nil)
+(dashboard-setup-startup-hook)
+
+;; In case of dashboard mode do a dashboard-refresh-buffer
+;; As seen in https://github.com/emacs-dashboard/emacs-dashboard/issues/433#issuecomment-1468060398
+(add-hook 'server-after-make-frame-hook
+            (lambda ()
+              (when (eq (buffer-local-value 'major-mode (current-buffer)) 'dashboard-mode)
+                (dashboard-refresh-buffer))))
 
 ;; Configure ivy
 (ivy-mode)
@@ -85,7 +97,12 @@
 ;; Recommended keymap prefix on Windows/Linux
 (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
 
+;; Doom-modeline
+(require 'doom-modeline)
+(doom-modeline-mode 1)
+
 ;; Configure evil
+
 ;; For certain modes start in Emacs mode by default
 (defun myhooks/evil-hook ()
   (dolist (mode '(custom-mode
@@ -94,12 +111,6 @@
                   term-mode
                   vterm-mode))
   (add-to-list 'evil-emacs-state-modes mode)))
-
-(require 'doom-modeline)
-(doom-modeline-mode 1)
-
-;; Make ESC quit prompts
-(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
 (setq evil-want-keybinding nil)
 (require 'evil)
@@ -179,14 +190,8 @@
 (require 'visual-fill-column)
 (add-hook 'org-mode-hook #'myhooks/org-mode-visual-fill)
 
-;; In case of dashboard mode do a dashboard-refresh-buffer
-;; As seen in https://github.com/emacs-dashboard/emacs-dashboard/issues/433#issuecomment-1468060398
-(add-hook 'server-after-make-frame-hook
-            (lambda ()
-              (when (eq (buffer-local-value 'major-mode (current-buffer)) 'dashboard-mode)
-                (dashboard-refresh-buffer))))
-
 ;; Configure markdown-mode
+
 (defun myhooks/markdown-font-setup ()
   ;; Set faces for heading levels
   (dolist (face '((markdown-header-face-1 . 1.2)

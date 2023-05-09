@@ -29,10 +29,21 @@ export DEBFULLNAME="Gabor Udvari"
 export DEBEMAIL="gabor.udvari@gmail.com"
 
 # GUIX
-if [ -e "$HOME/.config/guix/current" ]; then
-  export GUIX_PROFILE="$HOME/.config/guix/current"
-  export GUIX_LOCPATH="$HOME/.guix-profile/lib/locale"
+# https://guix.gnu.org/manual/en/html_node/Getting-Started.html
+if [ -e "$HOME/.guix-profile" ]; then
+  GUIX_PROFILE="$HOME/.guix-profile"
   . "$GUIX_PROFILE/etc/profile"
+fi
+
+# https://guix.gnu.org/manual/en/html_node/Getting-Started.html
+if [ -e "$HOME/.config/guix/current" ]; then
+  GUIX_PROFILE="$HOME/.config/guix/current"
+  . "$GUIX_PROFILE/etc/profile"
+fi
+
+# https://guix.gnu.org/manual/en/html_node/Application-Setup.html#Locales-1
+if [ -e "$HOME/.guix-profile/lib/locale" ]; then
+  export GUIX_LOCPATH="$HOME/.guix-profile/lib/locale"
 fi
 
 # Nix
