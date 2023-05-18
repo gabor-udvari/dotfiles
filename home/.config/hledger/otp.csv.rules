@@ -140,6 +140,7 @@ OTP EP MOBIL APP
 PLÁZA PATIKA
 LUXURYNAILS
 REXTRA KFT
+Parfum-Eden
   account2 Kiadások:Egészség
 
 if NEMZETI DOHÁNYBOLT
@@ -190,6 +191,8 @@ NEW YORKER
 TAKKO
 LARA DIVATARUHAZ
 OVISJEL\.HU
+ÁZSIA HÁZ
+shein\.com
   account2 Kiadások:Ruha
 
 if
@@ -254,7 +257,12 @@ KOZPONT PARKOLASI CSOP
 
 if
 MOL Nyrt
+OMV
   account2 Kiadások:Autó:Tankolás
+
+if
+FACEBK
+  account2 Kiadások:Fotózás
 
 if
 OTPMOBL\*EON\.HU
@@ -267,7 +275,7 @@ VODAFONE MAGYARORSZÁG ZRT
 
 if
 NETFLIX\.COM
-	account2 Kiadások:Szolgáltatók:Netflix
+  account2 Kiadások:Szolgáltatók:Netflix
 
 if
 OTPMOBL\*TELEKOM

@@ -34,9 +34,10 @@
   ;; Below is the list of packages that will show up in your
   ;; Home profile, under ~/.guix-home/profile.
   (packages (append
-              (specifications->packages (list "glibc-locales"
+              (specifications->packages (list ;; "glibc-locales"
                                             "emacs"
                                             "emacs-doom-modeline"
+                                            "emacs-disable-mouse"
                                             "emacs-dashboard"
                                             "emacs-evil"
                                             "emacs-evil-collection"
@@ -47,10 +48,11 @@
                                             "emacs-markdown-mode"
                                             "emacs-projectile"
                                             "emacs-org"
-                                            "emacs-org-superstar"
                                             "emacs-org-roam"
+                                            "emacs-org-modern"
                                             "emacs-yaml-mode"
                                             "emacs-visual-fill-column"
+                                            "emacs-eat"
                                             "emacs-vterm"
                                             "shellcheck"
                                             "jq"

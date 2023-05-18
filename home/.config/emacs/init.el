@@ -23,6 +23,7 @@
                 shell-mode-hook
                 eshell-mode-hook
                 vterm-mode-hook
+                eat-mode-hook
                 markdown-mode-hook
                 ))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
@@ -177,11 +178,12 @@
 (setq org-hide-leading-stars nil)
 (myhooks/org-font-setup)
 
-(require 'org-superstar)
-(add-hook 'org-mode-hook (lambda () (org-superstar-mode 1)))
-;; Hide leading bullets
-(setq org-superstar-leading-bullet ?\s)
+;; Configure Org-Roam
+(setq org-roam-directory (file-truename "~/org-roam"))
+(require 'org-roam)
+(org-roam-db-autosync-mode)
 
+;; Configure Visual Fill
 (defun myhooks/org-mode-visual-fill ()
   (setq visual-fill-column-width 100
         visual-fill-column-center-text t)
@@ -189,6 +191,9 @@
 
 (require 'visual-fill-column)
 (add-hook 'org-mode-hook #'myhooks/org-mode-visual-fill)
+
+;; Configure org-modern
+(with-eval-after-load 'org (global-org-modern-mode))
 
 ;; Configure markdown-mode
 
@@ -219,3 +224,12 @@
 ;; Configure yaml-mode
 (require 'yaml-mode)
 (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
+
+;; Configure disable mouse
+(require 'disable-mouse)
+(global-disable-mouse-mode)
+(mapc #'disable-mouse-in-keymap
+  (list evil-motion-state-map
+        evil-normal-state-map
+        evil-visual-state-map
+        evil-insert-state-map))

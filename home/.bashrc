@@ -144,6 +144,10 @@ vterm_prompt_end(){
 # NOTE: we do not set PS1, because shell_prompt.sh will set PROMPT_COMMAND
 # PS1=$PS1'\[$(vterm_prompt_end)\]'
 
+# emacs-eat shell integration
+[ -n "$EAT_SHELL_INTEGRATION_DIR" ] && \
+  source "$EAT_SHELL_INTEGRATION_DIR/bash"
+
 #
 # SOURCING
 
