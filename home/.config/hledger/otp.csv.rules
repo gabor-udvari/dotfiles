@@ -92,6 +92,7 @@ Települési támogatás
 
 if
 KAMATJÓVÁÍRÁS
+OTP KEDVEZMÉNYPROGR
   account2 Bevételek:Banki kamat
 
 if
@@ -208,6 +209,7 @@ PIZZAFORTE\.HU
 SAP ÉTTEREM
 PASA KEBAB
 HAZISARKANY KFT
+BISTRO
   account2 Kiadások:Étel
 
 if
@@ -253,11 +255,13 @@ NAV belföldi gépjárműadó
 PARKOLÓ
 TOYOTA MAYER
 KOZPONT PARKOLASI CSOP
+BALATON PLÁZA
   account2 Kiadások:Autó
 
 if
 MOL Nyrt
 OMV
+MOL * sz\. toltoall
   account2 Kiadások:Autó:Tankolás
 
 if

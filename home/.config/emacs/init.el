@@ -75,8 +75,7 @@
 ;; Configure widgets
 (setq dashboard-items '((recents  . 5)
                         (projects . 5)
-                        (agenda . 5)
-                        (registers . 5)))
+                        (agenda . 5)))
 (setq dashboard-set-file-icons t)
 (setq dashboard-set-footer nil)
 (dashboard-setup-startup-hook)
@@ -184,18 +183,21 @@
 (org-roam-db-autosync-mode)
 
 ;; Configure Visual Fill
-(defun myhooks/org-mode-visual-fill ()
+(defun myhooks/visual-fill ()
   (setq visual-fill-column-width 100
         visual-fill-column-center-text t)
   (visual-fill-column-mode 1))
 
 (require 'visual-fill-column)
-(add-hook 'org-mode-hook #'myhooks/org-mode-visual-fill)
+(add-hook 'org-mode-hook #'myhooks/visual-fill)
 
 ;; Configure org-modern
 (with-eval-after-load 'org (global-org-modern-mode))
 
 ;; Configure markdown-mode
+(defun myhooks/markdown-mode-setup ()
+  (variable-pitch-mode 1)
+  (visual-line-mode 1))
 
 (defun myhooks/markdown-font-setup ()
   ;; Set faces for heading levels
@@ -220,16 +222,35 @@
 (add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode))
 
 (add-hook 'markdown-mode-hook #'myhooks/markdown-font-setup)
+(add-hook 'markdown-mode-hook #'myhooks/markdown-mode-setup)
+(add-hook 'markdown-mode-hook #'myhooks/visual-fill)
 
 ;; Configure yaml-mode
 (require 'yaml-mode)
 (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
 
+;; EMMS
+(require 'emms-setup)
+(emms-all)
+(setq emms-player-list '(emms-player-mpv)
+      emms-info-functions '(emms-info-native))
+
 ;; Configure disable mouse
 (require 'disable-mouse)
 (global-disable-mouse-mode)
+
+;; This code is still unreleased for disable-mouse
+;;;###autoload
+(defun disable-mouse-in-keymap (map &optional include-targets)
+  "Rebind all mouse commands in MAP so that they are disabled.
+When INCLUDE-TARGETS is non-nil, also disable mouse actions that
+target GUI elements such as the modeline."
+  (dolist (binding (disable-mouse--all-bindings include-targets))
+    (define-key map binding 'disable-mouse--handle)))
+
 (mapc #'disable-mouse-in-keymap
-  (list evil-motion-state-map
+  (list dashboard-mode-map
+        evil-motion-state-map
         evil-normal-state-map
         evil-visual-state-map
         evil-insert-state-map))
