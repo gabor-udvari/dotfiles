@@ -83,15 +83,18 @@
   (services
     (list (service home-bash-service-type
                    (home-bash-configuration
-                     (bash-profile (list (local-file
-                                    "home/.profile"
-                                    "bash_profile")))
+                     (guix-defaults? #f)
                      (bashrc (list (local-file
                                     "home/.bashrc"
                                     "bashrc")))
                      (bash-logout (list (local-file
                                          "home/.bash_logout"
                                          "bash_logout")))))
+
+          ;; Extend .profile with my own
+          (simple-service 'my-profile
+                          home-shell-profile-service-type
+                              `(,(local-file "home/.profile" "profile")))
 
           (simple-service 'env-vars-service
                           home-environment-variables-service-type
