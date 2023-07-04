@@ -59,7 +59,7 @@
                   (dashboard-heading . 1.2)
                   (dashboard-items-face . 1.0)
                   (dashboard-no-items-face . 1.0)))
-    (set-face-attribute (car face) nil :font "Cantarell" :weight 'regular :height (cdr face))))
+    (set-face-attribute (car face) nil :font "cantarell" :weight 'regular :height (cdr face))))
 
 (require 'dashboard)
 (setq dashboard-set-heading-icons t)
@@ -159,7 +159,7 @@
                   (org-level-6 . 1.1)
                   (org-level-7 . 1.1)
                   (org-level-8 . 1.1)))
-    (set-face-attribute (car face) nil :font "Cantarell" :weight 'regular :height (cdr face)))
+    (set-face-attribute (car face) nil :font "cantarell" :weight 'regular :height (cdr face)))
 
   ;; Ensure that anything that should be fixed-pitch in Org files appears that way
   (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
@@ -234,6 +234,22 @@
 (emms-all)
 (setq emms-player-list '(emms-player-mpv)
       emms-info-functions '(emms-info-native))
+
+;; Configure tramp
+(require 'tramp)
+;; Based on tramp-sh.el https://git.savannah.gnu.org/cgit/tramp.git/tree/lisp/tramp-sh.el
+(add-to-list 'tramp-methods
+             '("mysudo"
+                   (tramp-login-program        "env")
+                   (tramp-login-args           (("SUDO_PROMPT=P\"\"a\"\"s\"\"s\"\"w\"\"o\"\"r\"\"d\"\":")
+                                                ("sudo") ("su") ("-") ("%u") ))
+                   (tramp-remote-shell         "/bin/sh")
+                   (tramp-remote-shell-login   ("-l"))
+                   (tramp-remote-shell-args    ("-c"))
+                   (tramp-connection-timeout   10)
+                   (tramp-session-timeout      300)
+                   (tramp-password-previous-hop t)))
+;; (setq tramp-use-ssh-controlmaster-options nil)
 
 ;; Configure disable mouse
 (require 'disable-mouse)

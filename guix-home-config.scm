@@ -55,6 +55,8 @@
                                             "emacs-visual-fill-column"
                                             "emacs-eat"
                                             "emacs-vterm"
+                                            "fontconfig"
+                                            "font-abattis-cantarell"
                                             "shellcheck"
                                             "jq"
                                             "python-yamllint"
