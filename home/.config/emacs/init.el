@@ -72,6 +72,8 @@
 (setq dashboard-banner-logo-title "")
 ;; Content is not centered by default. To center, set
 (setq dashboard-center-content t)
+;; Configure project.el
+(setq dashboard-projects-backend 'project-el)
 ;; Configure widgets
 (setq dashboard-items '((recents  . 5)
                         (projects . 5)
@@ -92,11 +94,6 @@
 (setq ivy-use-virtual-buffers t)
 (setq enable-recursive-minibuffers t)
 
-;; Configure Projectile
-(projectile-mode +1)
-;; Recommended keymap prefix on Windows/Linux
-(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
-
 ;; Doom-modeline
 (require 'doom-modeline)
 (doom-modeline-mode 1)
@@ -109,7 +106,9 @@
                   eshell-mode
                   git-rebase-mode
                   term-mode
-                  vterm-mode))
+                  vterm-mode
+                  dashboard-mode
+                  ))
   (add-to-list 'evil-emacs-state-modes mode)))
 
 (setq evil-want-keybinding nil)
@@ -121,10 +120,13 @@
 (evil-global-set-key 'motion "j" 'evil-next-visual-line)
 (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
 (evil-set-initial-state 'messages-buffer-mode 'normal)
-(evil-set-initial-state 'dashboard-mode 'normal)
+;; (evil-set-initial-state 'dashboard-mode 'normal)
 
 ;; Configure evil-collection
 (evil-collection-init)
+
+;; Configure evil-commentary-mode
+(evil-commentary-mode)
 
 ;; Configure hunspell
 (setq ispell-program-name "hunspell")
@@ -177,11 +179,6 @@
 (setq org-hide-leading-stars nil)
 (myhooks/org-font-setup)
 
-;; Configure Org-Roam
-(setq org-roam-directory (file-truename "~/org-roam"))
-(require 'org-roam)
-(org-roam-db-autosync-mode)
-
 ;; Configure Visual Fill
 (defun myhooks/visual-fill ()
   (setq visual-fill-column-width 100
@@ -191,10 +188,32 @@
 (require 'visual-fill-column)
 (add-hook 'org-mode-hook #'myhooks/visual-fill)
 
-;; Configure org-modern
+;; Configure org-modern -------------------------------------------------------------------
 (with-eval-after-load 'org (global-org-modern-mode))
 
-;; Configure markdown-mode
+;; Configure denote ----------------------------------------------------------------------
+
+(require 'denote)
+
+;; Remember to check the doc strings of those variables.
+(setq denote-directory (expand-file-name "~/Jegyzetek/"))
+(setq denote-infer-keywords t)
+(setq denote-sort-keywords t)
+(setq denote-file-type nil) ; Org is the default, set others here
+(setq denote-prompts '(subdirectory title keywords))
+(setq denote-excluded-directories-regexp nil)
+(setq denote-excluded-keywords-regexp nil)
+
+;; Pick dates, where relevant, with Org's advanced interface:
+(setq denote-date-prompt-use-org-read-date t)
+
+(setq denote-allow-multi-word-keywords t)
+
+;; By default, we do not show the context of links.  We just display
+;; file names.  This provides a more informative view.
+(setq denote-backlinks-show-context t)
+
+;; Configure markdown-mode ----------------------------------------------------------------
 (defun myhooks/markdown-mode-setup ()
   (variable-pitch-mode 1)
   (visual-line-mode 1))
@@ -209,7 +228,7 @@
                   (markdown-header-face-6 . 1.1)
                   (markdown-markup-face . 1.0)
                   ))
-    (set-face-attribute (car face) nil :font "Cantarell" :weight 'regular :height (cdr face)))
+    (set-face-attribute (car face) nil :font "cantarell" :weight 'regular :height (cdr face)))
   )
 
 (autoload 'markdown-mode "markdown-mode"
@@ -225,11 +244,11 @@
 (add-hook 'markdown-mode-hook #'myhooks/markdown-mode-setup)
 (add-hook 'markdown-mode-hook #'myhooks/visual-fill)
 
-;; Configure yaml-mode
+;; Configure yaml-mode -----------------------------------------------------------------------
 (require 'yaml-mode)
 (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
 
-;; EMMS
+;; EMMS ------------------------------------------------------------------------------------
 (require 'emms-setup)
 (emms-all)
 (setq emms-player-list '(emms-player-mpv)
@@ -251,7 +270,7 @@
                    (tramp-password-previous-hop t)))
 ;; (setq tramp-use-ssh-controlmaster-options nil)
 
-;; Configure disable mouse
+;; Configure disable mouse -----------------------------------------------------------------
 (require 'disable-mouse)
 (global-disable-mouse-mode)
 
@@ -269,4 +288,5 @@ target GUI elements such as the modeline."
         evil-motion-state-map
         evil-normal-state-map
         evil-visual-state-map
-        evil-insert-state-map))
+        evil-insert-state-map
+        ))

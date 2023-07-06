@@ -210,6 +210,7 @@ SAP ÉTTEREM
 PASA KEBAB
 HAZISARKANY KFT
 BISTRO
+DON-PEPE
   account2 Kiadások:Étel
 
 if
@@ -275,7 +276,7 @@ OTPMOBL\*EON\.HU
 if
 UPC
 VODAFONE MAGYARORSZÁG ZRT
-  account2 Kiadások:Szolgáltatók:TV, internet
+  account2 Kiadások:Szolgáltatók:TV, internet, mobil
 
 if
 NETFLIX\.COM
