@@ -89,9 +89,9 @@
               (when (eq (buffer-local-value 'major-mode (current-buffer)) 'dashboard-mode)
                 (dashboard-refresh-buffer))))
 
-;; Configure ivy
-(ivy-mode)
-(setq ivy-use-virtual-buffers t)
+;; Configure vertico
+(require 'vertico)
+(vertico-mode)
 (setq enable-recursive-minibuffers t)
 
 ;; Doom-modeline

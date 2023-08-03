@@ -211,6 +211,7 @@ PASA KEBAB
 HAZISARKANY KFT
 BISTRO
 DON-PEPE
+ARCO SERVICE
   account2 Kiadások:Étel
 
 if
@@ -257,12 +258,15 @@ PARKOLÓ
 TOYOTA MAYER
 KOZPONT PARKOLASI CSOP
 BALATON PLÁZA
+GUMIFLEX SZFVAR
   account2 Kiadások:Autó
 
 if
 MOL Nyrt
 OMV
 MOL * sz\. toltoall
+SZÉKESFEHÉRVÁR BENZ
+MOL 21202 sz\. toltoall
   account2 Kiadások:Autó:Tankolás
 
 if

@@ -35,6 +35,7 @@
   ;; Home profile, under ~/.guix-home/profile.
   (packages (append
               (specifications->packages (list ;; "glibc-locales"
+                                            "bind:utils"
                                             "emacs"
                                             "emacs-doom-modeline"
                                             "emacs-disable-mouse"
@@ -44,7 +45,6 @@
                                             "emacs-evil"
                                             "emacs-evil-collection"
                                             "emacs-evil-commentary"
-                                            "emacs-ivy"
                                             "emacs-no-littering"
                                             "emacs-magit"
                                             "emacs-markdown-mode"
@@ -53,6 +53,7 @@
                                             "emacs-yaml-mode"
                                             "emacs-visual-fill-column"
                                             "emacs-eat"
+                                            "emacs-vertico"
                                             "emacs-vterm"
                                             "fontconfig"
                                             "font-abattis-cantarell"
