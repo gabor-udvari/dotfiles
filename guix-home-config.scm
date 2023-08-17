@@ -61,6 +61,8 @@
                                             "jq"
                                             "python-yamllint"
                                             "grep"
+                                            "git"
+                                            "git-annex"
                                             "findutils"
                                             "direnv"
                                             "tmux"
