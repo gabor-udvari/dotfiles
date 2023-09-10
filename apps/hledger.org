@@ -1,10 +1,21 @@
-#############################
-# General OTP configurations
-# This is for the new OTP Portal format which was introduced
-# in late 2021. The old OTP Portal format was retired on the
-# on the 1st March 2022.
-#############################
+* Hledger
 
+** CSV rules for importing from OTP Bank
+
+OTP Bank is a Hungarian bank. It supports exporting the transactions into Excel. The older interface OTP Direkt exports into XLS, the new OTP Internetbank exports into XLSX format.
+
+*** OTP Internetbank
+
+The current OTP Internetbank was introduced in late 2021. The old OTP Portal format was retired on the on the 1st March 2022. The current OTP Internetbank exports into an XLSX format which needs to be converted into CSV first. After that, the following CSV import rules can be used.
+
+**** General, format related configurations
+
+#+BEGIN_SRC text :noweb yes :exports none :mkdirp yes :tangle ../build/config/hledger/otp.csv.rules
+  <<otp>>
+#+END_SRC
+
+#+BEGIN_SRC text :noweb-ref otp
+# Use ; as separator
 separator ;
 
 # First line is a header
@@ -40,11 +51,13 @@ description %transfer_name %desc
 
 # Add currency symbol on the right:
 amount %quantity %curr
+#+END_SRC
 
-############################
-# Custom categorizations
-############################
+**** Custom category configurations
 
+The following category configs are customized how I am grouping my transfers. You should take this as inspiration only.
+
+#+BEGIN_SRC text :noweb-ref otp
 # Default accounts
 account1 Eszközök:Közös folyószámla
 account2 Kiadások:Ismeretlen
@@ -388,3 +401,63 @@ okosjatek.hu
 FEZEN
 TROPICARIUM
   account2 Kiadások:Szórakozás
+#+END_SRC
+
+*** OTP SZÉP kártya
+
+OTP SZÉP kártya is a cafeteria type card, it can be used in restaurants, hotels, etc. The SZÉP card transfers can be downloaded from the older OTP Direkt interface in an XLS format. The XLS needs to be converted into CSV, after that, the following rules can be used.
+
+**** General, format related configs
+
+#+BEGIN_SRC text :noweb yes :exports none :mkdirp yes :tangle ../build/config/hledger/otp-szep.csv.rules
+  <<otp-szep>>
+#+END_SRC
+
+#+BEGIN_SRC text :noweb-ref otp-szep
+  # Use ; as separator
+  separator ;
+
+  # First line is a header
+  skip 3
+
+  # sub_account can be: Vendéglátás, Szállás, Szabadidő
+  fields date, sub_account, account_number, quant_to, quant_from, description
+
+  # Specify the date field's format
+  date-format %Y.%m.%d.
+
+  # Add currency symbol on the right:
+  amount -%quant_from HUF
+
+  # Replace amount with amount_from if not null
+  if %quant_to [1-9]
+    amount %quant_to HUF
+
+  ############################
+  # Custom categorizations
+  ############################
+
+  # Default accounts
+  account1 Eszközök:Gábor szépkártya:Vendéglátás
+  account2 Kiadások:Étel
+
+  # Set account1 if there is a transaction to (less frequent)
+  if %quant_to [1-9]
+    account2 Bevételek:Gábor cafeteria
+#+END_SRC
+
+** Guix home config for linking the tangled config
+
+#+begin_src scheme :noweb-ref guix-home
+  (define %home-services
+    (append %home-services
+        (list
+              (simple-service 'hledger-symlinking-service
+                              home-files-service-type
+                                  `((".config/hledger/otp.csv.rules"
+                                      ,(local-file "config/hledger/otp.csv.rules" "otp_csv_rules"))
+                                    (".config/hledger/otp-szep.csv.rules"
+                                        ,(local-file "config/hledger/otp-szep.csv.rules" "otp_szep_csv_rules"))
+                                   )
+    ))))
+#+end_src

@@ -1,0 +1,42 @@
+* Gabor Udvari's dotfiles
+
+All the dotfiles are maintained in org-mode files as literate configuration. This was done in the hope that the different snippets can be understood and copied separately regardless of your own dotfiles solution. Feel free to browse through the different files and use whatever you like.
+
+** Installation
+
+You can compile the whole config by running make in the repository. The Makefile will extract all the actual configuration files first, and then it will do a guix reconfigure based on the target. You can find more explanation regarding these two steps below.
+
+*** 0. Requirements
+
+For installation you will need make, emacs and emacs-org. If you already have guix installed on your system, then you can launch a shell with all of the required libraries with the following command:
+
+#+begin_src shell
+guix shell --search-paths --manifest=manifest.scm
+#+end_src
+
+The repository also have a direnv config file, if you also have that, then the above command will be run for you whenever you step into the directory of the repository.
+
+*** 1. Entanglement
+
+You will need to start from an Emacs installation with org-mode configured. All the actual configuration files are stored in org-mode files and they need to be extracted into their own actual files.
+
+#+begin_src shell
+emacs --batch --eval "(require 'org)" --eval '(org-babel-tangle-file "README.org")'
+#+end_src
+
+*** 2. Guix reconfiguration
+
+Once the configuration files are extracted from the org-mode documentations, either the Guix Home or the Guix System needs to be reconfigured depending what you want to refresh.
+
+#+begin_src shell
+guix home reconfigure -L build guix-home-config.scm
+#+end_src
+
+#+begin_src shell
+guix system reconfigure -L build guix-system-config.scm
+#+end_src
+
+** Other literate configs for inspiration
+
+- https://github.com/dustinlyons/guix-config/tree/main
+- https://github.com/hiecaq/guix-config#references-and-recommendations

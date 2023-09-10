@@ -290,3 +290,9 @@ target GUI elements such as the modeline."
         evil-visual-state-map
         evil-insert-state-map
         ))
+
+;; direnv support
+(envrc-global-mode)
+
+;; Support for colors in the compilation buffer
+(add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
