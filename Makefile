@@ -10,8 +10,7 @@ install: --config-home --install-home
 	@{ \
 		echo -e "${GREEN_TERMINAL_OUTPUT}--> [Makefile] Building Home...${CLEAR}"
 		-mkdir build
-		cat guix/home-header.org apps/hledger.org guix/home.org >build/tangle.org
-		# cat guix/home.org >build/tangle.org
+		cat guix/home-header.org apps/emacs.org apps/hledger.org guix/home.org >build/tangle.org
 		emacs --batch --eval "(require 'org)" --eval '(org-babel-tangle-file "build/tangle.org")'
 		cp -pr home build/home
 	}

@@ -1,22 +1,13 @@
 * Guix home
 
 #+BEGIN_SRC scheme :noweb-ref guix-home
-  (define my-glibc-locales
-    (make-glibc-utf8-locales
-     glibc
-     #:locales (list "hu_HU" "en_US")
-     #:name "glibc-hungarian-utf8-locales"))
+(define my-glibc-locales
+  (make-glibc-utf8-locales
+   glibc
+   #:locales (list "hu_HU" "en_US")
+   #:name "glibc-hungarian-utf8-locales"))
 
-  ;; Put logs into XDG_LOG_HOME/#$name.log
-  ;; Or $HOME/.local/var/log/$#name.log
-  (define (home-log name)
-          #~(string-append (format #f "~a"
-                                   (or (getenv "XDG_LOG_HOME")
-                                       (format #f "~a/.local/var/log"
-                                               (getenv "HOME"))))
-                           "/" #$name ".log"))
-
-  (home-environment
+(home-environment
     ;; Below is the list of packages that will show up in your
     ;; Home profile, under ~/.guix-home/profile.
     (packages (append
@@ -100,21 +91,7 @@
                                 `((".shell_prompt.sh"
                                     ,(local-file "home/.shell_prompt.sh" "shell_prompt"))
                                   (".sync-history.sh"
-                                    ,(local-file "home/.sync-history.sh" "sync-history"))
-                                  (".config/emacs/init.el"
-                                    ,(local-file "home/.config/emacs/init.el" "emacs-init"))))
-
-            (simple-service 'emacsdaemon
-                      home-shepherd-service-type
-                      (list (shepherd-service
-                             (provision '(emacs))
-                             (documentation "Run `emacs --daemon'")
-                             (start #~(make-forkexec-constructor
-                                       (list #$(file-append emacs "/bin/emacs")
-                                             "--fg-daemon")
-                                       #:log-file #$(home-log "emacs")))
-                             (stop #~(make-system-destructor "emacsclient -e '(client-save-kill-emacs)'"))
-                             (respawn? #f))))
+                                    ,(local-file "home/.sync-history.sh" "sync-history"))))
 
             ;; Socket activated podman, you can compare with the systemd unit files here:
             ;; https://github.com/containers/podman/issues/9633
