@@ -232,7 +232,6 @@ As seen on https://www.youtube.com/watch?v=74zOY-vgkyw
 
   ;; Org Agenda
   (setq org-agenda-files (list (expand-file-name "~/Jegyzetek")))
-  (add-hook 'focus-in-hook 'org-agenda-list)
 #+END_SRC
 
 *** Visual Fill
