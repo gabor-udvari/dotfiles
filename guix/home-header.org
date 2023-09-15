@@ -3,29 +3,33 @@
 Header definitions for the Guix Home configuration.
 
 #+BEGIN_SRC scheme :noweb yes :tangle ../build/guix-home-config.scm
-<<guix-home>>
+  <<guix-home>>
 #+END_SRC
 
 #+BEGIN_SRC scheme :noweb-ref guix-home
-(use-modules (gnu home)
-           (gnu home services)
-           (gnu home services shells)
-           (gnu home services shepherd)
-           (gnu packages)
-           (gnu packages base)
-           (gnu packages emacs)
-           (gnu packages containers)
-           (gnu services)
-           (guix gexp))
+  (use-modules (gnu home)
+               (gnu home services)
+               (gnu home services shells)
+               (gnu home services shepherd)
+               (gnu packages)
+               (gnu packages base)
+               (gnu packages emacs)
+               (gnu packages containers)
+               (gnu services)
+               (guix gexp))
 
-;; Put logs into XDG_LOG_HOME/#$name.log
-;; Or $HOME/.local/var/log/$#name.log
-(define (home-log name)
-        #~(string-append (format #f "~a"
-                                 (or (getenv "XDG_LOG_HOME")
-                                     (format #f "~a/.local/var/log"
-                                             (getenv "HOME"))))
-                         "/" #$name ".log"))
+  ;; Put logs into XDG_LOG_HOME/#$name.log
+  ;; Or $HOME/.local/var/log/$#name.log
+  (define (home-log name)
+    #~(string-append (format #f "~a"
+                             (or (getenv "XDG_LOG_HOME")
+                                 (format #f "~a/.local/var/log"
+                                         (getenv "HOME"))))
+                     "/" #$name ".log"))
 
-(define %home-services '())
+  ;; We will collect the different application services into this list
+  (define %home-services '())
+
+  ;; We will collect the different application packages into this list
+  (define %home-packages '())
 #+END_SRC

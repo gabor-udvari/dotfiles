@@ -1,120 +1,95 @@
 * Guix home
 
 #+BEGIN_SRC scheme :noweb-ref guix-home
-(define my-glibc-locales
-  (make-glibc-utf8-locales
-   glibc
-   #:locales (list "hu_HU" "en_US")
-   #:name "glibc-hungarian-utf8-locales"))
+  (define my-glibc-locales
+    (make-glibc-utf8-locales
+     glibc
+     #:locales (list "hu_HU" "en_US")
+     #:name "glibc-hungarian-utf8-locales"))
 
-(home-environment
-    ;; Below is the list of packages that will show up in your
-    ;; Home profile, under ~/.guix-home/profile.
-    (packages (append
-                (specifications->packages (list ;; "glibc-locales"
-                                              "bind:utils"
-                                              "emacs"
-                                              "emacs-doom-modeline"
-                                              "emacs-disable-mouse"
-                                              "emacs-dashboard"
-                                              "emacs-denote"
-                                              "emacs-emms"
-                                              "emacs-envrc"
-                                              "emacs-evil"
-                                              "emacs-evil-collection"
-                                              "emacs-evil-commentary"
-                                              "emacs-no-littering"
-                                              "emacs-magit"
-                                              "emacs-markdown-mode"
-                                              "emacs-org"
-                                              "emacs-org-modern"
-                                              "emacs-yaml-mode"
-                                              "emacs-visual-fill-column"
-                                              "emacs-eat"
-                                              "emacs-vertico"
-                                              "emacs-vterm"
-                                              "fontconfig"
-                                              "font-abattis-cantarell"
-                                              "shellcheck"
-                                              "jq"
-                                              "python-yamllint"
-                                              "grep"
-                                              "git"
-                                              "git-annex"
-                                              "findutils"
-                                              "direnv"
-                                              "tmux"
-                                              "vim"
-                                              "pdfgrep"
-                                              "qpdf"
-                                              "mpv"
-                                              "hunspell"
-                                              "hunspell-dict-hu"
-                                              "hunspell-dict-en"
-                                              "podman"
-                                              "docker-compose"
-                                              ))
-                (list my-glibc-locales)
-                )
-              )
+  (home-environment
+   ;; Below is the list of packages that will show up in your
+   ;; Home profile, under ~/.guix-home/profile.
+   (packages (append
+              (specifications->packages (append (list ;; "glibc-locales"
+                                                 "bind:utils"
+                                                 "fontconfig"
+                                                 "font-abattis-cantarell"
+                                                 "shellcheck"
+                                                 "jq"
+                                                 "python-yamllint"
+                                                 "grep"
+                                                 "git"
+                                                 "git-annex"
+                                                 "findutils"
+                                                 "tmux"
+                                                 "vim"
+                                                 "pdfgrep"
+                                                 "qpdf"
+                                                 "podman"
+                                                 "docker-compose"
+                                                 )
+                                                %home-packages))
+              (list my-glibc-locales))
+             )
 
-    ;; Below is the list of Home services.  To search for available
-    ;; services, run 'guix home search KEYWORD' in a terminal.
-    (services
-      (append %home-services
-        (list (service home-bash-service-type
-                     (home-bash-configuration
-                       (guix-defaults? #f)
-                       (bashrc (list (local-file
-                                      "home/.bashrc"
-                                      "bashrc")))
-                       (bash-logout (list (local-file
-                                           "home/.bash_logout"
-                                           "bash_logout")))))
+   ;; Below is the list of Home services.  To search for available
+   ;; services, run 'guix home search KEYWORD' in a terminal.
+   (services
+    (append %home-services
+            (list (service home-bash-service-type
+                           (home-bash-configuration
+                            (guix-defaults? #f)
+                            (bashrc (list (local-file
+                                           "home/.bashrc"
+                                           "bashrc")))
+                            (bash-logout (list (local-file
+                                                "home/.bash_logout"
+                                                "bash_logout")))))
 
-            ;; Extend .profile with my own
-            (simple-service 'my-profile
-                            home-shell-profile-service-type
-                                `(,(local-file "home/.profile" "profile")))
+                  ;; Extend .profile with my own
+                  (simple-service 'my-profile
+                                  home-shell-profile-service-type
+                                  `(,(local-file "home/.profile" "profile")))
 
-            (simple-service 'env-vars-service
-                            home-environment-variables-service-type
-                            `(("DOCKER_HOST" .  ,(string-append "unix://"
-                                                                (or (getenv "XDG_RUNTIME_DIR")
-                                                                       (format #f "/run/user/~a"
-                                                                         (getuid)))
-                                                                "/podman/podman.sock"))
-                                  ))
+                  (simple-service 'env-vars-service
+                                  home-environment-variables-service-type
+                                  `(("DOCKER_HOST" .  ,(string-append "unix://"
+                                                                      (or (getenv "XDG_RUNTIME_DIR")
+                                                                          (format #f "/run/user/~a"
+                                                                                  (getuid)))
+                                                                      "/podman/podman.sock"))
+                                    ))
 
-            (simple-service 'dotfiles-symlinking-service
-                            home-files-service-type
-                                `((".shell_prompt.sh"
-                                    ,(local-file "home/.shell_prompt.sh" "shell_prompt"))
-                                  (".sync-history.sh"
-                                    ,(local-file "home/.sync-history.sh" "sync-history"))))
+                  (simple-service 'dotfiles-symlinking-service
+                                  home-files-service-type
+                                  `((".shell_prompt.sh"
+                                     ,(local-file "home/.shell_prompt.sh" "shell_prompt"))
+                                    (".sync-history.sh"
+                                     ,(local-file "home/.sync-history.sh" "sync-history"))))
 
-            ;; Socket activated podman, you can compare with the systemd unit files here:
-            ;; https://github.com/containers/podman/issues/9633
-            (simple-service 'podman-socket
-                      home-shepherd-service-type
-                      (list (shepherd-service
-                              (provision '(podman))
-                              (documentation "Start a systemd like podman.socket")
-                              (start #~(make-systemd-constructor
-                                        (list #$(file-append podman "/bin/podman")
-                                              "system" "service" "-t" "0")
-                                        (list (endpoint
-                                                (make-socket-address
-                                                  AF_UNIX
-                                                  (string-append (or (getenv "XDG_RUNTIME_DIR")
-                                                                     (format #f "/run/user/~a"
-                                                                       (getuid)))
-                                                   "/podman/podman.sock"))))
-                                        #:environment-variables (append (default-environment-variables)
-                                                                          (list (string-append "CONTAINERS_REGISTRIES_CONF="
-                                                                                               (getenv "HOME")
-                                                                                               "/.config/containers/registries.conf")))
-                                        #:log-file #$(home-log "podman")))
-                              (stop #~(make-systemd-destructor)))))
-            ))))
+                  ;; Socket activated podman, you can compare with the systemd unit files here:
+                  ;; https://github.com/containers/podman/issues/9633
+                  (simple-service 'podman-socket
+                                  home-shepherd-service-type
+                                  (list (shepherd-service
+                                         (provision '(podman))
+                                         (documentation "Start a systemd like podman.socket")
+                                         (start #~(make-systemd-constructor
+                                                   (list #$(file-append podman "/bin/podman")
+                                                         "system" "service" "-t" "0")
+                                                   (list (endpoint
+                                                          (make-socket-address
+                                                           AF_UNIX
+                                                           (string-append (or (getenv "XDG_RUNTIME_DIR")
+                                                                              (format #f "/run/user/~a"
+                                                                                      (getuid)))
+                                                                          "/podman/podman.sock"))))
+                                                   #:environment-variables (append (default-environment-variables)
+                                                                                   (list (string-append "CONTAINERS_REGISTRIES_CONF="
+                                                                                                        (getenv "HOME")
+                                                                                                        "/.config/containers/registries.conf")))
+                                                   #:log-file #$(home-log "podman")))
+                                         (stop #~(make-systemd-destructor)))))
+                  ))))
 #+END_SRC

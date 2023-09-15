@@ -1,17 +1,23 @@
 #+title: Emacs
 #+author: Gábor Udvari
 
-* Emacs
+* Emacs config
 
-** Emacs config
-
-Everything below will go into the init.el file.
+The Emacs configurations will go into the init.el file.
 
 #+BEGIN_SRC text :noweb yes :exports none :mkdirp yes :tangle ../build/config/emacs/init.el
   <<emacs>>
 #+END_SRC
 
-*** Simpler UI
+The different emacs packages will be installed through Guix home, therefore we will add all the packages to the guix home configuration as well.
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (define %home-packages
+    (append %home-packages
+            (list "emacs")))
+#+END_SRC
+
+** Simpler UI
 
 As seen on https://www.youtube.com/watch?v=74zOY-vgkyw
 
@@ -26,8 +32,6 @@ As seen on https://www.youtube.com/watch?v=74zOY-vgkyw
 
   ;; Enable visible bell
   (setq visible-bell t)
-
-  (load-theme 'wombat)
 
   ;; Enable line numbers globally
   (column-number-mode)
@@ -60,9 +64,56 @@ As seen on https://www.youtube.com/watch?v=74zOY-vgkyw
   ;; no need to use package.el or use-package
 #+END_SRC
 
-*** No littering
+** Ef themes
 
 #+BEGIN_SRC elisp :noweb-ref emacs
+  ;; Make customisations that affect Emacs faces BEFORE loading a theme
+  ;; (any change needs a theme re-load to take effect).
+  (require 'ef-themes)
+
+  ;; If you like two specific themes and want to switch between them, you
+  ;; can specify them in `ef-themes-to-toggle' and then invoke the command
+  ;; `ef-themes-toggle'.  All the themes are included in the variable
+  ;; `ef-themes-collection'.
+  (setq ef-themes-to-toggle '(ef-light ef-symbiosis))
+
+  (setq ef-themes-headings ; read the manual's entry or the doc string
+        '((0 variable-pitch light 1.9)
+          (1 variable-pitch light 1.8)
+          (2 variable-pitch regular 1.7)
+          (3 variable-pitch regular 1.6)
+          (4 variable-pitch regular 1.5)
+          (5 variable-pitch 1.4) ; absence of weight means `bold'
+          (6 variable-pitch 1.3)
+          (7 variable-pitch 1.2)
+          (t variable-pitch 1.1)))
+
+  ;; They are nil by default...
+  (setq ef-themes-mixed-fonts t
+        ef-themes-variable-pitch-ui t)
+
+  ;; Read the doc string or manual for this one.  The symbols can be
+  ;; combined in any order.
+  (setq ef-themes-region '(intense no-extend neutral))
+
+  ;; Disable all other themes to avoid awkward blending:
+  (mapc #'disable-theme custom-enabled-themes)
+
+  ;; Use this to load the theme which also calls `ef-themes-post-load-hook':
+  (ef-themes-select 'ef-symbiosis)
+#+END_SRC
+
+Add the Guix package to the home config:
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (define %home-packages
+    (append %home-packages
+            (list "emacs-ef-themes")))
+#+END_SRC
+
+** No littering
+
+#+BEGIN_SRC elisp :noweb-ref emac
   ;; Configure no-littering
   (require 'no-littering)
   ;; Move auto-save files to var
@@ -73,55 +124,30 @@ As seen on https://www.youtube.com/watch?v=74zOY-vgkyw
   (load custom-file 'noerror 'nomessage)
 #+END_SRC
 
-*** All the icons
+Add the Guix package to the home config:
 
-#+BEGIN_SRC elisp :noweb-ref emacs
-    ;; Load all the icons before the dashboard
-    (require 'all-the-icons)
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (define %home-packages
+    (append %home-packages
+            (list "emacs-no-littering")))
 #+END_SRC
 
-*** Dashboard
+** All the icons
 
 #+BEGIN_SRC elisp :noweb-ref emacs
-  ;; Configure dashboard
-  (defun myhooks/dashboard-font-setup ()
-    (dolist (face '((dashboard-text-banner . 1.4)
-                    (dashboard-banner-logo-title . 1.4)
-                    (dashboard-heading . 1.2)
-                    (dashboard-items-face . 1.0)
-                    (dashboard-no-items-face . 1.0)))
-      (set-face-attribute (car face) nil :font "cantarell" :weight 'regular :height (cdr face))))
-
-  (require 'dashboard)
-  (setq dashboard-set-heading-icons t)
-  (myhooks/dashboard-font-setup)
-  ;; Allow emacsclient -c to show dashboard as well
-  (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
-  ;; Set the banner
-  (setq dashboard-startup-banner 'logo)
-  ;; Disable emacs title
-  (setq dashboard-banner-logo-title "")
-  ;; Content is not centered by default. To center, set
-  (setq dashboard-center-content t)
-  ;; Configure project.el
-  (setq dashboard-projects-backend 'project-el)
-  ;; Configure widgets
-  (setq dashboard-items '((recents  . 5)
-                          (projects . 5)
-                          (agenda . 5)))
-  (setq dashboard-set-file-icons t)
-  (setq dashboard-set-footer nil)
-  (dashboard-setup-startup-hook)
-
-  ;; In case of dashboard mode do a dashboard-refresh-buffer
-  ;; As seen in https://github.com/emacs-dashboard/emacs-dashboard/issues/433#issuecomment-1468060398
-  (add-hook 'server-after-make-frame-hook
-              (lambda ()
-                (when (eq (buffer-local-value 'major-mode (current-buffer)) 'dashboard-mode)
-                  (dashboard-refresh-buffer))))
+  ;; Load all the icons before the dashboard
+  (require 'all-the-icons)
 #+END_SRC
 
-*** Vertico
+Add the Guix package to the home config:
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (define %home-packages
+    (append %home-packages
+            (list "emacs-all-the-icons")))
+#+END_SRC
+
+** Vertico
 
 #+BEGIN_SRC elisp :noweb-ref emacs
   ;; Configure vertico
@@ -130,7 +156,15 @@ As seen on https://www.youtube.com/watch?v=74zOY-vgkyw
   (setq enable-recursive-minibuffers t)
 #+END_SRC
 
-*** Doom modeline
+Add the Guix package to the home config:
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (define %home-packages
+    (append %home-packages
+            (list "emacs-vertico")))
+#+END_SRC
+
+** Doom modeline
 
 
 #+BEGIN_SRC elisp :noweb-ref emacs
@@ -139,7 +173,15 @@ As seen on https://www.youtube.com/watch?v=74zOY-vgkyw
   (doom-modeline-mode 1)
 #+END_SRC
 
-*** Evil
+Add the Guix package to the home config:
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (define %home-packages
+    (append %home-packages
+            (list "emacs-doom-modeline")))
+#+END_SRC
+
+** Evil
 
 #+BEGIN_SRC elisp :noweb-ref emacs
   ;; For certain modes start in Emacs mode by default
@@ -149,9 +191,8 @@ As seen on https://www.youtube.com/watch?v=74zOY-vgkyw
                     git-rebase-mode
                     term-mode
                     vterm-mode
-                    dashboard-mode
                     ))
-    (add-to-list 'evil-emacs-state-modes mode)))
+      (add-to-list 'evil-emacs-state-modes mode)))
 
   (setq evil-want-keybinding nil)
   (require 'evil)
@@ -162,7 +203,6 @@ As seen on https://www.youtube.com/watch?v=74zOY-vgkyw
   (evil-global-set-key 'motion "j" 'evil-next-visual-line)
   (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
   (evil-set-initial-state 'messages-buffer-mode 'normal)
-  ;; (evil-set-initial-state 'dashboard-mode 'normal)
 
   ;; Configure evil-collection
   (evil-collection-init)
@@ -171,7 +211,17 @@ As seen on https://www.youtube.com/watch?v=74zOY-vgkyw
   (evil-commentary-mode)
 #+END_SRC
 
-*** Hunspell
+Add the Guix packages to the home config:
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (define %home-packages
+    (append %home-packages
+            (list "emacs-evil"
+                  "emacs-evil-collection"
+                  "emacs-evil-commentary")))
+#+END_SRC
+
+** Hunspell
 
 #+BEGIN_SRC elisp :noweb-ref emacs
   ;; Configure hunspell
@@ -186,7 +236,17 @@ As seen on https://www.youtube.com/watch?v=74zOY-vgkyw
      ))
 #+END_SRC
 
-*** Org-mode
+Add the Guix packages to the home config:
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (define %home-packages
+    (append %home-packages
+            (list "hunspell"
+                  "hunspell-dict-hu"
+                  "hunspell-dict-en")))
+#+END_SRC
+
+** Org-mode
 
 #+BEGIN_SRC elisp :noweb-ref emacs
   (defun myhooks/org-mode-setup ()
@@ -234,7 +294,16 @@ As seen on https://www.youtube.com/watch?v=74zOY-vgkyw
   (setq org-agenda-files (list (expand-file-name "~/Jegyzetek")))
 #+END_SRC
 
-*** Visual Fill
+Add the Guix packages to the home config:
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (define %home-packages
+    (append %home-packages
+            (list "emacs-org"
+                  "emacs-org-modern")))
+#+END_SRC
+
+** Visual Fill
 
 #+BEGIN_SRC elisp :noweb-ref emacs
   ;; Configure Visual Fill
@@ -247,7 +316,15 @@ As seen on https://www.youtube.com/watch?v=74zOY-vgkyw
   (add-hook 'org-mode-hook #'myhooks/visual-fill)
 #+END_SRC
 
-*** Denote
+Add the Guix packages to the home config:
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (define %home-packages
+    (append %home-packages
+            (list "emacs-visual-fill-column")))
+#+END_SRC
+
+** Denote
 
 #+BEGIN_SRC elisp :noweb-ref emacs
   (require 'denote)
@@ -271,7 +348,15 @@ As seen on https://www.youtube.com/watch?v=74zOY-vgkyw
   (setq denote-backlinks-show-context t)
 #+END_SRC
 
-*** Markdown mode
+Add the Guix package to the home config:
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (define %home-packages
+    (append %home-packages
+            (list "emacs-denote")))
+#+END_SRC
+
+** Markdown mode
 
 #+BEGIN_SRC elisp :noweb-ref emacs
   (defun myhooks/markdown-mode-setup ()
@@ -292,12 +377,12 @@ As seen on https://www.youtube.com/watch?v=74zOY-vgkyw
     )
 
   (autoload 'markdown-mode "markdown-mode"
-     "Major mode for editing Markdown files" t)
+    "Major mode for editing Markdown files" t)
   (add-to-list 'auto-mode-alist
                '("\\.\\(?:md\\|markdown\\|mkd\\|mdown\\|mkdn\\|mdwn\\)\\'" . markdown-mode))
 
   (autoload 'gfm-mode "markdown-mode"
-     "Major mode for editing GitHub Flavored Markdown files" t)
+    "Major mode for editing GitHub Flavored Markdown files" t)
   (add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode))
 
   (add-hook 'markdown-mode-hook #'myhooks/markdown-font-setup)
@@ -305,14 +390,30 @@ As seen on https://www.youtube.com/watch?v=74zOY-vgkyw
   (add-hook 'markdown-mode-hook #'myhooks/visual-fill)
 #+END_SRC
 
-*** YAML mode
+Add the Guix package to the home config:
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (define %home-packages
+    (append %home-packages
+            (list "emacs-markdown-mode")))
+#+END_SRC
+
+** YAML mode
 
 #+BEGIN_SRC elisp :noweb-ref emacs
   (require 'yaml-mode)
   (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
 #+END_SRC
 
-*** EMMS
+Add the Guix package to the home config:
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (define %home-packages
+    (append %home-packages
+            (list "emacs-yaml-mode")))
+#+END_SRC
+
+** EMMS
 
 #+BEGIN_SRC elisp :noweb-ref emacs
   ;; EMMS
@@ -322,7 +423,16 @@ As seen on https://www.youtube.com/watch?v=74zOY-vgkyw
         emms-info-functions '(emms-info-native))
 #+END_SRC
 
-*** Tramp
+Add the Guix packages to the home config:
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (define %home-packages
+    (append %home-packages
+            (list "emacs-emms"
+                  "mpv")))
+#+END_SRC
+
+** Tramp
 
 #+BEGIN_SRC elisp :noweb-ref emacs
   ;; Configure tramp
@@ -330,19 +440,19 @@ As seen on https://www.youtube.com/watch?v=74zOY-vgkyw
   ;; Based on tramp-sh.el https://git.savannah.gnu.org/cgit/tramp.git/tree/lisp/tramp-sh.el
   (add-to-list 'tramp-methods
                '("mysudo"
-                     (tramp-login-program        "env")
-                     (tramp-login-args           (("SUDO_PROMPT=P\"\"a\"\"s\"\"s\"\"w\"\"o\"\"r\"\"d\"\":")
-                                                  ("sudo") ("su") ("-") ("%u") ))
-                     (tramp-remote-shell         "/bin/sh")
-                     (tramp-remote-shell-login   ("-l"))
-                     (tramp-remote-shell-args    ("-c"))
-                     (tramp-connection-timeout   10)
-                     (tramp-session-timeout      300)
-                     (tramp-password-previous-hop t)))
+                 (tramp-login-program        "env")
+                 (tramp-login-args           (("SUDO_PROMPT=P\"\"a\"\"s\"\"s\"\"w\"\"o\"\"r\"\"d\"\":")
+                                              ("sudo") ("su") ("-") ("%u") ))
+                 (tramp-remote-shell         "/bin/sh")
+                 (tramp-remote-shell-login   ("-l"))
+                 (tramp-remote-shell-args    ("-c"))
+                 (tramp-connection-timeout   10)
+                 (tramp-session-timeout      300)
+                 (tramp-password-previous-hop t)))
   ;; (setq tramp-use-ssh-controlmaster-options nil)
 #+END_SRC
 
-*** Disable mouse
+** Disable mouse
 
 #+BEGIN_SRC elisp :noweb-ref emacs
   ;; Configure disable mouse
@@ -359,50 +469,78 @@ As seen on https://www.youtube.com/watch?v=74zOY-vgkyw
       (define-key map binding 'disable-mouse--handle)))
 
   (mapc #'disable-mouse-in-keymap
-    (list dashboard-mode-map
-          evil-motion-state-map
-          evil-normal-state-map
-          evil-visual-state-map
-          evil-insert-state-map
-          ))
+        (list evil-motion-state-map
+              evil-normal-state-map
+              evil-visual-state-map
+              evil-insert-state-map
+              ))
 #+END_SRC
 
-*** Envrc
+Add the Guix packages to the home config:
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (define %home-packages
+    (append %home-packages
+            (list "emacs-disable-mouse")))
+#+END_SRC
+
+** Envrc
 
 #+BEGIN_SRC elisp :noweb-ref emacs
   ;; direnv support
   (envrc-global-mode)
 #+END_SRC
 
-** Guix config
-
-*** Herd service
+Add the Guix packages to the home config:
 
 #+BEGIN_SRC scheme :noweb-ref guix-home
-(define %home-services
-  (append %home-services
-     (list
-       (simple-service 'emacsdaemon
-                 home-shepherd-service-type
-                 (list (shepherd-service
-                        (provision '(emacs))
-                        (documentation "Run `emacs --daemon'")
-                        (start #~(make-forkexec-constructor
-                                  (list #$(file-append emacs "/bin/emacs")
-                                        "--fg-daemon")
-                                  #:log-file #$(home-log "emacs")))
-                        (stop #~(make-system-destructor "emacsclient -e '(client-save-kill-emacs)'"))
-                        (respawn? #f)))))))
+  (define %home-packages
+    (append %home-packages
+            (list "emacs-envrc"
+                  "direnv")))
 #+END_SRC
 
-*** Symlinking the init.el file
+** Various other packages
+
+Add the Guix packages to the home config:
 
 #+BEGIN_SRC scheme :noweb-ref guix-home
-(define %home-services
-  (append %home-services
-     (list
-       (simple-service 'emacs-symlinking-service
-                        home-files-service-type
-                        `((".config/emacs/init.el"
-                          ,(local-file "../build/config/emacs/init.el" "emacs-init")))))))
+  (define %home-packages
+    (append %home-packages
+            (list "emacs-magit"
+                  "emacs-eat"
+                  "emacs-vterm")))
+#+END_SRC
+
+* Guix config
+
+** Herd service
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (define %home-services
+    (append %home-services
+            (list
+             (simple-service 'emacsdaemon
+                             home-shepherd-service-type
+                             (list (shepherd-service
+                                    (provision '(emacs))
+                                    (documentation "Run `emacs --daemon'")
+                                    (start #~(make-forkexec-constructor
+                                              (list #$(file-append emacs "/bin/emacs")
+                                                    "--fg-daemon")
+                                              #:log-file #$(home-log "emacs")))
+                                    (stop #~(make-system-destructor "emacsclient -e '(client-save-kill-emacs)'"))
+                                    (respawn? #f)))))))
+#+END_SRC
+
+** Symlinking the init.el file
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (define %home-services
+    (append %home-services
+            (list
+             (simple-service 'emacs-symlinking-service
+                             home-files-service-type
+                             `((".config/emacs/init.el"
+                                ,(local-file "../build/config/emacs/init.el" "emacs-init")))))))
 #+END_SRC
