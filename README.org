@@ -4,11 +4,11 @@ All the dotfiles are maintained in org-mode files as literate configuration. Thi
 
 ** Installation
 
-You can compile the whole config by running make in the repository. The Makefile will extract all the actual configuration files first, and then it will do a guix reconfigure based on the target. You can find more explanation regarding these two steps below.
+You can compile the whole config by running make in the repository. The Makefile will extract all the actual configuration files first, and then it will do a guix reconfigure based on the target. If ~guix~ is not found, then it will try to link the config files with ~stow~. You can find more explanation regarding these two steps below.
 
 *** 0. Requirements
 
-For installation you will need make, emacs and emacs-org. If you already have guix installed on your system, then you can launch a shell with all of the required libraries with the following command:
+For installation you will need ~make~, ~emacs~ and ~emacs-org~. If you already have ~guix~ installed on your system, then you can launch a shell with all of the required libraries with the following command:
 
 #+begin_src shell
 guix shell --search-paths --manifest=manifest.scm
@@ -24,7 +24,7 @@ You will need to start from an Emacs installation with org-mode configured. All 
 emacs --batch --eval "(require 'org)" --eval '(org-babel-tangle-file "README.org")'
 #+end_src
 
-*** 2. Guix reconfiguration
+*** 2.A Guix reconfiguration
 
 Once the configuration files are extracted from the org-mode documentations, either the Guix Home or the Guix System needs to be reconfigured depending what you want to refresh.
 
@@ -34,6 +34,14 @@ guix home reconfigure -L build guix-home-config.scm
 
 #+begin_src shell
 guix system reconfigure -L build guix-system-config.scm
+#+end_src
+
+*** 2.B Stow linking
+
+If ~guix~ cannot be found, then ~make~ will search for ~stow~. If it finds ~stow~, then it will link all the ~build/home~ files with it to the home directory.
+
+#+begin_src shell
+stow --no-folding --dir=./build --target ~/ home
 #+end_src
 
 ** Other literate configs for inspiration

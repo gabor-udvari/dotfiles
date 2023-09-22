@@ -10,7 +10,7 @@ The current OTP Internetbank was introduced in late 2021. The old OTP Portal for
 
 **** General, format related configurations
 
-#+BEGIN_SRC text :noweb yes :exports none :mkdirp yes :tangle ../build/config/hledger/otp.csv.rules
+#+BEGIN_SRC text :noweb yes :exports none :mkdirp yes :tangle ../build/home/.config/hledger/otp.csv.rules
   <<otp>>
 #+END_SRC
 

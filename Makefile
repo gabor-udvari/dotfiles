@@ -10,17 +10,25 @@ install: --config-home --install-home
 	@{ \
 		echo -e "${GREEN_TERMINAL_OUTPUT}--> [Makefile] Building Home...${CLEAR}"
 		-mkdir build
-		cat guix/home-header.org apps/emacs.org apps/hledger.org guix/home.org >build/tangle.org
+		cat guix/home-header.org apps/*.org guix/home.org >build/tangle.org
 		emacs --batch --eval "(require 'org)" --eval '(org-babel-tangle-file "build/tangle.org")'
-		cp -pr home build/home
+		shopt -s dotglob; cp -pr home/* build/home/
 	}
 
 .ONESHELL:
 --install-home:
 	@{ \
-		echo -e "${GREEN_TERMINAL_OUTPUT}--> Deploying Guix Home...${CLEAR}"
-		if guix home reconfigure ./build/guix-home-config.scm; then
-			 echo -e "${GREEN_TERMINAL_OUTPUT}--> [Makefile] Finished deploying Guix Home.${CLEAR}"
+		if command -v guix; then
+			echo -e "${GREEN_TERMINAL_OUTPUT}--> Deploying Guix Home...${CLEAR}"
+			if guix home reconfigure ./build/guix-home-config.scm; then
+				echo -e "${GREEN_TERMINAL_OUTPUT}--> [Makefile] Finished deploying Guix Home.${CLEAR}"
+			fi
+		elif command -v stow; then
+			echo -e "${CYAN_TERMINAL_OUTPUT}--> Warning: guix not found, deploying with Stow...${CLEAR}"
+			echo -e "${GREEN_TERMINAL_OUTPUT}--> Deploying Stow Home...${CLEAR}"
+			if stow --no-folding --dir=./build --target ~/ home; then
+				echo -e "${GREEN_TERMINAL_OUTPUT}--> [Makefile] Finished deploying Stow home${CLEAR}"
+			fi
 		fi
 	}
 

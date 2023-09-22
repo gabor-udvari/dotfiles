@@ -5,7 +5,7 @@
 
 The Emacs configurations will go into the init.el file.
 
-#+BEGIN_SRC text :noweb yes :exports none :mkdirp yes :tangle ../build/config/emacs/init.el
+#+BEGIN_SRC text :noweb yes :exports none :mkdirp yes :tangle ../build/home/.config/emacs/init.el
   <<emacs>>
 #+END_SRC
 

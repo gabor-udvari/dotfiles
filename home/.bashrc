@@ -43,37 +43,46 @@ if [ -z "$UNDER_SCRIPT" ]; then
 fi
 
 #
-# Start ssh-agent (if exists)
+# Check and start either ssh-pageant or ssh-agent
 #
-if [ -x /usr/bin/ssh-agent ]; then
-  # Create .ssh if not exists
-  if [ ! -d "$HOME"/.ssh ]; then
-    mkdir "$HOME"/.ssh
+for agent in /usr/bin/ssh-pageant /usr/bin/ssh-agent; do
+  if [ -x "$agent" ]; then
+    # Create .ssh if not exists
+    if [ ! -d "$HOME"/.ssh ]; then
+      mkdir "$HOME"/.ssh
+    fi
+
+    export SSH_ENV="$HOME/.ssh/environment"
+
+    # Check if SSH_ENV exists, and if the SSH_AGENT_PID inside it is still running
+    if [ -f "$SSH_ENV" ] && [ "$agent" == "$(tr -d '\0' </proc/"$(sed -n 's/^SSH_.*_PID=\([0-9]\+\).*$/\1/p' "$SSH_ENV")"/cmdline)" ]; then
+      source "$SSH_ENV" >/dev/null
+    fi
+
+    # Check if ssh-agent is already running
+    # Taken from: https://stackoverflow.com/a/48509425
+    /usr/bin/ssh-add -l &>/dev/null
+    add_retval="$?"
+
+    # Only launch a new ssh-agent if ssh-add gives return code 2 or 3.
+    # GNOME keyring only sets SSH_AGENT_LAUNCHER and SSH_AUTH_SOCK,
+    # so only check for SSH_AUTH_SOCK.
+    if [ "$add_retval" -gt 1 ] || [ -z "$SSH_AUTH_SOCK" ]; then
+      # On Cygwin Pageant creates a sock like this:
+      # \\.\pipe\ssh-pageant
+      # This breaks the file and socket tests, so check for this
+      # case first
+      if [[ "$SSH_AUTH_SOCK" =~ ^\\\\.* ]] || [ ! -S "$SSH_AUTH_SOCK" ]; then
+        echo -n "Initialising new SSH agent..."
+        "$agent" > "$SSH_ENV"
+        echo " Done"
+        chmod 600 "$SSH_ENV"
+        source "$SSH_ENV" >/dev/null
+	break
+      fi
+    fi
   fi
-
-  export SSH_ENV="$HOME/.ssh/environment"
-
-  # Check if SSH_ENV exists, and if the SSH_AGENT_PID inside it is still running
-  if [ -f "$SSH_ENV" ] && [ 'ssh-agent' == "$(ps -q "$(sed -n 's/^SSH_AGENT_PID=\([0-9]\+\).*$/\1/p' "$SSH_ENV")" -o comm=)" ]; then
-    source "$SSH_ENV" >/dev/null
-  fi
-
-  # Check if ssh-agent is already running
-  # Taken from: https://stackoverflow.com/a/48509425
-  /usr/bin/ssh-add -l &>/dev/null
-  add_retval="$?"
-
-  # Only launch a new ssh-agent if ssh-add gives return code 3
-  # GNOME keyring only sets SSH_AGENT_LAUNCHER and SSH_AUTH_SOCK,
-  # so only check for SSH_AUTH_SOCK
-  if [ "$add_retval" -eq 3 ] || [ -z "$SSH_AUTH_SOCK" ] ||  [ ! -S "$SSH_AUTH_SOCK" ]; then
-    echo -n "Initialising new SSH agent..."
-    /usr/bin/ssh-agent > "$SSH_ENV"
-    echo " Done"
-    chmod 600 "$SSH_ENV"
-    source "$SSH_ENV" >/dev/null
-  fi
-fi
+done
 
 #
 # Concat SSH config scripts if any
