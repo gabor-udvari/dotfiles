@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # Default prompt from Ubuntu
 
 # set variable identifying the chroot you work in (used in the prompt below)

@@ -57,7 +57,9 @@ merge_orphaned_history() {
       *)
         local fpid
         fpid=$(echo "$f" | grep -o '[0-9]*$')
-        if ! ps -p "$fpid" -o pid= >/dev/null && [ -f "$f" ]; then
+	# The script needs to support Cygwin as well, so
+	# use the /proc files instead of the ps command.
+        if [ ! -d /proc/"$fpid" ] && [ -f "$f" ]; then
           echo -n "Merging orphaned history file:"
           echo -n " $(basename "$f")"
           cat "$f" >> "$HISTFILE"
