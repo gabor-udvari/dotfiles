@@ -30,6 +30,10 @@ install: --config-home --install-home
 				echo -e "${GREEN_TERMINAL_OUTPUT}--> [Makefile] Finished deploying Stow home${CLEAR}"
 			fi
 		fi
+		if [ -d "$HOME"/AppData/Roaming/.emacs.d ]; then
+			echo -e "${GREEN_TERMINAL_OUTPUT}--> [Makefile] Copying init.el to Windows Emacs folder${CLEAR}"
+			cp ./build/home/.config/emacs/init.el "$HOME"/AppData/Roaming/.emacs.d/
+		fi
 	}
 
 clean: 
