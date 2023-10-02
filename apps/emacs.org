@@ -5,7 +5,7 @@
 
 The Emacs configurations will go into the init.el file.
 
-#+BEGIN_SRC text :noweb yes :exports none :mkdirp yes :tangle ../build/home/.config/emacs/init.el
+#+BEGIN_SRC text :noweb yes :exports none :mkdirp yes :tangle home/.config/emacs/init.el
   <<emacs>>
 #+END_SRC
 
@@ -542,5 +542,5 @@ Add the Guix packages to the home config:
              (simple-service 'emacs-symlinking-service
                              home-files-service-type
                              `((".config/emacs/init.el"
-                                ,(local-file "../build/config/emacs/init.el" "emacs-init")))))))
+                                ,(local-file "home/.config/emacs/init.el" "emacs-init")))))))
 #+END_SRC

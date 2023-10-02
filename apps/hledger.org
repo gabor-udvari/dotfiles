@@ -414,7 +414,7 @@ OTP SZÉP kártya is a cafeteria type card, it can be used in restaurants, hotel
 
 **** General, format related configs
 
-#+BEGIN_SRC text :noweb yes :exports none :mkdirp yes :tangle ../build/config/hledger/otp-szep.csv.rules
+#+BEGIN_SRC text :noweb yes :exports none :mkdirp yes :tangle home/.config/hledger/otp-szep.csv.rules
   <<otp-szep>>
 #+END_SRC
 
@@ -460,9 +460,9 @@ OTP SZÉP kártya is a cafeteria type card, it can be used in restaurants, hotel
               (simple-service 'hledger-symlinking-service
                               home-files-service-type
                                   `((".config/hledger/otp.csv.rules"
-                                      ,(local-file "config/hledger/otp.csv.rules" "otp_csv_rules"))
+                                      ,(local-file "home/.config/hledger/otp.csv.rules" "otp_csv_rules"))
                                     (".config/hledger/otp-szep.csv.rules"
-                                        ,(local-file "config/hledger/otp-szep.csv.rules" "otp_szep_csv_rules"))
+                                        ,(local-file "home/.config/hledger/otp-szep.csv.rules" "otp_szep_csv_rules"))
                                    )
     ))))
 #+end_src

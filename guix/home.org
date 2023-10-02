@@ -63,10 +63,10 @@
 
                   (simple-service 'dotfiles-symlinking-service
                                   home-files-service-type
-                                  `((".shell_prompt.sh"
-                                     ,(local-file "home/.shell_prompt.sh" "shell_prompt"))
-                                    (".sync-history.sh"
-                                     ,(local-file "home/.sync-history.sh" "sync-history"))))
+                                  `((".config/bash/bashrc.d/shell_prompt.sh"
+                                     ,(local-file "home/.config/bash/shell_prompt.sh" "shell_prompt"))
+                                    (".config/bash/bashrc.d/sync-history.sh"
+                                     ,(local-file "home/.config/bash/bashrc.d/sync-history.sh" "sync-history"))))
 
                   ;; Socket activated podman, you can compare with the systemd unit files here:
                   ;; https://github.com/containers/podman/issues/9633
