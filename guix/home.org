@@ -22,7 +22,6 @@
                                                  "git"
                                                  "git-annex"
                                                  "findutils"
-                                                 "tmux"
                                                  "vim"
                                                  "pdfgrep"
                                                  "qpdf"
