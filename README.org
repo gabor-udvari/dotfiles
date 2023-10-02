@@ -48,3 +48,4 @@ stow --no-folding --dir=./build --target ~/ home
 
 - https://github.com/dustinlyons/guix-config/tree/main
 - https://github.com/hiecaq/guix-config#references-and-recommendations
+- https://github.com/caisah/emacs.dz
