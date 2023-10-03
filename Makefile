@@ -11,7 +11,9 @@ install: --config-home --install-home
 		echo -e "${GREEN_TERMINAL_OUTPUT}--> [Makefile] Building Home...${CLEAR}"
 		-mkdir build
 		cat guix/home-header.org apps/*.org guix/home.org >build/tangle.org
-		emacs --batch --eval "(require 'org)" --eval '(org-babel-tangle-file "build/tangle.org")'
+		emacs --batch --eval "(require 'org)" \
+			--eval "(add-hook 'org-babel-pre-tangle-hook (lambda () (setq coding-system-for-write 'utf-8-unix)))" \
+			--eval '(org-babel-tangle-file "build/tangle.org")'
 		shopt -s dotglob; cp -pr home/* build/home/
 	}
 
