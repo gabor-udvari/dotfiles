@@ -18,4 +18,5 @@ All the below will go into ~ ~/.ssh/config.d/10-general.config~, and then my .ba
     ServerAliveInterval 240
     ServerAliveCountMax 4
     IdentitiesOnly yes
+    AddKeysToAgent yes
 #+END_SRC
