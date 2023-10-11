@@ -1,0 +1,189 @@
+#+title: VIM
+#+author: Gábor Udvari
+
+* Installation
+
+Add the vim package to the Guix home config:
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (define %home-packages
+    (append %home-packages
+            (list "vim")))
+#+END_SRC
+
+* Configuration
+
+#+BEGIN_SRC text :noweb yes :exports none :mkdirp yes :tangle home/.vim/vimrc
+  <<vimrc>>
+#+END_SRC
+
+#+BEGIN_SRC text :noweb-ref vimrc
+  " Set 'nocompatible' to ward off unexpected things that your distro might
+  " have made, as well as sanely reset options when re-sourcing .vimrc
+  set nocompatible
+
+  if has("autocmd")
+    " Enable plugins, indent
+    filetype plugin indent on
+
+    " Install vim-plug from the web
+    let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
+    if empty(glob(data_dir . '/autoload/plug.vim'))
+      silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+      autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+    endif
+  endif
+
+  call plug#begin()
+  Plug 'tpope/vim-sensible'
+  Plug 'qpkorr/vim-bufkill'
+  Plug 'chr4/nginx.vim'
+  Plug 'vim-airline/vim-airline'
+  Plug 'vim-airline/vim-airline-themes'
+  Plug 'edkolev/tmuxline.vim'
+  Plug 'edkolev/promptline.vim', { 'on': 'PromptlineSnapshot' }
+  Plug 'cormacrelf/vim-colors-github'
+  Plug 'vim-scripts/wombat256.vim'
+  Plug 'tpope/vim-commentary'
+  Plug 'chrisbra/vim-diff-enhanced'
+  Plug 'kana/vim-fakeclip'
+  Plug 'tpope/vim-fugitive'
+  Plug 'elzr/vim-json'
+  Plug 'tpope/vim-sleuth'
+  call plug#end()
+
+  if has("syntax")
+    " switch on syntax highlighting
+    syntax on
+  endif
+
+  if has("folding")
+    " folding settings
+    set foldmethod=indent   "fold based on indent
+    set foldnestmax=10      "deepest fold is 10 levels
+    set nofoldenable        "dont fold by default
+    set foldlevel=1         "this is just what i use
+  endif
+
+  " tabsize settings
+  set tabstop=2
+  set shiftwidth=2
+
+  " disable arrow keys
+  map <up> <nop>
+  map <down> <nop>
+  map <left> <nop>
+  map <right> <nop>
+  imap <up> <nop>
+  imap <down> <nop>
+  imap <left> <nop>
+  imap <right> <nop>
+
+  " numbers
+  set number
+
+  " disable automatic commenting
+  autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+
+  " set swapfiles and backupfiles directory
+  set viminfo=
+  set backupdir=~/.vim/backup/,/tmp//
+  set directory=~/.vim/swp/,/tmp//
+  set undodir=~/.vim/undo/,/tmp//
+
+  "if $TMUX == ''
+  "    set clipboard+=unnamed
+  "endif
+
+  if has("syntax")
+    set t_Co=256
+
+    colorscheme wombat256mod
+  endif
+
+  if has("eval")
+    let g:airline_powerline_fonts=1
+    let g:airline_theme='wombat'
+  endif
+
+  " Set higher font size on Windows
+  " Taken from https://stackoverflow.com/a/39579362
+  set guifont=default
+  if has('windows')
+    "get dpi, strip out utf-16 garbage and new lines
+    "system() converts 0x00 to 0x01 for 'platform independence'
+    "should return something like 'PixelsPerXLogicalInch=192'
+    "get the part from the = to the end of the line (eg '=192') and strip
+    "the first character
+    "and convert to a number
+    let dpi = str2nr(strpart(matchstr(substitute(
+          \system('wmic desktopmonitor get PixelsPerXLogicalInch /value'),
+          \'\%x01\|\%x0a\|\%x0a\|\%xff\|\%xfe', '', 'g'),
+          \'=.*$'), 1))
+    if dpi > 100
+      set guifont=Droid_Sans_Mono_Slashed_for_Pow:h12
+    endif
+  endif
+
+  " Set fugitive to vertical by default
+  set diffopt+=vertical
+
+  " Set patience algorithm by default with EnhancedDiff plugin
+  " started In Diff-Mode set diffexpr (plugin not loaded yet)
+  if &diff
+    let &diffexpr='EnhancedDiff#Diff("git diff", "--word-diff --diff-algorithm=patience")'
+  endif
+
+  " Disable the bell
+  set visualbell
+  set t_vb=
+
+  " Reduce redrawtime to 1000
+  " https://github.com/vim/vim/issues/2712
+  set redrawtime=1000
+
+  " Vim 8.1.0.360 has internal xdiff library
+  " https://vimways.org/2018/the-power-of-diff/
+  "if has("patch-8.1.0360")
+  " set diffopt+=internal,algorithm:patience
+  "endif
+
+  " Taken from: https://vim.fandom.com/wiki/Faster_loading_of_large_files
+  " file is large from 10mb
+  let g:LargeFile = 1024 * 1024 * 10
+  augroup LargeFile
+    au!
+    autocmd BufReadPre * let f=getfsize(expand("<afile>")) | if f > g:LargeFile || f == -2 | call LargeFile() | endif
+  augroup END
+
+  function! LargeFile()
+    " no syntax highlighting etc
+    set eventignore+=FileType
+    " save memory when other file is viewed
+    setlocal bufhidden=unload
+    " is read-only (write with :w new_filename)
+    setlocal buftype=nowrite
+    " no undo possible
+    setlocal undolevels=-1
+    " display message
+    autocmd VimEnter *  echo "The file is larger than " . (g:LargeFile / 1024 / 1024) . " MB, so some options are changed (see .vimrc for details)."
+  endfunction
+
+  " Set Jenkinsfile syntaxhighlight to groovy
+  au BufNewFile,BufRead Jenkinsfile setf groovy
+#+END_SRC
+
+* Guix home config
+
+For linking the tangled config file.
+
+#+begin_src scheme :noweb-ref guix-home
+  (define %home-services
+    (append %home-services
+        (list
+              (simple-service 'vim-symlinking-service
+                              home-files-service-type
+                                  `((".vim/vimrc"
+                                      ,(local-file "home/.vim/vimrc" "vimrc")))
+    ))))
+#+end_src
