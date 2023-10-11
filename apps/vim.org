@@ -28,8 +28,11 @@ Add the vim package to the Guix home config:
 
     " Install vim-plug from the web
     let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
-    if empty(glob(data_dir . '/autoload/plug.vim'))
-      silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+    let plugin_path = data_dir.'/autoload/plug.vim'
+    " Check if we are on Cygwin, then curl will need a Windows path
+    let download_path = has('win32unix') ? trim(system('cygpath -w '.plugin_path)) : plugin_path
+    if empty(glob(plugin_path))
+      silent execute '!curl --create-dirs -fLo "'.download_path.'" https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
       autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
     endif
   endif
