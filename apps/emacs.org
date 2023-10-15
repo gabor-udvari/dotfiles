@@ -17,39 +17,14 @@ The different emacs packages will be installed through Guix home, therefore we w
             (list "emacs")))
 #+END_SRC
 
-** Simpler UI
+** Defaults
 
-As seen on https://www.youtube.com/watch?v=74zOY-vgkyw
+Change some of the defaults to make a more minimal interface.
 
 #+BEGIN_SRC elisp :noweb-ref emacs
-  (setq inhibit-startup-message t)
-
-  (menu-bar-mode -1) ;; Disable menubar
-  (scroll-bar-mode -1) ;; Disable visible scrollbar
-  (tool-bar-mode -1) ;; Disable the toolbar
-  (tooltip-mode -1) ;; Disable tooltips
-  (set-fringe-mode 10) ;; Give some breathing room
-
-  ;; Enable visible bell
-  (setq visible-bell t)
-
-  ;; Enable line numbers globally
-  (column-number-mode)
-  (global-display-line-numbers-mode t)
-
-  ;; Disable line numbers for some modes
-  (dolist (mode '(org-mode-hook
-                  term-mode-hook
-                  shell-mode-hook
-                  eshell-mode-hook
-                  vterm-mode-hook
-                  eat-mode-hook
-                  markdown-mode-hook
-                  ))
-    (add-hook mode (lambda () (display-line-numbers-mode 0))))
-
-  ;; Prevent GUI dialogs
-  (setq use-dialog-box nil)
+  ;; Setup customization file
+  (setq custom-file "~/.config/emacs/custom.el")
+  ;; (load custom-file)
 
   ;; Automatically revert buffers
   (global-auto-revert-mode 1)
@@ -65,6 +40,105 @@ As seen on https://www.youtube.com/watch?v=74zOY-vgkyw
     (mapc 'load (file-expand-wildcards "~/.emacs.d/init.d/*.el"))
     (mapc 'load (file-expand-wildcards "~/.config/emacs/init.d/*.el"))
   )
+
+  ;; y/n for  answering yes/no questions
+  (fset 'yes-or-no-p 'y-or-n-p)
+
+  (setq-default indent-tabs-mode nil) ;; No tabs
+  (setq-default tab-width 2) ;; 2 spaces as tabs
+
+  ;; Buffer encoding
+  (prefer-coding-system       'utf-8)
+  (set-default-coding-systems 'utf-8)
+  (set-terminal-coding-system 'utf-8)
+  (set-keyboard-coding-system 'utf-8)
+  (set-language-environment   'utf-8)
+
+  ;; Unique buffer names
+  (require 'uniquify)
+  (setq uniquify-buffer-name-style 'reverse
+        uniquify-separator " • "
+        uniquify-after-kill-buffer-p t
+        uniquify-ignore-buffers-re "^\\*")
+#+END_SRC
+
+** Simpler UI
+
+As seen on https://www.youtube.com/watch?v=74zOY-vgkyw, and from the nano-defaults.el:
+
+#+BEGIN_SRC elisp :noweb-ref emacs
+  (setq inhibit-startup-screen t) ;; Disable startup screen
+  (setq inhibit-startup-message t) ;; Disable startup message
+  (setq inhibit-startup-echo-area-message t) ;; Disable startup message
+
+  (setq initial-scratch-message nil) ;; No message in scratch buffer
+  (setq initial-buffer-choice nil) ;; Initial buffer
+  (setq initial-major-mode 'text-mode) ;; Initial major mode
+
+  (setq default-major-mode 'text-mode) ;; Default major mode
+
+  (setq frame-title-format nil) ;; No frame title
+
+  (setq use-file-dialog nil) ;; No file dialog
+  (setq use-dialog-box nil) ;; No dialog box
+
+  (setq indicate-empty-lines nil) ;; No empty line indicators
+
+  (setq cursor-in-non-selected-windows nil) ;; Disable cursor in inactive windows
+
+  (setq font-lock-maximum-decoration nil) ;; Moderate font lock
+  (setq font-lock-maximum-size nil) ;; No limit on font lock
+
+  (setq auto-fill-mode nil) ;; No line break space points
+  (setq fill-column 80) ;; Fill column at 80
+
+  (menu-bar-mode -1) ;; Disable menubar
+  (scroll-bar-mode -1) ;; Disable visible scrollbar
+  (tool-bar-mode -1) ;; Disable the toolbar
+  (tooltip-mode -1) ;; Disable tooltips
+  (set-fringe-mode 10) ;; Give some breathing room
+
+  ;; Enable visible bell
+  (setq visible-bell t)
+
+  ;; Size of temporary buffers
+  (temp-buffer-resize-mode)
+  (setq temp-buffer-max-height 8)
+
+  ;; Minimum window height
+  (setq window-min-height 1)
+
+  ;; Add frame borders and window dividers
+  (modify-all-frames-parameters
+   '((right-divider-width . 20)
+     (internal-border-width . 20)))
+  (dolist (face '(window-divider
+                  window-divider-first-pixel
+                  window-divider-last-pixel))
+          (face-spec-reset-face face)
+            (set-face-foreground face (face-attribute 'default :background)))
+  (set-face-background 'fringe (face-attribute 'default :background))
+#+END_SRC
+
+** Line numbers
+
+#+BEGIN_SRC elisp :noweb-ref emacs
+  ;; Enable line numbers globally
+  (column-number-mode)
+  (global-display-line-numbers-mode t)
+
+  ;; Disable line numbers for some modes
+  (dolist (mode '(org-mode-hook
+                  term-mode-hook
+                  shell-mode-hook
+                  eshell-mode-hook
+                  vterm-mode-hook
+                  eat-mode-hook
+                  markdown-mode-hook
+                 ))
+          (add-hook mode (lambda () (display-line-numbers-mode 0))))
+
+  ;; Prevent GUI dialogs
 #+END_SRC
 
 ** Package handling
@@ -72,41 +146,48 @@ As seen on https://www.youtube.com/watch?v=74zOY-vgkyw
 Install ~quelpa~, ~quelpa-use-package~ and ~use-package~ if ~guix~ is not found on the system.
 
 #+BEGIN_SRC elisp :noweb-ref emacs
-  (require 'package)
+  (unless (executable-find "guix")
+    (require 'package)
 
-  ;; (unless (executable-find "guix"))
-  (unless (package-installed-p 'quelpa)
-    (with-temp-buffer
-        (url-insert-file-contents "https://github.com/quelpa/quelpa/raw/master/quelpa.el")
-        (eval-buffer)
-        (quelpa-self-upgrade)))
+    (unless (package-installed-p 'quelpa)
+      (with-temp-buffer
+          (url-insert-file-contents "https://github.com/quelpa/quelpa/raw/master/quelpa.el")
+          (eval-buffer)
+          (quelpa-self-upgrade)))
 
-  (quelpa
-   '(use-package
-     :fetcher git
-     :url "https://github.com/jwiegley/use-package"))
-  (quelpa
-   '(quelpa-use-package
-     :fetcher git
-     :url "https://github.com/quelpa/quelpa-use-package.git"))
+    (quelpa
+     '(use-package
+       :fetcher git
+       :url "https://github.com/jwiegley/use-package"))
+    (quelpa
+     '(quelpa-use-package
+       :fetcher git
+       :url "https://github.com/quelpa/quelpa-use-package.git"))
 
-  (require 'quelpa-use-package)
+    (require 'quelpa-use-package)
 
-  ;; Make quelpa the function for use-package ensure
-  (setq use-package-ensure-function 'quelpa)
-  ;; Build stable packages
-  (setq quelpa-stable-p t)
+    ;; Make quelpa the function for use-package ensure
+    (setq use-package-ensure-function 'quelpa)
+    ;; Build stable packages
+    (setq quelpa-stable-p t)
+  )
 #+END_SRC
 
-Require use-package and ensure all the packages. This will be always on, regardless of version or OS.
+Require use-package in all cases regardless of version or OS.
 
 #+BEGIN_SRC elisp :noweb-ref emacs
   (eval-when-compile
     (require 'use-package)
   )
+#+END_SRC
 
-  (require 'use-package-ensure)
-  (setq use-package-always-ensure t)
+Ensuring packages is not required when Guix is available, but useful otherwise.
+
+#+BEGIN_SRC elisp :noweb-ref emacs
+  (unless (executable-find "guix")
+    (require 'use-package-ensure)
+    (setq use-package-always-ensure t)
+  )
 #+END_SRC
 
 ** Ef themes
@@ -173,48 +254,6 @@ Add the Guix package to the home config:
   )
 #+END_SRC
 
-** No littering
-
-*** Installation
-
-If guix is not installed, then install within Emacs using quelpa:
-
-#+BEGIN_SRC elisp :noweb-ref emacs
-  (unless (executable-find "guix")
-    (quelpa
-     '(compat
-       :fetcher github
-       :repo "emacs-compat/compat"))
-    (quelpa
-     '(no-littering
-       :fetcher github
-       :repo "emacscollective/no-littering"))
-  )
-#+END_SRC
-
-Add the Guix package to the home config:
-
-#+BEGIN_SRC scheme :noweb-ref guix-home
-  (define %home-packages
-    (append %home-packages
-            (list "emacs-no-littering")))
-#+END_SRC
-
-*** Config
-
-#+BEGIN_SRC elisp :noweb-ref emac
-  ;; Configure no-littering
-  (use-package no-littering
-    :init
-      ;; Move auto-save files to var
-      (setq auto-save-file-name-transforms
-            `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
-      ;; Store custom-file in etc
-      (setq custom-file (no-littering-expand-etc-file-name "custom.el"))
-      (load custom-file 'noerror 'nomessage)
-  )
-#+END_SRC
-
 ** All the icons
 
 *** Installation
@@ -246,6 +285,218 @@ Add the Guix package to the home config:
 #+BEGIN_SRC elisp :noweb-ref emacs
   ;; Load all the icons before the dashboard
   (use-package all-the-icons)
+#+END_SRC
+
+** General
+
+*** Installation
+
+Add the Guix package to the home config:
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (define %home-packages
+    (append %home-packages
+            (list "emacs-general")))
+#+END_SRC
+
+*** Configuration
+
+#+BEGIN_SRC elisp :noweb-ref emacs
+(use-package general
+    :after evil
+    :config
+    (general-create-definer my-leader-def
+                            :prefix "SPC"
+                            )
+
+    ;; Global keybindigs
+    (my-leader-def
+     :states 'normal
+     :keymaps 'override
+     :major-modes t
+
+     "SPC"     '("M-x" . execute-extended-command)
+     "TAB"     '("last buffer" . alternate-buffer)
+     "!"       '("shell cmd" . shell-command)
+
+     ;; Buffer
+     "b"       (cons "buffers" (make-sparse-keymap))
+     "bb"      'switch-to-buffer
+     "bB"      'ibuffer
+     "bd"      'kill-current-buffer
+     "bm"      'switch-to-messages-buffer
+     "bs"      'switch-to-scratch-buffer
+     "bu"      'reopen-killed-buffer
+     "bx"      'kill-buffer-and-window
+
+     ;; Code
+     "c"       (cons "code" (make-sparse-keymap))
+     "cb"      'flymake-show-buffer-diagnostics
+     "cc"      'compile
+     "cn"      'next-error
+     "cp"      'previous-error
+     "cr"      'recompile
+     "cx"      'kill-compilation
+     "c="      'indent-region-or-buffer
+
+     ;; File
+     "f"       (cons "files" (make-sparse-keymap))
+     "fC"      '("copy-file" . write-file)
+     "fD"      'delete-current-buffer-file
+     "fe"      'find-library
+     "fE"      'sudo-edit
+     "ff"      'find-file
+     "fj"      'dired-jump
+     "fJ"      'dired-jump-other-window
+     "fo"      'open-file-or-directory-in-external-app
+     "fR"      'rename-current-buffer-file
+     "fs"      'save-buffer
+     "fv"      (cons "variables" (make-sparse-keymap))
+     "fvd"     'add-dir-local-variable
+     "fvf"     'add-file-local-variable
+     "fvp"     'add-file-local-variable-prop-line
+
+     ;; Help
+     "h"       (cons "help" (make-sparse-keymap))
+     "ha"      'apropos
+     "hb"      'describe-bindings
+     "hc"      'describe-char
+     "hf"      'describe-function
+     "hF"      'describe-face
+     "hi"      'info-emacs-manual
+     "hI"      'info-display-manual
+     "hk"      'describe-key
+     "hK"      'describe-keymap
+     "hm"      'describe-mode
+     "hM"      'woman
+     "hp"      'describe-package
+     "ht"      'describe-text-properties
+     "hv"      'describe-variable
+     "hP"      (cons "profiler" (make-sparse-keymap))
+     "hPs"     'profiler-start
+     "hPk"     'profiler-stop
+     "hPr"     'profiler-report
+
+     ;; Projects
+     "p"       (cons "projects" project-prefix-map)
+     "pt"      'project-open-in-tab
+
+     ;; Quit
+     "q"       (cons "quit" (make-sparse-keymap))
+     "qd"      'restart-emacs-debug-init
+     "qr"      'restart-emacs
+     "qR"      'restart-emacs-without-desktop
+     "qf"      'delete-frame
+     "qq"      'save-buffers-kill-terminal
+     "qQ"      'save-buffers-kill-emacs
+
+     ;; Spelling
+     "s"       (cons "spelling" (make-sparse-keymap))
+     "sb"      'flyspell-buffer
+     "sn"      'flyspell-goto-next-error
+     "sr"      'flyspell-region
+
+     ;; Toggles
+     "T"       (cons "toggles" (make-sparse-keymap))
+     "Ta"      'auto-fill-mode
+     "Td"      'toggle-debug-on-error
+     "Tf"      'display-fill-column-indicator-mode
+     "Tl"      'toggle-truncate-lines
+     "Tm"      'flymake-mode
+     "Tn"      'display-line-numbers-mode
+     "Ts"      'flyspell-mode
+     "Tw"      'whitespace-mode
+     "TW"      'toggle-word-wrap
+
+     ;; Windows
+     "w"       (cons "windows" (make-sparse-keymap))
+     "w TAB"   'alternate-window
+     "w+"      'window-layout-toggle
+     "wb"      'switch-to-minibuffer-window
+     "wd"      'delete-window
+     "wD"      'delete-other-windows
+     "wm"      'toggle-maximize-buffer
+     "wf"      'follow-mode
+     "wh"      'evil-window-left
+     "wH"      'evil-window-move-far-left
+     "wj"      'evil-window-down
+     "wJ"      'evil-window-move-very-bottom
+     "wk"      'evil-window-up
+     "wK"      'evil-window-move-very-top
+     "wl"      'evil-window-right
+     "wL"      'evil-window-move-far-right
+     "wr"      'rotate-windows-forward
+     "wR"      'rotate-windows-backward
+     "ws"      'split-window-vertically
+     "wS"      'split-window-vertically-and-focus
+     "wt"      'toggle-current-window-dedication
+     "wu"      'winner-undo
+     "wU"      'winner-redo
+     "wv"      'split-window-horizontally
+     "wV"      'split-window-horizontally-and-focus
+     )
+    )
+#+END_SRC
+
+** Which key
+
+*** Installation
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (define %home-packages
+    (append %home-packages
+            (list "emacs-which-key")))
+#+END_SRC
+
+*** Configuration
+
+#+BEGIN_SRC elisp :noweb-ref emacs
+  (use-package which-key
+    :init
+      (which-key-mode)
+  )
+#+END_SRC
+
+** No littering
+
+*** Installation
+
+If guix is not installed, then install within Emacs using quelpa:
+
+#+BEGIN_SRC elisp :noweb-ref emacs
+  (unless (executable-find "guix")
+    (quelpa
+     '(compat
+       :fetcher github
+       :repo "emacs-compat/compat"))
+    (quelpa
+     '(no-littering
+       :fetcher github
+       :repo "emacscollective/no-littering"))
+  )
+#+END_SRC
+
+Add the Guix package to the home config:
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (define %home-packages
+    (append %home-packages
+            (list "emacs-no-littering")))
+#+END_SRC
+
+*** Config
+
+#+BEGIN_SRC elisp :noweb-ref emacs
+  ;; Configure no-littering
+  (use-package no-littering
+    :init
+      ;; Move auto-save files to var
+      (setq auto-save-file-name-transforms
+            `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
+      ;; Store custom-file in etc
+      (setq custom-file (no-littering-expand-etc-file-name "custom.el"))
+      (load custom-file 'noerror 'nomessage)
+  )
 #+END_SRC
 
 ** Vertico
@@ -291,10 +542,7 @@ Add the Guix package to the home config:
   ;; For certain modes start in Emacs mode by default
   (defun myhooks/evil-hook ()
     (dolist (mode '(custom-mode
-                    eshell-mode
                     git-rebase-mode
-                    term-mode
-                    vterm-mode
                     ))
       (add-to-list 'evil-emacs-state-modes mode)))
 
@@ -313,13 +561,17 @@ Add the Guix package to the home config:
   )
 
   (use-package evil-collection
-    :init
-      (evil-collection-init)
+    :after evil
+    :config
+      (evil-collection-init '(org
+                              dired
+                              vterm))
   )
 
   (use-package evil-commentary
+    :after evil
     :init
-      (evil-commentary-mode)
+      ;; (evil-commentary-mode)
   )
 #+END_SRC
 
