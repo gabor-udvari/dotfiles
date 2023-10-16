@@ -291,6 +291,19 @@ Add the Guix package to the home config:
 
 *** Installation
 
+If guix is not installed, then install within Emacs using quelpa:
+
+#+BEGIN_SRC elisp :noweb-ref emacs
+  (unless (executable-find "guix")
+    (quelpa
+     '(general
+       :fetcher github
+       :repo "noctuid/general.el"
+       :stable nil
+      ))
+  )
+#+END_SRC
+
 Add the Guix package to the home config:
 
 #+BEGIN_SRC scheme :noweb-ref guix-home
