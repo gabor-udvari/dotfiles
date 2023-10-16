@@ -190,6 +190,67 @@ Ensuring packages is not required when Guix is available, but useful otherwise.
   )
 #+END_SRC
 
+** Fontaine
+
+*** Installation
+
+If guix is not installed, then install within Emacs using quelpa:
+
+#+BEGIN_SRC elisp :noweb-ref emacs
+  (unless (executable-find "guix")
+    (quelpa
+     '(fontaine
+       :fetcher github
+       :repo "protesilaos/fontaine"))
+  )
+#+END_SRC
+
+Add the Guix package to the home config:
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (define %home-packages
+    (append %home-packages
+            (list "emacs-fontaine")))
+#+END_SRC
+
+*** Configuration
+
+#+BEGIN_SRC elisp :noweb-ref emacs
+  (use-package fontaine
+    :init
+      (setq fontaine-presets
+      '((regular
+         :default-height 120)
+        (medium
+         :default-weight semilight
+         :default-height 140)
+        (large
+         :default-weight semilight
+         :default-height 180
+         :bold-weight extrabold)
+        (t ; our shared fallback properties
+         :default-family "Consolas"
+         :default-weight normal
+         :variable-pitch-family "Arial"
+         :variable-pitch-height 1.05)))
+
+      (setq fontaine-latest-state-file
+        (locate-user-emacs-file "fontaine-latest-state.eld"))
+
+    :config
+      ;; Recover last preset or fall back to desired style from
+      ;; `fontaine-presets'.
+      (fontaine-set-preset (or (fontaine-restore-latest-preset) 'regular))
+
+      ;; The other side of `fontaine-restore-latest-preset'.
+      (add-hook 'kill-emacs-hook #'fontaine-store-latest-preset)
+
+      ;; Persist font configurations while switching themes (doing it with
+      ;; my `modus-themes' and `ef-themes' via the hooks they provide).
+      (add-hook 'ef-themes-after-load-theme-hook #'fontaine-apply-current-preset)
+  )
+#+END_SRC
+
 ** Ef themes
 
 *** Installation
