@@ -89,8 +89,13 @@ As seen on https://www.youtube.com/watch?v=74zOY-vgkyw, and from the nano-defaul
   (setq font-lock-maximum-decoration nil) ;; Moderate font lock
   (setq font-lock-maximum-size nil) ;; No limit on font lock
 
-  (setq auto-fill-mode nil) ;; No line break space points
-  (setq fill-column 80) ;; Fill column at 80
+  ;; TODO: there is something wrong with disabling auto-fill-mode
+  ;; (setq-default auto-fill-mode -1) ;; No line break space points
+  ;; (add-hook 'text-mode-hook 'turn-off-auto-fill)
+  ;; (setq fill-column 80) ;; Fill column at 80
+  ;; (add-hook 'text-mode-hook (lambda () (auto-fill-mode -1)))
+  ;; (remove-hook 'text-mode-hook #'turn-on-auto-fill)
+  ;; (remove-hook 'text-mode-hook #'auto-detect-wrap)
 
   (menu-bar-mode -1) ;; Disable menubar
   (scroll-bar-mode -1) ;; Disable visible scrollbar
@@ -155,6 +160,11 @@ Install ~quelpa~, ~quelpa-use-package~ and ~use-package~ if ~guix~ is not found 
           (eval-buffer)
           (quelpa-self-upgrade)))
 
+    ;; Build stable packages
+    (setq quelpa-stable-p t)
+    ;; Do not update MELPA repo list on startup
+    ;; (setq quelpa-update-melpa-p nil)
+
     (quelpa
      '(use-package
        :fetcher git
@@ -168,8 +178,6 @@ Install ~quelpa~, ~quelpa-use-package~ and ~use-package~ if ~guix~ is not found 
 
     ;; Make quelpa the function for use-package ensure
     (setq use-package-ensure-function 'quelpa)
-    ;; Build stable packages
-    (setq quelpa-stable-p t)
   )
 #+END_SRC
 
@@ -385,7 +393,7 @@ Add the Guix package to the home config:
 
     ;; Global keybindigs
     (my-leader-def
-     :states 'normal
+     :states '(normal emacs)
      :keymaps 'override
      :major-modes t
 
@@ -570,6 +578,8 @@ Add the Guix package to the home config:
       ;; Store custom-file in etc
       (setq custom-file (no-littering-expand-etc-file-name "custom.el"))
       (load custom-file 'noerror 'nomessage)
+      ;; Enable no-littering to configure auto-save, backup, etc.
+      (no-littering-theme-backups)
   )
 #+END_SRC
 
@@ -686,10 +696,39 @@ Add the Guix packages to the home config:
 
 ** Org-mode
 
+*** Installation
+
+Org is bundled inside Emacs, so only need to install some extra packages, like emacs-org-modern emacs-org-contrib.
+
+If guix is not installed, then install within Emacs using quelpa:
+
+#+BEGIN_SRC elisp :noweb-ref emacs
+  (unless (executable-find "guix")
+    (quelpa
+     '(org-contrib
+       :fetcher github
+       :repo "emacsmirror/org-contrib"
+       :stable nil
+       :files (:defaults
+               "lisp")))
+  )
+#+END_SRC
+
+Add the Guix packages to the home config:
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (define %home-packages
+    (append %home-packages
+            (list "emacs-org-modern")))
+#+END_SRC
+
+*** Configuration
+
 #+BEGIN_SRC elisp :noweb-ref emacs
   (defun myhooks/org-mode-setup ()
     (org-indent-mode)
     (variable-pitch-mode 1)
+    (setq visual-line-fringe-indicators t)
     (visual-line-mode 1))
 
   (defun myhooks/org-font-setup ()
@@ -718,33 +757,32 @@ Add the Guix packages to the home config:
     (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
     (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch))
 
+  (defun my-notes ()
+    (expand-file-name
+      (concat (if (eq system-type 'windows-nt) (getenv "USERPROFILE") "~") "/Jegyzetek")))
+
   (use-package org
+    :hook (org-mode . myhooks/org-mode-setup)
+    :hook (org-mode . myhooks/org-font-setup)
     :init
-      (add-hook 'org-mode-hook #'myhooks/org-mode-setup)
       (setq org-ellipsis " ▾")
       ;; Hide leading stars
       (setq org-hide-leading-stars nil)
 
       ;; Org Agenda
-      (setq org-agenda-files (list (expand-file-name "~/Jegyzetek")))
-
-    :config
-      (myhooks/org-font-setup)
+      (setq org-agenda-files (list (my-notes)))
   )
 
+  (use-package ox-md)
+
+  (use-package org-contrib)
+  (use-package ox-confluence)
+
   (use-package org-modern
+    :after org
     :config
       (with-eval-after-load 'org (global-org-modern-mode))
   )
-#+END_SRC
-
-Add the Guix packages to the home config:
-
-#+BEGIN_SRC scheme :noweb-ref guix-home
-  (define %home-packages
-    (append %home-packages
-            (list "emacs-org"
-                  "emacs-org-modern")))
 #+END_SRC
 
 ** Visual Fill
@@ -775,14 +813,14 @@ Add the Guix packages to the home config:
 
 #+BEGIN_SRC elisp :noweb-ref emacs
   ;; Configure Visual Fill
-  (defun myhooks/visual-fill ()
-    (setq visual-fill-column-width 100
-          visual-fill-column-center-text t)
+  (defun myhooks/visual-fill-column ()
+    (setq visual-fill-column-center-text t
+          visual-fill-column-width 80)
     (visual-fill-column-mode 1))
 
   (use-package visual-fill-column
-    :init
-    (add-hook 'org-mode-hook #'myhooks/visual-fill)
+    :hook (org-mode . myhooks/visual-fill-column)
+    :hook (markdown-mode . myhooks/visual-fill-column)
   )
 #+END_SRC
 
@@ -815,7 +853,8 @@ Add the Guix package to the home config:
   (use-package denote
     :init
       ;; Remember to check the doc strings of those variables.
-      (setq denote-directory (expand-file-name "~/Jegyzetek/"))
+      (setq denote-directory (my-notes))
+      (setq denote-known-keywords '())
       (setq denote-infer-keywords t)
       (setq denote-sort-keywords t)
       (setq denote-file-type nil) ; Org is the default, set others here
