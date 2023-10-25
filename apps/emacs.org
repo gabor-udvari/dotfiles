@@ -24,7 +24,11 @@ Change some of the defaults to make a more minimal interface.
 #+BEGIN_SRC elisp :noweb-ref emacs
   ;; Setup customization file
   (setq custom-file "~/.config/emacs/custom.el")
+  ;; Never load it
   ;; (load custom-file)
+
+  ;; Prevent default.el to be run
+  (setq inhibit-default-init t)
 
   ;; Automatically revert buffers
   (global-auto-revert-mode 1)
@@ -53,6 +57,7 @@ Change some of the defaults to make a more minimal interface.
   (set-terminal-coding-system 'utf-8)
   (set-keyboard-coding-system 'utf-8)
   (set-language-environment   'utf-8)
+  (setq-default buffer-file-coding-system 'utf-8)
 
   ;; Unique buffer names
   (require 'uniquify)
@@ -89,13 +94,8 @@ As seen on https://www.youtube.com/watch?v=74zOY-vgkyw, and from the nano-defaul
   (setq font-lock-maximum-decoration nil) ;; Moderate font lock
   (setq font-lock-maximum-size nil) ;; No limit on font lock
 
-  ;; TODO: there is something wrong with disabling auto-fill-mode
-  ;; (setq-default auto-fill-mode -1) ;; No line break space points
-  ;; (add-hook 'text-mode-hook 'turn-off-auto-fill)
-  ;; (setq fill-column 80) ;; Fill column at 80
-  ;; (add-hook 'text-mode-hook (lambda () (auto-fill-mode -1)))
-  ;; (remove-hook 'text-mode-hook #'turn-on-auto-fill)
-  ;; (remove-hook 'text-mode-hook #'auto-detect-wrap)
+  (setq fill-column 80) ;; Fill column at 80
+  (global-visual-line-mode 1) ;; Do line wrapping everywhere
 
   (menu-bar-mode -1) ;; Disable menubar
   (scroll-bar-mode -1) ;; Disable visible scrollbar
@@ -142,8 +142,6 @@ As seen on https://www.youtube.com/watch?v=74zOY-vgkyw, and from the nano-defaul
                   markdown-mode-hook
                  ))
           (add-hook mode (lambda () (display-line-numbers-mode 0))))
-
-  ;; Prevent GUI dialogs
 #+END_SRC
 
 ** Package handling
@@ -814,8 +812,7 @@ Add the Guix packages to the home config:
 #+BEGIN_SRC elisp :noweb-ref emacs
   ;; Configure Visual Fill
   (defun myhooks/visual-fill-column ()
-    (setq visual-fill-column-center-text t
-          visual-fill-column-width 80)
+    (setq visual-fill-column-center-text t)
     (visual-fill-column-mode 1))
 
   (use-package visual-fill-column
