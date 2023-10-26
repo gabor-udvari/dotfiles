@@ -196,6 +196,50 @@ Ensuring packages is not required when Guix is available, but useful otherwise.
   )
 #+END_SRC
 
+** No littering
+
+*** Installation
+
+If guix is not installed, then install within Emacs using quelpa:
+
+#+BEGIN_SRC elisp :noweb-ref emacs
+  (unless (executable-find "guix")
+    (quelpa
+     '(compat
+       :fetcher github
+       :repo "emacs-compat/compat"))
+    (quelpa
+     '(no-littering
+       :fetcher github
+       :repo "emacscollective/no-littering"))
+  )
+#+END_SRC
+
+Add the Guix package to the home config:
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (define %home-packages
+    (append %home-packages
+            (list "emacs-no-littering")))
+#+END_SRC
+
+*** Config
+
+#+BEGIN_SRC elisp :noweb-ref emacs
+  ;; Configure no-littering
+  (use-package no-littering
+    :init
+      ;; Move auto-save files to var
+      (setq auto-save-file-name-transforms
+            `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
+      ;; Store custom-file in etc
+      (setq custom-file (no-littering-expand-etc-file-name "custom.el"))
+      (load custom-file 'noerror 'nomessage)
+      ;; Enable no-littering to configure auto-save, backup, etc.
+      (no-littering-theme-backups)
+  )
+#+END_SRC
+
 ** Fontaine
 
 *** Installation
@@ -354,7 +398,7 @@ Add the Guix package to the home config:
   (use-package all-the-icons)
 #+END_SRC
 
-** General
+** Keybindings with General
 
 *** Installation
 
@@ -518,6 +562,40 @@ Add the Guix package to the home config:
     )
 #+END_SRC
 
+** Disable mouse
+
+#+BEGIN_SRC elisp :noweb-ref emacs
+  (use-package disable-mouse
+    :after evil
+    :init
+      (global-disable-mouse-mode)
+
+      ;; This code is still unreleased for disable-mouse
+      ;;;###autoload
+      (defun disable-mouse-in-keymap (map &optional include-targets)
+        "Rebind all mouse commands in MAP so that they are disabled.
+      When INCLUDE-TARGETS is non-nil, also disable mouse actions that
+      target GUI elements such as the modeline."
+        (dolist (binding (disable-mouse--all-bindings include-targets))
+          (define-key map binding 'disable-mouse--handle)))
+
+      (mapc #'disable-mouse-in-keymap
+            (list evil-motion-state-map
+                  evil-normal-state-map
+                  evil-visual-state-map
+                  evil-insert-state-map
+                  ))
+  )
+#+END_SRC
+
+Add the Guix packages to the home config:
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (define %home-packages
+    (append %home-packages
+            (list "emacs-disable-mouse")))
+#+END_SRC
+
 ** Which key
 
 *** Installation
@@ -537,7 +615,7 @@ Add the Guix package to the home config:
   )
 #+END_SRC
 
-** No littering
+** Visual Fill
 
 *** Installation
 
@@ -545,39 +623,33 @@ If guix is not installed, then install within Emacs using quelpa:
 
 #+BEGIN_SRC elisp :noweb-ref emacs
   (unless (executable-find "guix")
+    ;; The visual-fill-column was moved to Codeberg, but it is still archived on Github
     (quelpa
-     '(compat
+     '(visual-fill-column
        :fetcher github
-       :repo "emacs-compat/compat"))
-    (quelpa
-     '(no-littering
-       :fetcher github
-       :repo "emacscollective/no-littering"))
+       :repo "joostkremers/visual-fill-column"))
   )
 #+END_SRC
 
-Add the Guix package to the home config:
+Add the Guix packages to the home config:
 
 #+BEGIN_SRC scheme :noweb-ref guix-home
   (define %home-packages
     (append %home-packages
-            (list "emacs-no-littering")))
+            (list "emacs-visual-fill-column")))
 #+END_SRC
 
-*** Config
+*** Configuration
 
 #+BEGIN_SRC elisp :noweb-ref emacs
-  ;; Configure no-littering
-  (use-package no-littering
-    :init
-      ;; Move auto-save files to var
-      (setq auto-save-file-name-transforms
-            `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
-      ;; Store custom-file in etc
-      (setq custom-file (no-littering-expand-etc-file-name "custom.el"))
-      (load custom-file 'noerror 'nomessage)
-      ;; Enable no-littering to configure auto-save, backup, etc.
-      (no-littering-theme-backups)
+  ;; Configure Visual Fill
+  (defun myhooks/visual-fill-column ()
+    (setq visual-fill-column-center-text t)
+    (visual-fill-column-mode 1))
+
+  (use-package visual-fill-column
+    :hook (org-mode . myhooks/visual-fill-column)
+    :hook (markdown-mode . myhooks/visual-fill-column)
   )
 #+END_SRC
 
@@ -653,7 +725,7 @@ Add the Guix package to the home config:
   (use-package evil-commentary
     :after evil
     :init
-      ;; (evil-commentary-mode)
+      (evil-commentary-mode)
   )
 #+END_SRC
 
@@ -667,19 +739,24 @@ Add the Guix packages to the home config:
                   "emacs-evil-commentary")))
 #+END_SRC
 
-** Hunspell
+** Spell checking
 
 #+BEGIN_SRC elisp :noweb-ref emacs
-  ;; Configure hunspell
-  (setq ispell-program-name "hunspell")
-  (setq ispell-hunspell-dict-paths-alist
-    '(("hu_HU" "~/.guix-home/profile/share/hunspell/hu_HU.aff")
-      ("en_US" "~/.guix-home/profile/share/hunspell/en_US.aff")
-     ))
-  (setq ispell-local-dictionary-alist
-    '(("Hungarian" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "hu_HU") nil utf-8)
-      ("English"   "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US") nil utf-8)
-     ))
+  (use-package flyspell
+    :init
+      ;; Configure hunspell
+      ;; You can get dictionaries from the Libreoffice repo:
+      ;; https://cgit.freedesktop.org/libreoffice/dictionaries/tree
+      (setq ispell-program-name "hunspell")
+      (setq ispell-hunspell-dict-paths-alist
+        '(("hu_HU" (concat (if (eq system-type 'windows-nt) (getenv "USERPROFILE") "~") (if (executable-find "guix") "/.guix-home/profile" "/.local") "/share/hunspell/hu_HU.aff"))
+          ("en_US" (concat (if (eq system-type 'windows-nt) (getenv "USERPROFILE") "~") (if (executable-find "guix") "/.guix-home/profile" "/.local") "/share/hunspell/en_US.aff"))
+         ))
+      (setq ispell-local-dictionary-alist
+        '(("Hungarian" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "hu_HU") nil utf-8)
+          ("English"   "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US") nil utf-8)
+         ))
+  )
 #+END_SRC
 
 Add the Guix packages to the home config:
@@ -780,44 +857,6 @@ Add the Guix packages to the home config:
     :after org
     :config
       (with-eval-after-load 'org (global-org-modern-mode))
-  )
-#+END_SRC
-
-** Visual Fill
-
-*** Installation
-
-If guix is not installed, then install within Emacs using quelpa:
-
-#+BEGIN_SRC elisp :noweb-ref emacs
-  (unless (executable-find "guix")
-    ;; The visual-fill-column was moved to Codeberg, but it is still archived on Github
-    (quelpa
-     '(visual-fill-column
-       :fetcher github
-       :repo "joostkremers/visual-fill-column"))
-  )
-#+END_SRC
-
-Add the Guix packages to the home config:
-
-#+BEGIN_SRC scheme :noweb-ref guix-home
-  (define %home-packages
-    (append %home-packages
-            (list "emacs-visual-fill-column")))
-#+END_SRC
-
-*** Configuration
-
-#+BEGIN_SRC elisp :noweb-ref emacs
-  ;; Configure Visual Fill
-  (defun myhooks/visual-fill-column ()
-    (setq visual-fill-column-center-text t)
-    (visual-fill-column-mode 1))
-
-  (use-package visual-fill-column
-    :hook (org-mode . myhooks/visual-fill-column)
-    :hook (markdown-mode . myhooks/visual-fill-column)
   )
 #+END_SRC
 
@@ -985,39 +1024,6 @@ Add the Guix packages to the home config:
                      (tramp-session-timeout      300)
                      (tramp-password-previous-hop t)))
   )
-#+END_SRC
-
-** Disable mouse
-
-#+BEGIN_SRC elisp :noweb-ref emacs
-  (use-package disable-mouse
-    :init
-      (global-disable-mouse-mode)
-
-      ;; This code is still unreleased for disable-mouse
-      ;;;###autoload
-      (defun disable-mouse-in-keymap (map &optional include-targets)
-        "Rebind all mouse commands in MAP so that they are disabled.
-      When INCLUDE-TARGETS is non-nil, also disable mouse actions that
-      target GUI elements such as the modeline."
-        (dolist (binding (disable-mouse--all-bindings include-targets))
-          (define-key map binding 'disable-mouse--handle)))
-
-      (mapc #'disable-mouse-in-keymap
-            (list evil-motion-state-map
-                  evil-normal-state-map
-                  evil-visual-state-map
-                  evil-insert-state-map
-                  ))
-  )
-#+END_SRC
-
-Add the Guix packages to the home config:
-
-#+BEGIN_SRC scheme :noweb-ref guix-home
-  (define %home-packages
-    (append %home-packages
-            (list "emacs-disable-mouse")))
 #+END_SRC
 
 ** Envrc
