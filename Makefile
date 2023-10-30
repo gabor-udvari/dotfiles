@@ -34,7 +34,7 @@ install: --config-home --install-home
 		fi
 		if test -d "${HOME}"/AppData/Roaming/.emacs.d; then
 			echo -e "${GREEN_TERMINAL_OUTPUT}--> [Makefile] Copying init.el to Windows Emacs folder${CLEAR}"
-			cp ./build/home/.config/emacs/init.el "${HOME}"/AppData/Roaming/.emacs.d/
+			cp ./build/home/.config/emacs/* "${HOME}"/AppData/Roaming/.emacs.d/
 		fi
 	}
 

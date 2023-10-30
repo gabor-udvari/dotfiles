@@ -65,6 +65,8 @@
                                      ,(local-file "home/.config/bash/shell_prompt.sh" "shell_prompt"))
                                     (".config/bash/bashrc.d/sync-history.sh"
                                      ,(local-file "home/.config/bash/bashrc.d/sync-history.sh" "sync-history"))
+                                    (".config/bash/bashrc.d/bash_aliases.sh"
+                                     ,(local-file "home/.config/bash/bashrc.d/bash_aliases.sh" "bash_aliases"))
                                     (".gnomerc"
                                      ,(local-file "home/.profile" "gnomerc"))))
 

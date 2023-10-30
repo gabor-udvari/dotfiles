@@ -3,6 +3,12 @@
 
 * Emacs config
 
+The early-init.el file contains early configurations which do not need any extra packages.
+
+#+BEGIN_SRC text :noweb yes :exports none :mkdirp yes :tangle home/.config/emacs/early-init.el
+  <<emacs-early>>
+#+END_SRC
+
 The Emacs configurations will go into the init.el file.
 
 #+BEGIN_SRC text :noweb yes :exports none :mkdirp yes :tangle home/.config/emacs/init.el
@@ -17,13 +23,73 @@ The different emacs packages will be installed through Guix home, therefore we w
             (list "emacs")))
 #+END_SRC
 
+** early-init.el
+
+#+BEGIN_SRC elisp :noweb-ref emacs-early
+  (setq inhibit-startup-screen t ;; Disable startup screen
+        inhibit-startup-message t ;; Disable startup message
+        inhibit-startup-echo-area-message t ;; Disable startup message
+
+        initial-scratch-message nil ;; No message in scratch buffer
+        initial-buffer-choice nil ;; Initial buffer
+
+        frame-title-format nil ;; No frame title
+
+        use-file-dialog nil ;; No file dialog
+        use-dialog-box nil ;; No dialog box
+
+        cursor-in-non-selected-windows nil) ;; Disable cursor in inactive windows)
+
+    (menu-bar-mode -1) ;; Disable menubar
+    (scroll-bar-mode -1) ;; Disable visible scrollbar
+    (tool-bar-mode -1) ;; Disable the toolbar
+    (tooltip-mode -1) ;; Disable tooltips
+    (set-fringe-mode 10) ;; Give some breathing room
+
+  ;; Save the original GC, file handler, VC handled backends values
+  ;; set them to nil now, and restore them in an emacs-startup-hook.
+  ;; This is taken from Prot's config, it should decrease startup time.
+  (defvar my-gc-cons-threshold gc-cons-threshold)
+  (setq gc-cons-threshold most-positive-fixnum)
+
+  (defvar my-file-name-handler-alist file-name-handler-alist)
+  (setq file-name-handler-alist nil)
+
+  (defvar my-vc-handled-backends vc-handled-backends)
+  (setq vc-handled-backends nil)
+
+  (add-hook 'emacs-startup-hook
+            (lambda ()
+              (setq gc-cons-threshold my-gc-cons-threshold
+                    file-name-handler-alist my-file-name-handler-alist
+                    vc-handled-backends my-vc-handled-backends)))
+
+  ;; Initialize package from cache
+  (setq package-enable-at-startup t)
+
+  ;; Avoid white background because we use a dark theme by default
+  (setq mode-line-format nil)
+  (set-face-attribute 'default nil :background "#000000" :foreground "#ffffff")
+  (set-face-attribute 'mode-line nil :background "#000000" :foreground "#ffffff" :box 'unspecified)
+
+  ;; Function for re-enabling the theme background, as taken
+  ;; from Prot's config.
+  (defun my-re-enable-frame-theme (_frame)
+    (when-let ((theme (car custom-enabled-themes)))
+      (enable-theme theme)))
+
+  (add-hook 'after-make-frame-functions #'my-re-enable-frame-theme)
+
+  (add-hook 'after-init-hook (lambda () (set-frame-name "home")))
+#+END_SRC
+
 ** Defaults
 
 Change some of the defaults to make a more minimal interface.
 
 #+BEGIN_SRC elisp :noweb-ref emacs
   ;; Setup customization file
-  (setq custom-file "~/.config/emacs/custom.el")
+  (setq custom-file (make-temp-file "emacs-custom-"))
   ;; Never load it
   ;; (load custom-file)
 
@@ -45,8 +111,10 @@ Change some of the defaults to make a more minimal interface.
     (mapc 'load (file-expand-wildcards "~/.config/emacs/init.d/*.el"))
   )
 
-  ;; y/n for  answering yes/no questions
-  (fset 'yes-or-no-p 'y-or-n-p)
+  (setq use-short-answers t) ;; y/n for answering yes/no questions
+
+  (setq native-comp-async-report-warnings-errors 'silent) ; Emacs 28 with native compilation
+  (setq native-compile-prune-cache t) ; Emacs 29
 
   (setq-default indent-tabs-mode nil) ;; No tabs
   (setq-default tab-width 2) ;; 2 spaces as tabs
@@ -65,6 +133,8 @@ Change some of the defaults to make a more minimal interface.
         uniquify-separator " • "
         uniquify-after-kill-buffer-p t
         uniquify-ignore-buffers-re "^\\*")
+
+  (setq default-major-mode 'text-mode) ;; Default major mode
 #+END_SRC
 
 ** Simpler UI
@@ -72,39 +142,14 @@ Change some of the defaults to make a more minimal interface.
 As seen on https://www.youtube.com/watch?v=74zOY-vgkyw, and from the nano-defaults.el:
 
 #+BEGIN_SRC elisp :noweb-ref emacs
-  (setq inhibit-startup-screen t) ;; Disable startup screen
-  (setq inhibit-startup-message t) ;; Disable startup message
-  (setq inhibit-startup-echo-area-message t) ;; Disable startup message
-
-  (setq initial-scratch-message nil) ;; No message in scratch buffer
-  (setq initial-buffer-choice nil) ;; Initial buffer
-  (setq initial-major-mode 'text-mode) ;; Initial major mode
-
-  (setq default-major-mode 'text-mode) ;; Default major mode
-
-  (setq frame-title-format nil) ;; No frame title
-
-  (setq use-file-dialog nil) ;; No file dialog
-  (setq use-dialog-box nil) ;; No dialog box
-
   (setq indicate-empty-lines nil) ;; No empty line indicators
-
-  (setq cursor-in-non-selected-windows nil) ;; Disable cursor in inactive windows
-
   (setq font-lock-maximum-decoration nil) ;; Moderate font lock
   (setq font-lock-maximum-size nil) ;; No limit on font lock
 
   (setq fill-column 80) ;; Fill column at 80
   (global-visual-line-mode 1) ;; Do line wrapping everywhere
 
-  (menu-bar-mode -1) ;; Disable menubar
-  (scroll-bar-mode -1) ;; Disable visible scrollbar
-  (tool-bar-mode -1) ;; Disable the toolbar
-  (tooltip-mode -1) ;; Disable tooltips
-  (set-fringe-mode 10) ;; Give some breathing room
-
-  ;; Enable visible bell
-  (setq visible-bell t)
+  (setq visible-bell t) ;; Enable visible bell
 
   ;; Size of temporary buffers
   (temp-buffer-resize-mode)
@@ -112,36 +157,6 @@ As seen on https://www.youtube.com/watch?v=74zOY-vgkyw, and from the nano-defaul
 
   ;; Minimum window height
   (setq window-min-height 1)
-
-  ;; Add frame borders and window dividers
-  (modify-all-frames-parameters
-   '((right-divider-width . 20)
-     (internal-border-width . 20)))
-  (dolist (face '(window-divider
-                  window-divider-first-pixel
-                  window-divider-last-pixel))
-          (face-spec-reset-face face)
-            (set-face-foreground face (face-attribute 'default :background)))
-  (set-face-background 'fringe (face-attribute 'default :background))
-#+END_SRC
-
-** Line numbers
-
-#+BEGIN_SRC elisp :noweb-ref emacs
-  ;; Enable line numbers globally
-  (column-number-mode)
-  (global-display-line-numbers-mode t)
-
-  ;; Disable line numbers for some modes
-  (dolist (mode '(org-mode-hook
-                  term-mode-hook
-                  shell-mode-hook
-                  eshell-mode-hook
-                  vterm-mode-hook
-                  eat-mode-hook
-                  markdown-mode-hook
-                 ))
-          (add-hook mode (lambda () (display-line-numbers-mode 0))))
 #+END_SRC
 
 ** Package handling
@@ -194,6 +209,27 @@ Ensuring packages is not required when Guix is available, but useful otherwise.
     (require 'use-package-ensure)
     (setq use-package-always-ensure t)
   )
+#+END_SRC
+
+** Line numbers
+
+#+BEGIN_SRC elisp :noweb-ref emacs
+(use-package display-line-numbers
+  :defer
+  :config
+    ;; Set absolute line numbers.  A value of "relative" is also useful.
+    (setq display-line-numbers-type t)
+    (global-display-line-numbers-mode t)
+
+    ;; Disable line numbers for some modes
+    (dolist (mode '(org-mode-hook
+                    term-mode-hook
+                    shell-mode-hook
+                    eshell-mode-hook
+                    eat-mode-hook
+                    markdown-mode-hook
+                   ))
+            (add-hook mode (lambda () (display-line-numbers-mode nil)))))
 #+END_SRC
 
 ** No littering
@@ -615,7 +651,7 @@ Add the Guix packages to the home config:
   )
 #+END_SRC
 
-** Visual Fill
+** Olivetti
 
 *** Installation
 
@@ -625,9 +661,9 @@ If guix is not installed, then install within Emacs using quelpa:
   (unless (executable-find "guix")
     ;; The visual-fill-column was moved to Codeberg, but it is still archived on Github
     (quelpa
-     '(visual-fill-column
+     '(olivetti
        :fetcher github
-       :repo "joostkremers/visual-fill-column"))
+       :repo "rnkn/olivetti"))
   )
 #+END_SRC
 
@@ -636,20 +672,21 @@ Add the Guix packages to the home config:
 #+BEGIN_SRC scheme :noweb-ref guix-home
   (define %home-packages
     (append %home-packages
-            (list "emacs-visual-fill-column")))
+            (list "emacs-olivetti")))
 #+END_SRC
 
 *** Configuration
 
 #+BEGIN_SRC elisp :noweb-ref emacs
-  ;; Configure Visual Fill
-  (defun myhooks/visual-fill-column ()
-    (setq visual-fill-column-center-text t)
-    (visual-fill-column-mode 1))
+  (use-package olivetti
+    :diminish
+    :config
+      (setq olivetti-minimum-body-width 40
+            olivetti-recall-visual-line-mode-entry-state t
+            olivetti-style "fancy")
 
-  (use-package visual-fill-column
-    :hook (org-mode . myhooks/visual-fill-column)
-    :hook (markdown-mode . myhooks/visual-fill-column)
+    :hook (org-mode . olivetti-mode)
+    :hook (markdown-mode . olivetti-mode)
   )
 #+END_SRC
 
@@ -718,8 +755,7 @@ Add the Guix package to the home config:
     :after evil
     :config
       (evil-collection-init '(org
-                              dired
-                              vterm))
+                              dired))
   )
 
   (use-package evil-commentary
@@ -741,12 +777,28 @@ Add the Guix packages to the home config:
 
 ** Spell checking
 
+*** Installation
+
+Add the Guix packages to the home config:
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (define %home-packages
+    (append %home-packages
+            (list "hunspell"
+                  "hunspell-dict-hu"
+                  "hunspell-dict-en")))
+#+END_SRC
+
+If you are not on Guix you can download the dictionaries from the LibreOffice repository:
+
+https://cgit.freedesktop.org/libreoffice/dictionaries/tree
+
+*** Configuration
+
 #+BEGIN_SRC elisp :noweb-ref emacs
   (use-package flyspell
     :init
       ;; Configure hunspell
-      ;; You can get dictionaries from the Libreoffice repo:
-      ;; https://cgit.freedesktop.org/libreoffice/dictionaries/tree
       (setq ispell-program-name "hunspell")
       (setq ispell-hunspell-dict-paths-alist
         '(("hu_HU" (concat (if (eq system-type 'windows-nt) (getenv "USERPROFILE") "~") (if (executable-find "guix") "/.guix-home/profile" "/.local") "/share/hunspell/hu_HU.aff"))
@@ -759,21 +811,11 @@ Add the Guix packages to the home config:
   )
 #+END_SRC
 
-Add the Guix packages to the home config:
-
-#+BEGIN_SRC scheme :noweb-ref guix-home
-  (define %home-packages
-    (append %home-packages
-            (list "hunspell"
-                  "hunspell-dict-hu"
-                  "hunspell-dict-en")))
-#+END_SRC
-
 ** Org-mode
 
 *** Installation
 
-Org is bundled inside Emacs, so only need to install some extra packages, like emacs-org-modern emacs-org-contrib.
+Org is bundled inside Emacs, so only need to install some extra packages, like emacs-org-modern and emacs-org-contrib.
 
 If guix is not installed, then install within Emacs using quelpa:
 
@@ -792,16 +834,19 @@ If guix is not installed, then install within Emacs using quelpa:
 Add the Guix packages to the home config:
 
 #+BEGIN_SRC scheme :noweb-ref guix-home
-  (define %home-packages
-    (append %home-packages
-            (list "emacs-org-modern")))
+    (define %home-packages
+      (append %home-packages
+              (list "emacs-org-modern"
+                    "emacs-org-contrib")))
 #+END_SRC
 
 *** Configuration
 
 #+BEGIN_SRC elisp :noweb-ref emacs
   (defun myhooks/org-mode-setup ()
-    (org-indent-mode)
+    ;; Disable org-indent-mode because it causes empty background
+    ;; for source blocks when the lines are too long
+    (org-indent-mode -1)
     (variable-pitch-mode 1)
     (setq visual-line-fringe-indicators t)
     (visual-line-mode 1))
@@ -856,6 +901,9 @@ Add the Guix packages to the home config:
   (use-package org-modern
     :after org
     :config
+      ;; Disable fringe, because Olivetti will move it to the left
+      ;; and it looks ugly:
+      (setq org-modern-block-fringe nil)
       (with-eval-after-load 'org (global-org-modern-mode))
   )
 #+END_SRC
@@ -1052,8 +1100,7 @@ Add the Guix packages to the home config:
   (define %home-packages
     (append %home-packages
             (list "emacs-magit"
-                  "emacs-eat"
-                  "emacs-vterm")))
+                  "emacs-eat")))
 #+END_SRC
 
 * Guix config
@@ -1080,11 +1127,14 @@ Add the Guix packages to the home config:
 ** Symlinking the init.el file
 
 #+BEGIN_SRC scheme :noweb-ref guix-home
-  (define %home-services
-    (append %home-services
-            (list
-             (simple-service 'emacs-symlinking-service
-                             home-files-service-type
-                             `((".config/emacs/init.el"
-                                ,(local-file "home/.config/emacs/init.el" "emacs-init")))))))
+    (define %home-services
+      (append %home-services
+              (list
+               (simple-service 'emacs-symlinking-service
+                               home-files-service-type
+                               `((".config/emacs/early-init.el"
+                                  ,(local-file "home/.config/emacs/early-init.el" "emacs-early-init"))
+                                 (".config/emacs/init.el"
+                                  ,(local-file "home/.config/emacs/init.el" "emacs-init"))
+  )))))
 #+END_SRC
