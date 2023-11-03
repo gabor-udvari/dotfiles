@@ -462,140 +462,153 @@ Add the Guix package to the home config:
 *** Configuration
 
 #+BEGIN_SRC elisp :noweb-ref emacs
-(use-package general
-    :after evil
-    :config
-    (general-create-definer my-leader-def
-                            :prefix "SPC"
-                            )
+  (use-package general
+      :after evil
+      :config
+      (general-create-definer my-leader-def
+                              :prefix "SPC"
+                              )
 
-    ;; Global keybindigs
-    (my-leader-def
-     :states '(normal emacs)
-     :keymaps 'override
-     :major-modes t
+      ;; Global keybindigs
+      (my-leader-def
+       :states '(normal emacs)
+       :keymaps 'override
+       :major-modes t
 
-     "SPC"     '("M-x" . execute-extended-command)
-     "TAB"     '("last buffer" . alternate-buffer)
-     "!"       '("shell cmd" . shell-command)
+       "SPC"     '("M-x" . execute-extended-command)
+       "TAB"     '("last buffer" . alternate-buffer)
+       "!"       '("shell cmd" . shell-command)
 
-     ;; Buffer
-     "b"       (cons "buffers" (make-sparse-keymap))
-     "bb"      'switch-to-buffer
-     "bB"      'ibuffer
-     "bd"      'kill-current-buffer
-     "bm"      'switch-to-messages-buffer
-     "bs"      'switch-to-scratch-buffer
-     "bu"      'reopen-killed-buffer
-     "bx"      'kill-buffer-and-window
+       ;; Buffer
+       "b"       (cons "buffers" (make-sparse-keymap))
+       "bb"      'switch-to-buffer
+       "bB"      'ibuffer
+       "bd"      'kill-current-buffer
+       "bm"      'switch-to-messages-buffer
+       "bs"      'switch-to-scratch-buffer
+       "bu"      'reopen-killed-buffer
+       "bx"      'kill-buffer-and-window
 
-     ;; Code
-     "c"       (cons "code" (make-sparse-keymap))
-     "cb"      'flymake-show-buffer-diagnostics
-     "cc"      'compile
-     "cn"      'next-error
-     "cp"      'previous-error
-     "cr"      'recompile
-     "cx"      'kill-compilation
-     "c="      'indent-region-or-buffer
+       ;; Code
+       "c"       (cons "code" (make-sparse-keymap))
+       "cb"      'flymake-show-buffer-diagnostics
+       "cc"      'compile
+       "cn"      'next-error
+       "cp"      'previous-error
+       "cr"      'recompile
+       "cx"      'kill-compilation
+       "c="      'indent-region-or-buffer
 
-     ;; File
-     "f"       (cons "files" (make-sparse-keymap))
-     "fC"      '("copy-file" . write-file)
-     "fD"      'delete-current-buffer-file
-     "fe"      'find-library
-     "fE"      'sudo-edit
-     "ff"      'find-file
-     "fj"      'dired-jump
-     "fJ"      'dired-jump-other-window
-     "fo"      'open-file-or-directory-in-external-app
-     "fR"      'rename-current-buffer-file
-     "fs"      'save-buffer
-     "fv"      (cons "variables" (make-sparse-keymap))
-     "fvd"     'add-dir-local-variable
-     "fvf"     'add-file-local-variable
-     "fvp"     'add-file-local-variable-prop-line
+       ;; File
+       "f"       (cons "files" (make-sparse-keymap))
+       "fC"      '("copy-file" . write-file)
+       "fD"      'delete-current-buffer-file
+       "fe"      'find-library
+       "fE"      'sudo-edit
+       "ff"      'find-file
+       "fj"      'dired-jump
+       "fJ"      'dired-jump-other-window
+       "fo"      'open-file-or-directory-in-external-app
+       "fR"      'rename-current-buffer-file
+       "fs"      'save-buffer
+       "fv"      (cons "variables" (make-sparse-keymap))
+       "fvd"     'add-dir-local-variable
+       "fvf"     'add-file-local-variable
+       "fvp"     'add-file-local-variable-prop-line
 
-     ;; Help
-     "h"       (cons "help" (make-sparse-keymap))
-     "ha"      'apropos
-     "hb"      'describe-bindings
-     "hc"      'describe-char
-     "hf"      'describe-function
-     "hF"      'describe-face
-     "hi"      'info-emacs-manual
-     "hI"      'info-display-manual
-     "hk"      'describe-key
-     "hK"      'describe-keymap
-     "hm"      'describe-mode
-     "hM"      'woman
-     "hp"      'describe-package
-     "ht"      'describe-text-properties
-     "hv"      'describe-variable
-     "hP"      (cons "profiler" (make-sparse-keymap))
-     "hPs"     'profiler-start
-     "hPk"     'profiler-stop
-     "hPr"     'profiler-report
+       ;; Git
+       "g"       (cons "git" (make-sparse-keymap))
+       "gg"      'magit-status
+       "gp"      'magit-pull
+       "gP"      'magit-push
 
-     ;; Projects
-     "p"       (cons "projects" project-prefix-map)
-     "pt"      'project-open-in-tab
+       ;; Help
+       "h"       (cons "help" (make-sparse-keymap))
+       "ha"      'apropos
+       "hb"      'describe-bindings
+       "hc"      'describe-char
+       "hf"      'describe-function
+       "hF"      'describe-face
+       "hi"      'info-emacs-manual
+       "hI"      'info-display-manual
+       "hk"      'describe-key
+       "hK"      'describe-keymap
+       "hm"      'describe-mode
+       "hM"      'woman
+       "hp"      'describe-package
+       "ht"      'describe-text-properties
+       "hv"      'describe-variable
+       "hP"      (cons "profiler" (make-sparse-keymap))
+       "hPs"     'profiler-start
+       "hPk"     'profiler-stop
+       "hPr"     'profiler-report
 
-     ;; Quit
-     "q"       (cons "quit" (make-sparse-keymap))
-     "qd"      'restart-emacs-debug-init
-     "qr"      'restart-emacs
-     "qR"      'restart-emacs-without-desktop
-     "qf"      'delete-frame
-     "qq"      'save-buffers-kill-terminal
-     "qQ"      'save-buffers-kill-emacs
+       ;; Projects
+       "p"       (cons "projects" project-prefix-map)
+       "pt"      'project-open-in-tab
 
-     ;; Spelling
-     "s"       (cons "spelling" (make-sparse-keymap))
-     "sb"      'flyspell-buffer
-     "sn"      'flyspell-goto-next-error
-     "sr"      'flyspell-region
+       ;; Quit
+       "q"       (cons "quit" (make-sparse-keymap))
+       "qd"      'restart-emacs-debug-init
+       "qr"      'restart-emacs
+       "qR"      'restart-emacs-without-desktop
+       "qf"      'delete-frame
+       "qq"      'save-buffers-kill-terminal
+       "qQ"      'save-buffers-kill-emacs
 
-     ;; Toggles
-     "T"       (cons "toggles" (make-sparse-keymap))
-     "Ta"      'auto-fill-mode
-     "Td"      'toggle-debug-on-error
-     "Tf"      'display-fill-column-indicator-mode
-     "Tl"      'toggle-truncate-lines
-     "Tm"      'flymake-mode
-     "Tn"      'display-line-numbers-mode
-     "Ts"      'flyspell-mode
-     "Tw"      'whitespace-mode
-     "TW"      'toggle-word-wrap
+       ;; Spelling
+       "s"       (cons "spelling" (make-sparse-keymap))
+       "sb"      'flyspell-buffer
+       "sn"      'flyspell-goto-next-error
+       "sr"      'flyspell-region
 
-     ;; Windows
-     "w"       (cons "windows" (make-sparse-keymap))
-     "w TAB"   'alternate-window
-     "w+"      'window-layout-toggle
-     "wb"      'switch-to-minibuffer-window
-     "wd"      'delete-window
-     "wD"      'delete-other-windows
-     "wm"      'toggle-maximize-buffer
-     "wf"      'follow-mode
-     "wh"      'evil-window-left
-     "wH"      'evil-window-move-far-left
-     "wj"      'evil-window-down
-     "wJ"      'evil-window-move-very-bottom
-     "wk"      'evil-window-up
-     "wK"      'evil-window-move-very-top
-     "wl"      'evil-window-right
-     "wL"      'evil-window-move-far-right
-     "wr"      'rotate-windows-forward
-     "wR"      'rotate-windows-backward
-     "ws"      'split-window-vertically
-     "wS"      'split-window-vertically-and-focus
-     "wt"      'toggle-current-window-dedication
-     "wu"      'winner-undo
-     "wU"      'winner-redo
-     "wv"      'split-window-horizontally
-     "wV"      'split-window-horizontally-and-focus
-     )
-    )
+       ;; Terminal
+       "t"       (cons "terminal" (make-sparse-keymap))
+       "tt"      'eat
+       "tT"      'eat-other-window
+       "tc"      'async-shell-command
+       "tC"      'shell-command
+
+       ;; Toggles
+       "T"       (cons "toggles" (make-sparse-keymap))
+       "Ta"      'auto-fill-mode
+       "Td"      'toggle-debug-on-error
+       "Tf"      'display-fill-column-indicator-mode
+       "Tl"      'toggle-truncate-lines
+       "Tm"      'flymake-mode
+       "Tn"      'display-line-numbers-mode
+       "Ts"      'flyspell-mode
+       "Tw"      'whitespace-mode
+       "TW"      'toggle-word-wrap
+
+       ;; Windows
+       "w"       (cons "windows" (make-sparse-keymap))
+       "w TAB"   'alternate-window
+       "w+"      'window-layout-toggle
+       "wb"      'switch-to-minibuffer-window
+       "wd"      'delete-window
+       "wD"      'delete-other-windows
+       "wm"      'toggle-maximize-buffer
+       "wf"      'follow-mode
+       "wh"      'evil-window-left
+       "wH"      'evil-window-move-far-left
+       "wj"      'evil-window-down
+       "wJ"      'evil-window-move-very-bottom
+       "wk"      'evil-window-up
+       "wK"      'evil-window-move-very-top
+       "wl"      'evil-window-right
+       "wL"      'evil-window-move-far-right
+       "wr"      'rotate-windows-forward
+       "wR"      'rotate-windows-backward
+       "ws"      'split-window-vertically
+       "wS"      'split-window-vertically-and-focus
+       "wt"      'toggle-current-window-dedication
+       "wu"      'winner-undo
+       "wU"      'winner-redo
+       "wv"      'split-window-horizontally
+       "wV"      'split-window-horizontally-and-focus
+       )
+      )
 #+END_SRC
 
 ** Disable mouse
@@ -755,7 +768,8 @@ Add the Guix package to the home config:
     :after evil
     :config
       (evil-collection-init '(org
-                              dired))
+                              dired
+                              magit))
   )
 
   (use-package evil-commentary
@@ -879,19 +893,24 @@ Add the Guix packages to the home config:
 
   (defun my-notes ()
     (expand-file-name
-      (concat (if (eq system-type 'windows-nt) (getenv "USERPROFILE") "~") "/Jegyzetek")))
+     (concat (if (eq system-type 'windows-nt) (getenv "USERPROFILE") "~") "/Jegyzetek")))
 
   (use-package org
     :hook (org-mode . myhooks/org-mode-setup)
     :hook (org-mode . myhooks/org-font-setup)
     :init
-      (setq org-ellipsis " ▾")
-      ;; Hide leading stars
-      (setq org-hide-leading-stars nil)
+    (setq org-ellipsis " ▾")
+    ;; Hide leading stars
+    (setq org-hide-leading-stars nil)
 
-      ;; Org Agenda
-      (setq org-agenda-files (list (my-notes)))
-  )
+    ;; Org Agenda
+    (setq org-agenda-files (list (my-notes)))
+    )
+
+    ;; Active Babel languages
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((shell . t)))
 
   (use-package ox-md)
 
@@ -901,11 +920,11 @@ Add the Guix packages to the home config:
   (use-package org-modern
     :after org
     :config
-      ;; Disable fringe, because Olivetti will move it to the left
-      ;; and it looks ugly:
-      (setq org-modern-block-fringe nil)
-      (with-eval-after-load 'org (global-org-modern-mode))
-  )
+    ;; Disable fringe, because Olivetti will move it to the left
+    ;; and it looks ugly:
+    (setq org-modern-block-fringe nil)
+    (with-eval-after-load 'org (global-org-modern-mode))
+    )
 #+END_SRC
 
 ** Denote
@@ -1092,6 +1111,35 @@ Add the Guix packages to the home config:
                   "direnv")))
 #+END_SRC
 
+** Magit
+
+*** Installation
+
+If guix is not installed, then install within Emacs using quelpa:
+
+#+BEGIN_SRC elisp :noweb-ref emacs
+  (unless (executable-find "guix")
+    (quelpa
+     '(emms-setup
+       :fetcher github
+       :repo "magit/magit"))
+  )
+#+END_SRC
+
+Add the Guix packages to the home config:
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (define %home-packages
+    (append %home-packages
+            (list "emacs-magit")))
+#+END_SRC
+
+*** Configuration
+
+#+BEGIN_SRC elisp :noweb-ref emacs
+  (use-package magit)
+#+END_SRC
+
 ** Various other packages
 
 Add the Guix packages to the home config:
@@ -1099,8 +1147,7 @@ Add the Guix packages to the home config:
 #+BEGIN_SRC scheme :noweb-ref guix-home
   (define %home-packages
     (append %home-packages
-            (list "emacs-magit"
-                  "emacs-eat")))
+            (list "emacs-eat")))
 #+END_SRC
 
 * Guix config

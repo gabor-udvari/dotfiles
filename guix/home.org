@@ -11,25 +11,24 @@
    ;; Below is the list of packages that will show up in your
    ;; Home profile, under ~/.guix-home/profile.
    (packages (append
-              (specifications->packages (append (list ;; "glibc-locales"
-                                                 "bind:utils"
-                                                 "fontconfig"
-                                                 "font-abattis-cantarell"
-                                                 "shellcheck"
-                                                 "jq"
-                                                 "python-yamllint"
-                                                 "grep"
-                                                 "git"
-                                                 "git-annex"
-                                                 "findutils"
-                                                 "pdfgrep"
-                                                 "qpdf"
-                                                 "podman"
-                                                 "docker-compose"
-                                                 )
-                                                %home-packages))
-              (list my-glibc-locales))
-             )
+              (specifications->packages
+               (append (list "bind:utils"
+                             "fontconfig"
+                             "font-abattis-cantarell"
+                             "shellcheck"
+                             "jq"
+                             "python-yamllint"
+                             "grep"
+                             "git"
+                             "git-annex"
+                             "findutils"
+                             "pdfgrep"
+                             "qpdf"
+                             "podman"
+                             "docker-compose"
+                             )
+                        %home-packages))
+              (list my-glibc-locales)))
 
    ;; Below is the list of Home services.  To search for available
    ;; services, run 'guix home search KEYWORD' in a terminal.
