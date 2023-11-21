@@ -722,24 +722,6 @@ Add the Guix package to the home config:
             (list "emacs-vertico")))
 #+END_SRC
 
-** Doom modeline
-
-#+BEGIN_SRC elisp :noweb-ref emacs
-  ;; Doom-modeline
-  (use-package doom-modeline
-    :init
-      (doom-modeline-mode 1)
-  )
-#+END_SRC
-
-Add the Guix package to the home config:
-
-#+BEGIN_SRC scheme :noweb-ref guix-home
-  (define %home-packages
-    (append %home-packages
-            (list "emacs-doom-modeline")))
-#+END_SRC
-
 ** Evil
 
 #+BEGIN_SRC elisp :noweb-ref emacs
@@ -1034,6 +1016,38 @@ Add the Guix package to the home config:
   (define %home-packages
     (append %home-packages
             (list "emacs-yaml-mode")))
+#+END_SRC
+
+** PDF Tools
+
+*** Installation
+
+If guix is not installed, then install within Emacs using quelpa:
+
+#+BEGIN_SRC elisp :noweb-ref emacs
+  (unless (executable-find "guix")
+    (quelpa
+     '(pdf-tools
+       :fetcher github
+       :repo "vedang/pdf-tools"))
+  )
+#+END_SRC
+
+Add the Guix packages to the home config:
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (define %home-packages
+    (append %home-packages
+            (list "emacs-pdf-tools")))
+#+END_SRC
+
+*** Configuration
+
+#+BEGIN_SRC elisp :noweb-ref emacs
+  (use-package pdf-tools
+    :magic ("%PDF" . pdf-view-mode)
+    :config (pdf-loader-install)
+    )
 #+END_SRC
 
 ** EMMS

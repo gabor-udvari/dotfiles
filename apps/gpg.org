@@ -1,0 +1,55 @@
+#+title: GPG
+#+author: Gábor Udvari
+
+* Guides on using GPG
+
+- https://wiki.debian.org/Subkeys?action=show&redirect=subkeys
+- https://security.stackexchange.com/questions/31594/what-is-a-good-general-purpose-gnupg-key-setup/31598#31598
+- https://gpg.wtf/
+
+* Configuration
+
+#+BEGIN_SRC text :noweb yes :exports none :mkdirp yes :tangle ../build/home/.gnupg/gpg.conf
+  <<gpg-config>>
+#+END_SRC
+
+#+BEGIN_SRC text :noweb-ref gpg-config
+  keyid-format LONG
+  with-fingerprint
+  with-keygrip
+#+END_SRC
+
+* Guix home services
+
+We need to start the GPG Agent service and also set the pinentry program to ~/bin/pinentry~.
+
+We also need to link the ~gpg.conf~ file to its final folder.
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (use-modules (gnu home services gnupg))
+
+  (define %home-services
+    (append %home-services
+            (list
+             (service home-gpg-agent-service-type
+                      (home-gpg-agent-configuration
+                       (pinentry-program
+                        (file-append pinentry "/bin/pinentry"))
+                       (ssh-support? #f)))
+
+             (simple-service 'gpg-symlinking-service
+                             home-files-service-type
+                             `((".gnupg/gpg.conf"
+                                ,(local-file "home/.gnupg/gpg.conf" "gpg-conf")))))))
+#+END_SRC
+
+* Guix packages
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (use-modules (gnu packages gnupg))
+
+  (define %home-packages
+    (append %home-packages
+            (list "gnupg"
+                  "pinentry")))
+#+END_SRC
