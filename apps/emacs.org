@@ -40,8 +40,8 @@ The different emacs packages will be installed through Guix home, therefore we w
 
         cursor-in-non-selected-windows nil) ;; Disable cursor in inactive windows)
 
-    (menu-bar-mode -1) ;; Disable menubar
-    (scroll-bar-mode -1) ;; Disable visible scrollbar
+    ;; (menu-bar-mode -1) ;; Disable menubar
+    ;; (scroll-bar-mode -1) ;; Disable visible scrollbar
     (tool-bar-mode -1) ;; Disable the toolbar
     (tooltip-mode -1) ;; Disable tooltips
     (set-fringe-mode 10) ;; Give some breathing room
@@ -611,40 +611,6 @@ Add the Guix package to the home config:
       )
 #+END_SRC
 
-** Disable mouse
-
-#+BEGIN_SRC elisp :noweb-ref emacs
-  (use-package disable-mouse
-    :after evil
-    :init
-      (global-disable-mouse-mode)
-
-      ;; This code is still unreleased for disable-mouse
-      ;;;###autoload
-      (defun disable-mouse-in-keymap (map &optional include-targets)
-        "Rebind all mouse commands in MAP so that they are disabled.
-      When INCLUDE-TARGETS is non-nil, also disable mouse actions that
-      target GUI elements such as the modeline."
-        (dolist (binding (disable-mouse--all-bindings include-targets))
-          (define-key map binding 'disable-mouse--handle)))
-
-      (mapc #'disable-mouse-in-keymap
-            (list evil-motion-state-map
-                  evil-normal-state-map
-                  evil-visual-state-map
-                  evil-insert-state-map
-                  ))
-  )
-#+END_SRC
-
-Add the Guix packages to the home config:
-
-#+BEGIN_SRC scheme :noweb-ref guix-home
-  (define %home-packages
-    (append %home-packages
-            (list "emacs-disable-mouse")))
-#+END_SRC
-
 ** Which key
 
 *** Installation
@@ -720,55 +686,6 @@ Add the Guix package to the home config:
   (define %home-packages
     (append %home-packages
             (list "emacs-vertico")))
-#+END_SRC
-
-** Evil
-
-#+BEGIN_SRC elisp :noweb-ref emacs
-  ;; For certain modes start in Emacs mode by default
-  (defun myhooks/evil-hook ()
-    (dolist (mode '(custom-mode
-                    git-rebase-mode
-                    ))
-      (add-to-list 'evil-emacs-state-modes mode)))
-
-  (use-package evil
-    :init
-      (setq evil-want-keybinding nil)
-
-    :config
-      (setq evil-want-integration t)
-      (add-hook 'evil-mode #'myhooks/evil-hook)
-      (evil-mode 1)
-      (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
-      (evil-global-set-key 'motion "j" 'evil-next-visual-line)
-      (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
-      (evil-set-initial-state 'messages-buffer-mode 'normal)
-  )
-
-  (use-package evil-collection
-    :after evil
-    :config
-      (evil-collection-init '(org
-                              dired
-                              magit))
-  )
-
-  (use-package evil-commentary
-    :after evil
-    :init
-      (evil-commentary-mode)
-  )
-#+END_SRC
-
-Add the Guix packages to the home config:
-
-#+BEGIN_SRC scheme :noweb-ref guix-home
-  (define %home-packages
-    (append %home-packages
-            (list "emacs-evil"
-                  "emacs-evil-collection"
-                  "emacs-evil-commentary")))
 #+END_SRC
 
 ** Spell checking
