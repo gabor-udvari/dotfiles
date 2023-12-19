@@ -94,6 +94,7 @@ The following category configs are customized how I am grouping my transfers. Yo
   MUNKABER
   & SAP
   SAP HUNGARY KFT
+  DEUTSCHE TELEKOM
     account2 Bevételek:Gábor fizetés
 
   if
@@ -276,7 +277,7 @@ The following category configs are customized how I am grouping my transfers. Yo
   BALATON PLÁZA
   GUMIFLEX SZFVAR
   BKK BUDAPESTGO
-    account2 Kiadások:Autó
+    account2 Kiadások:Közlekedés:Autó
 
   if
   MOL Nyrt
@@ -284,7 +285,7 @@ The following category configs are customized how I am grouping my transfers. Yo
   MOL * sz\. toltoall
   SZÉKESFEHÉRVÁR BENZ
   MOL 21202 sz\. toltoall
-    account2 Kiadások:Autó:Tankolás
+    account2 Kiadások:Közlekedés:Autó:Tankolás
 
   if
   FACEBK
@@ -312,6 +313,7 @@ The following category configs are customized how I am grouping my transfers. Yo
 
   if
   NHKV
+  MOHU MOL
     account2 Kiadások:Szolgáltatók:Hulladék
 
   if

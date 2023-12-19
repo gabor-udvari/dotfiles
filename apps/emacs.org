@@ -33,7 +33,7 @@ The different emacs packages will be installed through Guix home, therefore we w
         initial-scratch-message nil ;; No message in scratch buffer
         initial-buffer-choice nil ;; Initial buffer
 
-        frame-title-format nil ;; No frame title
+        ;; frame-title-format nil ;; No frame title
 
         use-file-dialog nil ;; No file dialog
         use-dialog-box nil ;; No dialog box
@@ -401,216 +401,6 @@ Add the Guix package to the home config:
   )
 #+END_SRC
 
-** All the icons
-
-*** Installation
-
-If guix is not installed, then install within Emacs using quelpa:
-
-#+BEGIN_SRC elisp :noweb-ref emacs
-  (unless (executable-find "guix")
-    (quelpa
-     '(all-the-icons
-       :fetcher github
-       :repo "domtronn/all-the-icons.el"
-       :files (:defaults
-               "data")
-      ))
-  )
-#+END_SRC
-
-Add the Guix package to the home config:
-
-#+BEGIN_SRC scheme :noweb-ref guix-home
-  (define %home-packages
-    (append %home-packages
-            (list "emacs-all-the-icons")))
-#+END_SRC
-
-*** Config
-
-#+BEGIN_SRC elisp :noweb-ref emacs
-  ;; Load all the icons before the dashboard
-  (use-package all-the-icons)
-#+END_SRC
-
-** Keybindings with General
-
-*** Installation
-
-If guix is not installed, then install within Emacs using quelpa:
-
-#+BEGIN_SRC elisp :noweb-ref emacs
-  (unless (executable-find "guix")
-    (quelpa
-     '(general
-       :fetcher github
-       :repo "noctuid/general.el"
-       :stable nil
-      ))
-  )
-#+END_SRC
-
-Add the Guix package to the home config:
-
-#+BEGIN_SRC scheme :noweb-ref guix-home
-  (define %home-packages
-    (append %home-packages
-            (list "emacs-general")))
-#+END_SRC
-
-*** Configuration
-
-#+BEGIN_SRC elisp :noweb-ref emacs
-  (use-package general
-      :after evil
-      :config
-      (general-create-definer my-leader-def
-                              :prefix "SPC"
-                              )
-
-      ;; Global keybindigs
-      (my-leader-def
-       :states '(normal emacs)
-       :keymaps 'override
-       :major-modes t
-
-       "SPC"     '("M-x" . execute-extended-command)
-       "TAB"     '("last buffer" . alternate-buffer)
-       "!"       '("shell cmd" . shell-command)
-
-       ;; Buffer
-       "b"       (cons "buffers" (make-sparse-keymap))
-       "bb"      'switch-to-buffer
-       "bB"      'ibuffer
-       "bd"      'kill-current-buffer
-       "bm"      'switch-to-messages-buffer
-       "bs"      'switch-to-scratch-buffer
-       "bu"      'reopen-killed-buffer
-       "bx"      'kill-buffer-and-window
-
-       ;; Code
-       "c"       (cons "code" (make-sparse-keymap))
-       "cb"      'flymake-show-buffer-diagnostics
-       "cc"      'compile
-       "cn"      'next-error
-       "cp"      'previous-error
-       "cr"      'recompile
-       "cx"      'kill-compilation
-       "c="      'indent-region-or-buffer
-
-       ;; File
-       "f"       (cons "files" (make-sparse-keymap))
-       "fC"      '("copy-file" . write-file)
-       "fD"      'delete-current-buffer-file
-       "fe"      'find-library
-       "fE"      'sudo-edit
-       "ff"      'find-file
-       "fj"      'dired-jump
-       "fJ"      'dired-jump-other-window
-       "fo"      'open-file-or-directory-in-external-app
-       "fR"      'rename-current-buffer-file
-       "fs"      'save-buffer
-       "fv"      (cons "variables" (make-sparse-keymap))
-       "fvd"     'add-dir-local-variable
-       "fvf"     'add-file-local-variable
-       "fvp"     'add-file-local-variable-prop-line
-
-       ;; Git
-       "g"       (cons "git" (make-sparse-keymap))
-       "gg"      'magit-status
-       "gp"      'magit-pull
-       "gP"      'magit-push
-
-       ;; Help
-       "h"       (cons "help" (make-sparse-keymap))
-       "ha"      'apropos
-       "hb"      'describe-bindings
-       "hc"      'describe-char
-       "hf"      'describe-function
-       "hF"      'describe-face
-       "hi"      'info-emacs-manual
-       "hI"      'info-display-manual
-       "hk"      'describe-key
-       "hK"      'describe-keymap
-       "hm"      'describe-mode
-       "hM"      'woman
-       "hp"      'describe-package
-       "ht"      'describe-text-properties
-       "hv"      'describe-variable
-       "hP"      (cons "profiler" (make-sparse-keymap))
-       "hPs"     'profiler-start
-       "hPk"     'profiler-stop
-       "hPr"     'profiler-report
-
-       ;; Projects
-       "p"       (cons "projects" project-prefix-map)
-       "pt"      'project-open-in-tab
-
-       ;; Quit
-       "q"       (cons "quit" (make-sparse-keymap))
-       "qd"      'restart-emacs-debug-init
-       "qr"      'restart-emacs
-       "qR"      'restart-emacs-without-desktop
-       "qf"      'delete-frame
-       "qq"      'save-buffers-kill-terminal
-       "qQ"      'save-buffers-kill-emacs
-
-       ;; Spelling
-       "s"       (cons "spelling" (make-sparse-keymap))
-       "sb"      'flyspell-buffer
-       "sn"      'flyspell-goto-next-error
-       "sr"      'flyspell-region
-
-       ;; Terminal
-       "t"       (cons "terminal" (make-sparse-keymap))
-       "tt"      'eat
-       "tT"      'eat-other-window
-       "tc"      'async-shell-command
-       "tC"      'shell-command
-
-       ;; Toggles
-       "T"       (cons "toggles" (make-sparse-keymap))
-       "Ta"      'auto-fill-mode
-       "Td"      'toggle-debug-on-error
-       "Tf"      'display-fill-column-indicator-mode
-       "Tl"      'toggle-truncate-lines
-       "Tm"      'flymake-mode
-       "Tn"      'display-line-numbers-mode
-       "Ts"      'flyspell-mode
-       "Tw"      'whitespace-mode
-       "TW"      'toggle-word-wrap
-
-       ;; Windows
-       "w"       (cons "windows" (make-sparse-keymap))
-       "w TAB"   'alternate-window
-       "w+"      'window-layout-toggle
-       "wb"      'switch-to-minibuffer-window
-       "wd"      'delete-window
-       "wD"      'delete-other-windows
-       "wm"      'toggle-maximize-buffer
-       "wf"      'follow-mode
-       "wh"      'evil-window-left
-       "wH"      'evil-window-move-far-left
-       "wj"      'evil-window-down
-       "wJ"      'evil-window-move-very-bottom
-       "wk"      'evil-window-up
-       "wK"      'evil-window-move-very-top
-       "wl"      'evil-window-right
-       "wL"      'evil-window-move-far-right
-       "wr"      'rotate-windows-forward
-       "wR"      'rotate-windows-backward
-       "ws"      'split-window-vertically
-       "wS"      'split-window-vertically-and-focus
-       "wt"      'toggle-current-window-dedication
-       "wu"      'winner-undo
-       "wU"      'winner-redo
-       "wv"      'split-window-horizontally
-       "wV"      'split-window-horizontally-and-focus
-       )
-      )
-#+END_SRC
-
 ** Which key
 
 *** Installation
@@ -824,6 +614,92 @@ Add the Guix packages to the home config:
     (setq org-modern-block-fringe nil)
     (with-eval-after-load 'org (global-org-modern-mode))
     )
+#+END_SRC
+
+** Paredit
+
+*** Installation
+
+If guix is not installed, then install within Emacs using quelpa:
+
+#+BEGIN_SRC elisp :noweb-ref emacs
+  (unless (executable-find "guix")
+    (quelpa
+     '(paredit
+       :fetcher github
+       :repo "paredit/paredit.el"))
+  )
+#+END_SRC
+
+Add the Guix package to the home config:
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (define %home-packages
+    (append %home-packages
+            (list "emacs-paredit")))
+#+END_SRC
+
+*** Configuration
+
+#+BEGIN_SRC elisp :noweb-ref emacs
+  (use-package paredit
+    :commands (enable-paredit-mode)
+    :hook ((emacs-lisp-mode . enable-paredit-mode)
+           (eval-expression-minibuffer-setup . enable-paredit-mode)
+           (ielm-mode . enable-paredit-mode)
+           (lisp-mode . enable-paredit-mode)
+           (lisp-interaction-mode . enable-paredit-mode)
+           (scheme-mode . enable-paredit-mode)
+           (slime-repl-mode . enable-paredit-mode)
+           (clojure-mode . enable-paredit-mode)
+           (clojurescript-mode . enable-paredit-mode)
+           (cider-repl-mode . enable-paredit-mode)
+           (cider-mode . enable-paredit-mode)
+           (clojure-mode . enable-paredit-mode))
+    :config
+    (show-paren-mode t)
+
+    :bind (("C->" . paredit-forward-slurp-sexp)
+           ("C-<" . paredit-forward-barf-sexp)
+           ("C-M-<" . paredit-backward-slurp-sexp)
+           ("C-M->" . paredit-backward-barf-sexp)
+           ("<C-right>" .  nil)
+           ("<C-left>" .  nil)
+           ("M-[" . paredit-wrap-square)
+           ("M-{" . paredit-wrap-curly))
+
+    ;; :after (autoload 'enable-paredit-mode "paredit" "Turn on
+    ;; pseudo-structural editing of Lisp code." t)
+    )
+#+END_SRC
+
+** Geiser
+
+*** Installation
+
+If guix is not installed, then install within Emacs using quelpa:
+
+#+BEGIN_SRC elisp :noweb-ref emacs
+  (unless (executable-find "guix")
+    (quelpa
+     '(geiser
+       :fetcher github
+       :repo "emacsmirror/geiser"))
+  )
+#+END_SRC
+
+Add the Guix package to the home config:
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (define %home-packages
+    (append %home-packages
+            (list "emacs-geiser" "emacs-geiser-guile")))
+#+END_SRC
+
+*** Configuration
+
+#+BEGIN_SRC elisp :noweb-ref emacs
+  (use-package geiser-guile)
 #+END_SRC
 
 ** Denote
