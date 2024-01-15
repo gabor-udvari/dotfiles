@@ -1,0 +1,548 @@
+#+title: Bash
+#+author: Gábor Udvari
+
+* Installation
+
+Add the bash package to the Guix home config:
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (define %home-packages
+    (append %home-packages
+            (list "bash")))
+#+END_SRC
+
+* Configuration
+
+** Profile
+
+Have a single ~.profile~ file for Bash and everything else. Bash will not read the ~.profile~ file if there is ~.bash_login~ or ~.bash_profile~.
+
+#+BEGIN_SRC text :noweb yes :exports none :mkdirp yes :tangle home/.profile
+  <<profile>>
+#+END_SRC
+
+#+BEGIN_SRC bash :noweb-ref profile
+  # Configure XDG_DATA_HOME if not set
+  export XDG_DATA_HOME="${XDG_DATA_HOME:="$HOME/.local/share"}"
+  # Configure the default XDG_DATA_DIRS if not set
+  export XDG_DATA_DIRS="${XDG_DATA_DIRS:="/usr/local/share:/usr/share"}"
+  # Add the .local to the XDG_DATA_DIRS
+  export XDG_DATA_DIRS="$XDG_DATA_DIRS:$HOME/.local/share"
+
+  # Set timeformat to ISO 8601
+  export TIME_STYLE="long-iso"
+
+  # PATH settings
+  export PATH="$HOME/bin:$HOME/.local/bin:$HOME/.composer/vendor/bin:$HOME/gems/bin:$HOME/lutris/bin:${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+
+  # EDITOR settings
+  export EDITOR='vim'
+
+  # GUIX
+  # https://guix.gnu.org/manual/en/html_node/Getting-Started.html
+  if [ -e "$HOME/.guix-profile" ]; then
+    GUIX_PROFILE="$HOME/.guix-profile"
+    . "$GUIX_PROFILE/etc/profile"
+  fi
+
+  # https://guix.gnu.org/manual/en/html_node/Getting-Started.html
+  if [ -e "$HOME/.config/guix/current" ]; then
+    GUIX_PROFILE="$HOME/.config/guix/current"
+    . "$GUIX_PROFILE/etc/profile"
+  fi
+
+  # https://guix.gnu.org/manual/en/html_node/Application-Setup.html#Locales-1
+  if [ -e "$HOME/.guix-profile/lib/locale" ]; then
+    export GUIX_LOCPATH="$HOME/.guix-profile/lib/locale"
+  fi
+
+  export LANG='en_US.utf8'
+
+  # if running bash
+  if [ -n "$BASH_VERSION" ]; then
+    # include .bashrc if it exists
+    if [ -f "$HOME/.bashrc" ]; then
+      . "$HOME/.bashrc"
+    fi
+  fi
+#+END_SRC
+
+** Bashrc
+
+#+BEGIN_SRC text :noweb yes :exports none :mkdirp yes :tangle home/.bashrc
+  <<bashrc>>
+#+END_SRC
+
+#+BEGIN_SRC bash :noweb-ref bashrc
+  # shellcheck disable=SC1090,SC1091
+
+  # ~/.bashrc: executed by bash(1) for non-login shells.
+  # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
+  # for examples
+
+  # If not running interactively, don't do anything
+  echo $- | grep -F i >/dev/null || return
+
+  # Terminal logging for interactive shells
+  #
+  # Check if not yet under script
+  if [ -z "$UNDER_SCRIPT" ]; then
+    # set the logdir
+    logdir="$XDG_DATA_HOME/terminal-logs"
+    if [ ! -d "$logdir" ]; then
+      mkdir -p "$logdir"
+    fi
+    # find the logs older than 30 days
+    old_logs=()
+    while IFS='' read -r line; do old_logs+=("$line"); done < <(find "$logdir" -type f -name "*.log" -mtime +30)
+    if [ ${#old_logs[@]} -gt 0 ]; then
+      echo -n "Compressing old logs..."
+      for i in "${old_logs[@]}"; do
+        # compress the logs older than 30 days
+        gzip "$i"
+      done
+      echo " Done"
+    fi
+    # set the new logfile and start the interactive terminal with script
+    logfile="$logdir/$(date +%F_%T).$$.log"
+    export UNDER_SCRIPT="$logfile"
+    if command -v script >/dev/null; then
+      if script -f -q "$logfile"; then
+        # exit the parent shell when script is finished
+        exit
+      else
+        # there was a problem running script, reset the terminal
+        reset
+      fi
+    fi
+  fi
+
+  #
+  # Check and start either ssh-pageant or ssh-agent
+  #
+  for agent in /usr/bin/ssh-pageant /usr/bin/ssh-agent; do
+    if [ -x "$agent" ]; then
+      # Create .ssh if not exists
+      if [ ! -d "$HOME"/.ssh ]; then
+        mkdir "$HOME"/.ssh
+      fi
+
+      export SSH_ENV="$HOME/.ssh/environment"
+
+      # Check if SSH_ENV exists, and if the SSH_AGENT_PID inside it is still running
+      if [ -f "$SSH_ENV" ]; then
+        pid="$(sed -n 's/^SSH_.*_PID=\([0-9]\+\).*$/\1/p' "$SSH_ENV")"
+        if [ -d /proc/"$pid" ] && [ "$agent" == "$(tr -d '\0' </proc/"$pid"/cmdline)" ]; then
+          source "$SSH_ENV" >/dev/null
+        fi
+      fi
+
+      # Check if ssh-agent is already running
+      # Taken from: https://stackoverflow.com/a/48509425
+      /usr/bin/ssh-add -l &>/dev/null
+      add_retval="$?"
+
+      # Only launch a new ssh-agent if ssh-add gives return code 2 or 3.
+      # GNOME keyring only sets SSH_AGENT_LAUNCHER and SSH_AUTH_SOCK,
+      # so only check for SSH_AUTH_SOCK.
+      if [ "$add_retval" -gt 1 ] || [ -z "$SSH_AUTH_SOCK" ]; then
+        # On Cygwin Pageant creates a sock like this:
+        # \\.\pipe\ssh-pageant
+        # This breaks the file and socket tests, so check for this
+        # case first
+        if [[ "$SSH_AUTH_SOCK" =~ ^\\\\.* ]] || [ ! -S "$SSH_AUTH_SOCK" ]; then
+          echo -n "Initialising new SSH agent..."
+          "$agent" > "$SSH_ENV"
+          echo " Done"
+          chmod 600 "$SSH_ENV"
+          source "$SSH_ENV" >/dev/null
+          break
+        fi
+      fi
+    fi
+  done
+
+  #
+  # Concat SSH config scripts if any
+  #
+  if [ -d "$HOME"/.ssh/config.d ] && [ "$(ls -A "$HOME"/.ssh/config.d)" ]; then
+    # concat .conf and .config files as well
+    echo -e "# Do not edit this file manually!\n# It is automatically generated from the .ssh/config.d folder.\n" >"$HOME/.ssh/config"
+    cat "$HOME"/.ssh/config.d/{*.conf,*.config} >>"$HOME"/.ssh/config 2>/dev/null
+    chmod 600 "$HOME"/.ssh/config
+  fi
+
+  #
+  # Create screen directory, and configure environment variable
+  #
+  if [ ! -d "$HOME/.screen" ]; then
+    mkdir "$HOME/.screen" && chmod 700 "$HOME/.screen"
+  fi
+  export SCREENDIR=$HOME/.screen
+
+  export PATH="$PATH:$HOME/bin"
+
+  #
+  # EXPORTS
+
+  # don't put duplicate lines or lines starting with space in the history.
+  # See bash(1) for more options
+  export HISTCONTROL=ignoreboth
+
+  # append to the history file, don't overwrite it
+  shopt -s histappend
+
+  # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
+  export HISTSIZE=10000
+  export HISTFILESIZE=20000
+
+  # check the window size after each command and, if necessary,
+  # update the values of LINES and COLUMNS.
+  shopt -s checkwinsize
+
+  # If set, the pattern "**" used in a pathname expansion context will
+  # match all files and zero or more directories and subdirectories.
+  #shopt -s globstar
+
+  # setup customized prompt command
+  # shellcheck disable=2154
+  export PROMPT_COMMAND='PS1X=$(p="${PWD#${HOME}}"; [ "${PWD}" != "${p}" ] && printf "~";IFS=/; for q in ${p:1}; do printf "%s" "/${q:0:1}"; done; printf "%s" "${q:1}")'
+  export PS1='[\u@\[\e[0;34m\]\h\[\e[m\]:$PS1X]\$ '
+
+  # make less more friendly for non-text input files, see lesspipe(1)
+  [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+
+  # emacs-vterm directory-tracking
+  vterm_printf() {
+      if [ -n "$TMUX" ] && { [ "${TERM%%-*}" = "tmux" ] || [ "${TERM%%-*}" = "screen" ]; }; then
+          # Tell tmux to pass the escape sequences through
+          printf "\ePtmux;\e\e]%s\007\e\\" "$1"
+      elif [ "${TERM%%-*}" = "screen" ]; then
+          # GNU screen (screen, screen-256color, screen-256color-bce)
+          printf "\eP\e]%s\007\e\\" "$1"
+      else
+          printf "\e]%s\e\\" "$1"
+      fi
+  }
+
+  vterm_prompt_end(){
+      vterm_printf "51;A$(whoami)@$(hostname):$(pwd)"
+  }
+
+  # NOTE: we do not set PS1, because shell_prompt.sh will set PROMPT_COMMAND
+  # PS1=$PS1'\[$(vterm_prompt_end)\]'
+
+  # emacs-eat shell integration
+  [ -n "$EAT_SHELL_INTEGRATION_DIR" ] && \
+    source "$EAT_SHELL_INTEGRATION_DIR/bash"
+
+  #
+  # SOURCING
+
+  if [ "$TERM" != "dumb" ]; then
+    # source shell prompt generated by vim-airline
+    [ -f "$HOME"/.config/bash/shell_prompt.sh ] && source "$HOME"/.config/bash/shell_prompt.sh
+  fi
+
+  # hook into direnv
+  command -v direnv >/dev/null && eval "$(direnv hook bash)"
+
+  # source homeshick
+  if [ -d "$HOME"/.homesick/repos/homeshick ]; then
+    source "$HOME"/.homesick/repos/homeshick/homeshick.sh
+  fi
+
+  # source all .bash scripts in the bashrc.d folder
+  if [ -d "$HOME"/.config/bash/bashrc.d ]; then
+    for f in "$HOME"/.config/bash/bashrc.d/*.sh; do source "$f"; done
+  fi
+
+  # source Abevjava profile
+  [ -f "$HOME"/.profabevjava ] && source "$HOME/.profabevjava"
+
+  #
+  # COMPLETIONS
+
+  # enable programmable completion features (you don't need to enable
+  # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
+  # sources /etc/bash.bashrc).
+  if ! shopt -oq posix; then
+    # Only source completions when POSIX compatibility is not set
+    if [ -f /usr/share/bash-completion/bash_completion ]; then
+      . /usr/share/bash-completion/bash_completion
+    elif [ -f /etc/bash_completion ]; then
+      . /etc/bash_completion
+    fi
+
+    if [ -d "$HOME"/.homesick/repos/homeshick ]; then
+      source "$HOME"/.homesick/repos/homeshick/completions/homeshick-completion.bash
+    fi
+  fi
+
+  # The Guix install script checks for GUIX_ENVIRONMENT, add
+  # this here so that the install script does not add it again
+  # https://guix-install.sh/
+  if [ -n "$GUIX_ENVIRONMENT" ]; then
+    if [[ "$PS1" =~ (.*)"\\$" ]]; then
+      PS1="${BASH_REMATCH[1]} [env]\\\$ "
+    fi
+  fi
+#+END_SRC
+
+** Bash logout
+
+#+BEGIN_SRC text :noweb yes :exports none :mkdirp yes :tangle home/.bash_logout
+  <<bash_logout>>
+#+END_SRC
+
+#+BEGIN_SRC bash :noweb-ref bash_logout
+  # Close dbus session
+  if [ -n "$DBUS_SESSION_BUS_PID" ]; then
+      kill $DBUS_SESSION_BUS_PID
+  fi
+
+  # When leaving the console clear the screen to increase privacy
+  if [ "$SHLVL" = 1 ]; then
+      [ -x /usr/bin/clear_console ] && /usr/bin/clear_console -q
+  fi
+#+END_SRC
+
+** Inputrc
+
+#+BEGIN_SRC text :noweb yes :exports none :mkdirp yes :tangle home/.inputrc
+  <<inputrc>>
+#+END_SRC
+
+#+BEGIN_SRC bash :noweb-ref inputrc
+  # do not bell on tab-completion
+  set bell-style none
+#+END_SRC
+
+** Bash aliases
+
+#+BEGIN_SRC text :noweb yes :exports none :mkdirp yes :tangle home/.config/bash/bashrc.d/bash_aliases.sh
+  <<bash-aliases>>
+#+END_SRC
+
+#+BEGIN_SRC bash :noweb-ref bash-aliases
+  #!/usr/bin/env bash
+
+  # enable color support of ls and also add handy aliases
+  if command -v dircolors >/dev/null; then
+      if [ -r ~/.dircolors ]; then
+          eval "$(dircolors -b ~/.dircolors)"
+      else
+          eval "$(dircolors -b)"
+      fi
+      alias ls='ls --color=auto'
+      #alias dir='dir --color=auto'
+      #alias vdir='vdir --color=auto'
+
+  fi
+
+  # check color support
+  if command -v tput >/dev/null && tput setaf 1 >&/dev/null; then
+      # We have color support; assume it's compliant with Ecma-48
+      # (ISO/IEC-6429). (Lack of such support is extremely rare, and such
+      # a case would tend to support setf rather than setaf.)
+      color_prompt=yes
+  else
+      color_prompt=
+  fi
+
+  if [ "$color_prompt" = yes ]; then
+      alias grep='grep --color=auto'
+      alias fgrep='fgrep --color=auto'
+      alias egrep='egrep --color=auto'
+
+      alias tmux='tmux -2 -S $HOME/.tmux.sock'
+  fi
+  unset color_prompt
+
+  # some more ls aliases
+  alias ll='ls -alF'
+  alias la='ls -A'
+  alias l='ls -CF'
+
+  # Add an "alert" alias for long running commands.  Use like so:
+  #   sleep 10; alert
+  alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+#+END_SRC
+
+** Default prompt
+
+#+BEGIN_SRC text :noweb yes :exports none :mkdirp yes :tangle home/.config/bash/bashrc.d/default_prompt.sh
+  <<default-prompt>>
+#+END_SRC
+
+#+BEGIN_SRC bash :noweb-ref default-prompt
+  #!/usr/bin/env bash
+
+  # Default prompt from Ubuntu
+
+  # set variable identifying the chroot you work in (used in the prompt below)
+  if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
+      debian_chroot=$(cat /etc/debian_chroot)
+  fi
+
+  # set a fancy prompt (non-color, unless we know we "want" color)
+  case "$TERM" in
+      xterm-color) color_prompt=yes;;
+  esac
+
+  # uncomment for a colored prompt, if the terminal has the capability; turned
+  # off by default to not distract the user: the focus in a terminal window
+  # should be on the output of commands, not on the prompt
+  #force_color_prompt=yes
+
+  if [ -n "$force_color_prompt" ]; then
+      if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
+    # We have color support; assume it's compliant with Ecma-48
+    # (ISO/IEC-6429). (Lack of such support is extremely rare, and such
+    # a case would tend to support setf rather than setaf.)
+    color_prompt=yes
+      else
+    color_prompt=
+      fi
+  fi
+
+  if [ "$color_prompt" = yes ]; then
+      PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+  else
+      PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
+  fi
+  unset color_prompt force_color_prompt
+#+END_SRC
+
+** History sync
+
+#+BEGIN_SRC text :noweb yes :exports none :mkdirp yes :tangle home/.config/bash/bashrc.d/history_sync.sh
+  <<history-sync.sh>>
+#+END_SRC
+
+#+BEGIN_SRC bash
+  #!/usr/bin/env bash
+
+  # As taken from:
+  # https://gist.github.com/gyakovlev/0e4141d4f310dc1788f9eeacfd14d4e6
+
+  # Synchronize history between bash sessions
+  #
+  # Make history from other terminals available to the current one. However,
+  # don't mix all histories together - make sure that *all* commands from the
+  # current session are on top of its history, so that pressing up arrow will
+  # give you most recent command from this session, not from any session.
+  #
+  # Since history is saved on each prompt, this additionally protects it from
+  # terminal crashes.
+
+  # keep unlimited shell history because it's very useful
+  export HISTFILESIZE=-1
+  export HISTSIZE=-1
+  shopt -s histappend   # don't overwrite history file after each session
+
+  # on every prompt, save new history to dedicated file and recreate full history
+  # by reading all files, always keeping history from current session on top.
+  update_history () {
+    history -a "${HISTFILE}.$$"
+    history -c
+    history -r  # load common history file
+    # load histories of other sessions
+    for f in "$HISTFILE".[0-9]*; do
+      case $f in
+        ,*.$$) true;;
+        ,*) history -r "$f";;
+      esac
+    done
+    if [[ -f "${HISTFILE}.$$" ]]; then
+      history -r "${HISTFILE}.$$" # load current session history
+    fi
+  }
+  if [[ "$PROMPT_COMMAND" != *update_history* ]]; then
+    export PROMPT_COMMAND="update_history; $PROMPT_COMMAND"
+  fi
+
+  # merge session history into main history file on bash exit
+  merge_session_history () {
+    if [[ -e "${HISTFILE}.$$" ]]; then
+      cat "${HISTFILE}.$$" >> "$HISTFILE"
+      rm "${HISTFILE}.$$"
+    fi
+  }
+  trap merge_session_history EXIT
+
+  # detect leftover files from crashed sessions and merge them back
+  merge_orphaned_history() {
+    for f in "$HISTFILE".[0-9]*; do
+      case $f in
+        ,*.'[0-9]*') true;;
+        ,*.$$) true;;
+        ,*)
+          local fpid
+          fpid=$(echo "$f" | grep -o '[0-9]*$')
+    # The script needs to support Cygwin as well, so
+    # use the /proc files instead of the ps command.
+          if [ ! -d /proc/"$fpid" ] && [ -f "$f" ]; then
+            echo -n "Merging orphaned history file:"
+            echo -n " $(basename "$f")"
+            cat "$f" >> "$HISTFILE"
+            rm "$f"
+            echo " done."
+          fi
+          ;;
+      esac
+    done
+  }
+  merge_orphaned_history
+#+END_SRC
+
+* Guix services
+
+Guix service for linking the bash config files:
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (define %home-services
+    (append %home-services
+            (list
+             (service home-bash-service-type
+                      (home-bash-configuration
+                       (guix-defaults? #f)
+                       (bashrc (list (local-file
+                                      "home/.bashrc"
+                                      "bashrc")))
+                       (bash-logout (list (local-file
+                                           "home/.bash_logout"
+                                           "bash_logout"))))))))
+#+END_SRC
+
+Guix service for extending the standard Guix profile file with my own ~.profile~:
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (define %home-services
+    (append %home-services
+            (list
+             ;; Extend .profile with my own
+             (simple-service 'my-profile
+                             home-shell-profile-service-type
+                             `(,(local-file "home/.profile" "profile"))))))
+#+END_SRC
+
+Guix service for linking all the files inside ~.config/bash~:
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (define %home-services
+    (append %home-services
+            (list
+             (simple-service 'dotfiles-symlinking-service
+                             home-files-service-type
+                             `((".config/bash/bashrc.d/shell_prompt.sh"
+                                ,(local-file "home/.config/bash/shell_prompt.sh" "shell_prompt"))
+                               (".config/bash/bashrc.d/sync-history.sh"
+                                ,(local-file "home/.config/bash/bashrc.d/sync-history.sh" "sync-history"))
+                               (".config/bash/bashrc.d/bash_aliases.sh"
+                                ,(local-file "home/.config/bash/bashrc.d/bash_aliases.sh" "bash_aliases"))
+                               (".inputrc"
+                                ,(local-file "home/.inputrc" "inputrc"))
+                               (".gnomerc"
+                                ,(local-file "home/.profile" "gnomerc")))))))
+#+END_SRC

@@ -69,8 +69,8 @@ The different emacs packages will be installed through Guix home, therefore we w
 
   ;; Avoid white background because we use a dark theme by default
   (setq mode-line-format nil)
-  (set-face-attribute 'default nil :background "#000000" :foreground "#ffffff")
-  (set-face-attribute 'mode-line nil :background "#000000" :foreground "#ffffff" :box 'unspecified)
+  ;; (set-face-attribute 'default nil :background "#000000" :foreground "#ffffff")
+  ;; (set-face-attribute 'mode-line nil :background "#000000" :foreground "#ffffff" :box 'unspecified)
 
   ;; Function for re-enabling the theme background, as taken
   ;; from Prot's config.
@@ -161,27 +161,33 @@ As seen on https://www.youtube.com/watch?v=74zOY-vgkyw, and from the nano-defaul
 
 ** Package handling
 
+Enable packages.
+
+#+BEGIN_SRC elisp :noweb-ref emacs
+  (require 'package)
+#+END_SRC
+
 Install ~quelpa~, ~quelpa-use-package~ and ~use-package~ if ~guix~ is not found on the system.
 
 #+BEGIN_SRC elisp :noweb-ref emacs
   (unless (executable-find "guix")
-    (require 'package)
-
     (unless (package-installed-p 'quelpa)
       (with-temp-buffer
-          (url-insert-file-contents "https://github.com/quelpa/quelpa/raw/master/quelpa.el")
-          (eval-buffer)
-          (quelpa-self-upgrade)))
+        (url-insert-file-contents "https://github.com/quelpa/quelpa/raw/master/quelpa.el")
+        (eval-buffer)
+        (quelpa-self-upgrade)))
 
     ;; Build stable packages
     (setq quelpa-stable-p t)
     ;; Do not update MELPA repo list on startup
-    ;; (setq quelpa-update-melpa-p nil)
+    (setq quelpa-update-melpa-p nil)
+    (setq quelpa-checkout-melpa-p nil)
 
     (quelpa
      '(use-package
        :fetcher git
        :url "https://github.com/jwiegley/use-package"))
+
     (quelpa
      '(quelpa-use-package
        :fetcher git
@@ -191,7 +197,7 @@ Install ~quelpa~, ~quelpa-use-package~ and ~use-package~ if ~guix~ is not found 
 
     ;; Make quelpa the function for use-package ensure
     (setq use-package-ensure-function 'quelpa)
-  )
+    )
 #+END_SRC
 
 Require use-package in all cases regardless of version or OS.
@@ -199,7 +205,7 @@ Require use-package in all cases regardless of version or OS.
 #+BEGIN_SRC elisp :noweb-ref emacs
   (eval-when-compile
     (require 'use-package)
-  )
+    )
 #+END_SRC
 
 Ensuring packages is not required when Guix is available, but useful otherwise.
@@ -332,48 +338,34 @@ Add the Guix package to the home config:
       (add-hook 'kill-emacs-hook #'fontaine-store-latest-preset)
 
       ;; Persist font configurations while switching themes (doing it with
-      ;; my `modus-themes' and `ef-themes' via the hooks they provide).
-      (add-hook 'ef-themes-after-load-theme-hook #'fontaine-apply-current-preset)
+      ;; Prot's `modus-themes' and `ef-themes' via the hooks they provide).
+      (add-hook 'modus-themes-after-load-theme-hook #'fontaine-apply-current-preset)
   )
 #+END_SRC
 
-** Ef themes
+** Modus themes
 
 *** Installation
 
-If guix is not installed, then install within Emacs using quelpa:
-
-#+BEGIN_SRC elisp :noweb-ref emacs
-  (unless (executable-find "guix")
-    (quelpa
-     '(ef-themes
-       :fetcher github
-       :repo "protesilaos/ef-themes"))
-  )
-#+END_SRC
-
-Add the Guix package to the home config:
-
-#+BEGIN_SRC scheme :noweb-ref guix-home
-  (define %home-packages
-    (append %home-packages
-            (list "emacs-ef-themes")))
-#+END_SRC
+The themes modus-operandi and modus-vivendi are part of Emacs since version 28. No need for installation.
 
 *** Config
 
 #+BEGIN_SRC elisp :noweb-ref emacs
   ;; Make customisations that affect Emacs faces BEFORE loading a theme
   ;; (any change needs a theme re-load to take effect).
-  (use-package ef-themes
+  (use-package emacs
     :init
       ;; If you like two specific themes and want to switch between them, you
-      ;; can specify them in `ef-themes-to-toggle' and then invoke the command
-      ;; `ef-themes-toggle'.  All the themes are included in the variable
-      ;; `ef-themes-collection'.
-      (setq ef-themes-to-toggle '(ef-light ef-symbiosis))
+      ;; can specify them in `modus-themes-to-toggle' and then invoke the command
+      ;; `modus-themes-toggle'.  All the themes are included in the variable
+      ;; `modus-themes-collection'.
+      (setq modus-themes-to-toggle '(modus-operandi modus-vivendi))
 
-      (setq ef-themes-headings ; read the manual's entry or the doc string
+      ;; Set org blocks background
+      (setq modus-themes-org-blocks 'gray-background) ; {nil,'gray-background,'tinted-background}
+
+      (setq modus-themes-headings ; read the manual's entry or the doc string
             '((0 variable-pitch light 1.9)
               (1 variable-pitch light 1.8)
               (2 variable-pitch regular 1.7)
@@ -385,19 +377,22 @@ Add the Guix package to the home config:
               (t variable-pitch 1.1)))
 
       ;; They are nil by default...
-      (setq ef-themes-mixed-fonts t
-            ef-themes-variable-pitch-ui t)
+      (setq modus-themes-mixed-fonts t
+            modus-themes-variable-pitch-ui t)
+
+      ;; Configure modeline
+      (setq modus-themes-mode-line '(accented borderless 4 0.9))
 
       ;; Read the doc string or manual for this one.  The symbols can be
       ;; combined in any order.
-      (setq ef-themes-region '(intense no-extend neutral))
+      (setq modus-themes-region '(intense no-extend neutral))
 
       ;; Disable all other themes to avoid awkward blending:
       (mapc #'disable-theme custom-enabled-themes)
 
     :config
-      ;; Use this to load the theme which also calls `ef-themes-post-load-hook':
-      (ef-themes-select 'ef-symbiosis)
+      ;; We use the built-in theme
+      (load-theme 'modus-operandi)
   )
 #+END_SRC
 
@@ -456,6 +451,41 @@ Add the Guix packages to the home config:
 
     :hook (org-mode . olivetti-mode)
     :hook (markdown-mode . olivetti-mode)
+  )
+#+END_SRC
+
+** Exec path from shell
+
+*** Installation
+
+If guix is not installed, then install within Emacs using quelpa:
+
+#+BEGIN_SRC elisp :noweb-ref emacs
+  (unless (executable-find "guix")
+    (quelpa
+     '(exec-path-from-shell
+       :fetcher github
+       :repo "purcell/exec-path-from-shell")))
+#+END_SRC
+
+Add the Guix packages to the home config:
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (define %home-packages
+    (append %home-packages
+            (list "emacs-exec-path-from-shell")))
+#+END_SRC
+
+*** Configuration
+
+#+BEGIN_SRC elisp :noweb-ref emacs
+  (use-package exec-path-from-shell
+    :init
+    ;; TODO: there is something breaking Emacs if an interactive shell is used, only do a login shell
+    (setq exec-path-from-shell-arguments (list "-l"))
+    (setq exec-path-from-shell-variables '("PATH" "SSH_AUTH_SOCK" "SSH_AGENT_PID"))
+    :config
+    (exec-path-from-shell-initialize)
   )
 #+END_SRC
 
