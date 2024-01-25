@@ -107,9 +107,9 @@ Change some of the defaults to make a more minimal interface.
 
   ;; Load all lisp files from the init.d folder
   (if (eq system-type 'windows-nt)
-    (mapc 'load (file-expand-wildcards "~/.emacs.d/init.d/*.el"))
+      (mapc 'load (file-expand-wildcards "~/.emacs.d/init.d/*.el"))
     (mapc 'load (file-expand-wildcards "~/.config/emacs/init.d/*.el"))
-  )
+    )
 
   (setq use-short-answers t) ;; y/n for answering yes/no questions
 
@@ -118,6 +118,9 @@ Change some of the defaults to make a more minimal interface.
 
   (setq-default indent-tabs-mode nil) ;; No tabs
   (setq-default tab-width 2) ;; 2 spaces as tabs
+
+  ;; Do not resize window based on the character count
+  (setq frame-resize-pixelwise t)
 
   ;; Buffer encoding
   (prefer-coding-system       'utf-8)
@@ -135,6 +138,11 @@ Change some of the defaults to make a more minimal interface.
         uniquify-ignore-buffers-re "^\\*")
 
   (setq default-major-mode 'text-mode) ;; Default major mode
+
+  ;; Change the default dir on Windows
+  (if (eq system-type 'windows-nt)
+      (setq default-directory (expand-file-name (concat (getenv "HOMEPATH") "/")))
+  )
 #+END_SRC
 
 ** Simpler UI
@@ -483,7 +491,10 @@ Add the Guix packages to the home config:
     :init
     ;; TODO: there is something breaking Emacs if an interactive shell is used, only do a login shell
     (setq exec-path-from-shell-arguments (list "-l"))
-    (setq exec-path-from-shell-variables '("PATH" "SSH_AUTH_SOCK" "SSH_AGENT_PID"))
+    ;; There is an issue setting PATH in Windows, set the shell variables depending on the OS
+    (if (eq system-type 'windows-nt)
+      (setq exec-path-from-shell-variables '("SSH_AUTH_SOCK" "SSH_AGENT_PID"))
+      (setq exec-path-from-shell-variables '("PATH" "SSH_AUTH_SOCK" "SSH_AGENT_PID")))
     :config
     (exec-path-from-shell-initialize)
   )
@@ -624,12 +635,14 @@ Add the Guix packages to the home config:
 
     ;; Org Agenda
     (setq org-agenda-files (list (my-notes)))
+
+    (setq org-src-fontify-natively t)
     )
 
-    ;; Active Babel languages
-    (org-babel-do-load-languages
-     'org-babel-load-languages
-     '((shell . t)))
+  ;; Active Babel languages
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((shell . t)))
 
   (use-package ox-md)
 
@@ -657,7 +670,7 @@ If guix is not installed, then install within Emacs using quelpa:
     (quelpa
      '(paredit
        :fetcher github
-       :repo "paredit/paredit.el"))
+       :repo "emacsmirror/paredit"))
   )
 #+END_SRC
 
@@ -710,12 +723,13 @@ Add the Guix package to the home config:
 If guix is not installed, then install within Emacs using quelpa:
 
 #+BEGIN_SRC elisp :noweb-ref emacs
-  (unless (executable-find "guix")
+  (unless (or (eq system-type 'windows-nt) (executable-find "guix"))
     (quelpa
      '(geiser
        :fetcher github
-       :repo "emacsmirror/geiser"))
-  )
+       :repo "emacsmirror/geiser"
+       :files (:defaults
+               "elisp"))))
 #+END_SRC
 
 Add the Guix package to the home config:
@@ -729,7 +743,9 @@ Add the Guix package to the home config:
 *** Configuration
 
 #+BEGIN_SRC elisp :noweb-ref emacs
-  (use-package geiser-guile)
+  (unless (eq system-type 'windows-nt)
+    (use-package geiser-guile)
+  )
 #+END_SRC
 
 ** Denote
