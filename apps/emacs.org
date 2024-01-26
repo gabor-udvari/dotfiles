@@ -542,17 +542,18 @@ https://cgit.freedesktop.org/libreoffice/dictionaries/tree
 #+BEGIN_SRC elisp :noweb-ref emacs
   (use-package flyspell
     :init
-      ;; Configure hunspell
-      (setq ispell-program-name "hunspell")
+    ;; Configure hunspell
+    (setq ispell-program-name "hunspell")
+    (let ((hunspell-dir (concat (if (eq system-type 'windows-nt) (getenv "USERPROFILE") "~") (if (executable-find "guix") "/.guix-home/profile" "/.local") "/share/hunspell/")))
       (setq ispell-hunspell-dict-paths-alist
-        '(("hu_HU" (concat (if (eq system-type 'windows-nt) (getenv "USERPROFILE") "~") (if (executable-find "guix") "/.guix-home/profile" "/.local") "/share/hunspell/hu_HU.aff"))
-          ("en_US" (concat (if (eq system-type 'windows-nt) (getenv "USERPROFILE") "~") (if (executable-find "guix") "/.guix-home/profile" "/.local") "/share/hunspell/en_US.aff"))
-         ))
-      (setq ispell-local-dictionary-alist
-        '(("Hungarian" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "hu_HU") nil utf-8)
-          ("English"   "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US") nil utf-8)
-         ))
-  )
+            `(("hu_HU" ,(expand-file-name (concat hunspell-dir "hu_HU.aff")))
+              ("en_US" ,(expand-file-name (concat hunspell-dir "en_US.aff")))
+              )))
+    (setq ispell-local-dictionary-alist
+          '(("Hungarian" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "hu_HU") nil utf-8)
+            ("English"   "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US") nil utf-8)
+            ))
+    )
 #+END_SRC
 
 ** Org-mode
