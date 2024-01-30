@@ -4,5 +4,4 @@
 
 (specifications->manifest (list "make"
                                 "emacs"
-                                "emacs-org"
                                 ))

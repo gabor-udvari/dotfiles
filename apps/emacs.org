@@ -391,6 +391,9 @@ The themes modus-operandi and modus-vivendi are part of Emacs since version 28. 
       ;; Configure modeline
       (setq modus-themes-mode-line '(accented borderless 4 0.9))
 
+      ;; Add background for fringe area
+      (setq modus-themes-fringes 'subtle)
+
       ;; Read the doc string or manual for this one.  The symbols can be
       ;; combined in any order.
       (setq modus-themes-region '(intense no-extend neutral))
@@ -455,7 +458,8 @@ Add the Guix packages to the home config:
     :config
       (setq olivetti-minimum-body-width 40
             olivetti-recall-visual-line-mode-entry-state t
-            olivetti-style "fancy")
+            olivetti-style 'fancy
+            olivetti-margin-width 3)
 
     :hook (org-mode . olivetti-mode)
     :hook (markdown-mode . olivetti-mode)
@@ -657,6 +661,37 @@ Add the Guix packages to the home config:
     (setq org-modern-block-fringe nil)
     (with-eval-after-load 'org (global-org-modern-mode))
     )
+#+END_SRC
+
+** PHP mode
+
+*** Installation
+
+If guix is not installed, then install within Emacs using quelpa:
+
+#+BEGIN_SRC elisp :noweb-ref emacs
+  (unless (executable-find "guix")
+    (quelpa
+     '(php-mode
+       :fetcher github
+       :repo "emacs-php/php-mode"))
+  )
+#+END_SRC
+
+Add the Guix package to the home config:
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (define %home-packages
+    (append %home-packages
+            (list "emacs-php-mode")))
+#+END_SRC
+
+*** Configuration
+
+#+BEGIN_SRC elisp :noweb-ref emacs
+  (use-package php-mode
+    :config
+    (setq php-mode-coding-style 'psr2))
 #+END_SRC
 
 ** Paredit
