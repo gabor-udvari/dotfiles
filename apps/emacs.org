@@ -475,10 +475,12 @@ If guix is not installed, then install within Emacs using quelpa:
     (quelpa
      '(svg-lib
        :fetcher github
-       :repo "rougier/svg-tag"))
+       :stable nil
+       :repo "rougier/svg-lib"))
     (quelpa
      '(svg-tag-mode
        :fetcher github
+       :stable nil
        :repo "rougier/svg-tag-mode"))
     )
 #+END_SRC
