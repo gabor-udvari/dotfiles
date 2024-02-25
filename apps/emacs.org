@@ -20,7 +20,7 @@ The different emacs packages will be installed through Guix home, therefore we w
 #+BEGIN_SRC scheme :noweb-ref guix-home
   (define %home-packages
     (append %home-packages
-            (list "emacs")))
+            (list "emacs-pgtk")))
 #+END_SRC
 
 ** early-init.el

@@ -156,6 +156,7 @@ The following category configs are customized how I am grouping my transfers. Yo
   LUXURYNAILS
   REXTRA KFT
   Parfum-Eden
+  CSITARY G. EMIL USZODA
     account2 Kiadások:Egészség
 
   if NEMZETI DOHÁNYBOLT
@@ -228,6 +229,7 @@ The following category configs are customized how I am grouping my transfers. Yo
   BISTRO
   DON-PEPE
   ARCO SERVICE
+  KAPOSVARI CAMPUS ÉTT
     account2 Kiadások:Étel
 
   if
