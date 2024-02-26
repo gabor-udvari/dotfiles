@@ -22,7 +22,7 @@ install: --config-home --install-home
 	@{ \
 		if command -v guix; then
 			echo -e "${GREEN_TERMINAL_OUTPUT}--> Deploying Guix Home...${CLEAR}"
-			if guix home reconfigure ./build/guix-home-config.scm; then
+			if guix time-machine -C channels.scm -- home reconfigure ./build/guix-home-config.scm; then
 				echo -e "${GREEN_TERMINAL_OUTPUT}--> [Makefile] Finished deploying Guix Home.${CLEAR}"
 			fi
 		elif command -v stow; then
