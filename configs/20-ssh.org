@@ -1,11 +1,11 @@
-+!title: SSH config
-+!author: Gábor Udvari
+#+title: SSH config
+#+author: Gábor Udvari
 
 * General SSH config for all hosts
 
 All the below will go into ~ ~/.ssh/config.d/10-general.config~, and then my .bashrc will concat all of the files inside config.d into one single config file.
 
-#+BEGIN_SRC text :noweb yes :exports none :mkdirp yes :tangle ../build/home/.ssh/config.d/10-general.config
+#+BEGIN_SRC text :noweb yes :exports none :mkdirp yes :tangle home/.ssh/config.d/10-general.config
   <<ssh-general>>
 #+END_SRC
 
@@ -19,4 +19,28 @@ All the below will go into ~ ~/.ssh/config.d/10-general.config~, and then my .ba
     ServerAliveCountMax 4
     IdentitiesOnly yes
     AddKeysToAgent yes
+#+END_SRC
+
+* Guix home services
+
+We will symlink the above files with guix.
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (define %home-services
+    (append %home-services
+            (list
+             (simple-service 'ssh-symlinking-service
+                             home-files-service-type
+                             `((".ssh/config.d/10-general.config"
+                                ,(local-file "home/.ssh/config.d/10-general.config" "ssh-conf")))))))
+#+END_SRC
+
+* Guix packages
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (use-modules (gnu packages ssh))
+
+  (define %home-packages
+    (append %home-packages
+            (list "openssh")))
 #+END_SRC

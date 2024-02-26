@@ -9,7 +9,7 @@
 
 * Configuration
 
-#+BEGIN_SRC text :noweb yes :exports none :mkdirp yes :tangle ../build/home/.gnupg/gpg.conf
+#+BEGIN_SRC text :noweb yes :exports none :mkdirp yes :tangle home/.gnupg/gpg.conf
   <<gpg-config>>
 #+END_SRC
 
