@@ -9,7 +9,7 @@ install: --config-home --install-home
 --config-home:
 	@{ \
 		echo -e "${GREEN_TERMINAL_OUTPUT}--> [Makefile] Building Home...${CLEAR}"
-		-mkdir build
+		mkdir -p build
 		cat configs/*.org >build/tangle.org
 		emacs --batch --eval "(require 'org)" \
 			--eval "(add-hook 'org-babel-pre-tangle-hook (lambda () (setq coding-system-for-write 'utf-8-unix)))" \
@@ -36,6 +36,15 @@ install: --config-home --install-home
 			echo -e "${GREEN_TERMINAL_OUTPUT}--> [Makefile] Copying config files to Windows Emacs folder${CLEAR}"
 			cp ./build/home/.config/emacs/* "${HOME}"/AppData/Roaming/.emacs.d/
 		fi
+	}
+
+.ONESHELL:
+--update-channels:
+	@{
+		echo -e "${GREEN_TERMINAL_OUTPUT}--> [Makefile] Updating channels.scm...${CLEAR}"
+		mkdir -p build
+		sed -e '/commit/,+1d' channels.scm >build/channels-update.scm
+	  guix time-machine -C build/channels-update.scm -- describe --format=channels >channels.scm
 	}
 
 clean:
