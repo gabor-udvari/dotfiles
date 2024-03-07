@@ -32,6 +32,10 @@ install: --config-home --install-home
 				echo -e "${GREEN_TERMINAL_OUTPUT}--> [Makefile] Finished deploying Stow home${CLEAR}"
 			fi
 		fi
+
+		echo -e "${GREEN_TERMINAL_OUTPUT}--> [Makefile] Copying emacs-eat terminfo files${CLEAR}"
+		cp -pr "$$(emacs --batch --eval "(require 'eat)" --eval "(princ eat-term-terminfo-directory)")" "${HOME}"/.terminfo
+
 		if test -d "${HOME}"/AppData/Roaming/.emacs.d; then
 			echo -e "${GREEN_TERMINAL_OUTPUT}--> [Makefile] Copying config files to Windows Emacs folder${CLEAR}"
 			cp ./build/home/.config/emacs/* "${HOME}"/AppData/Roaming/.emacs.d/

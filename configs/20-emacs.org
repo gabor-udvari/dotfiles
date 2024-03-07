@@ -40,11 +40,11 @@ The different emacs packages will be installed through Guix home, therefore we w
 
         cursor-in-non-selected-windows nil) ;; Disable cursor in inactive windows)
 
-    ;; (menu-bar-mode -1) ;; Disable menubar
-    ;; (scroll-bar-mode -1) ;; Disable visible scrollbar
-    (tool-bar-mode -1) ;; Disable the toolbar
-    (tooltip-mode -1) ;; Disable tooltips
-    (set-fringe-mode 10) ;; Give some breathing room
+  ;; (menu-bar-mode -1) ;; Disable menubar
+  ;; (scroll-bar-mode -1) ;; Disable visible scrollbar
+  (tool-bar-mode -1) ;; Disable the toolbar
+  (tooltip-mode -1) ;; Disable tooltips
+  (set-fringe-mode 10) ;; Give some breathing room
 
   ;; Save the original GC, file handler, VC handled backends values
   ;; set them to nil now, and restore them in an emacs-startup-hook.
@@ -141,8 +141,7 @@ Change some of the defaults to make a more minimal interface.
 
   ;; Change the default dir on Windows
   (if (eq system-type 'windows-nt)
-      (setq default-directory (expand-file-name (concat (getenv "HOMEPATH") "/")))
-  )
+      (setq default-directory (expand-file-name (concat (getenv "HOMEPATH") "/"))))
 #+END_SRC
 
 ** Simpler UI
@@ -193,8 +192,8 @@ Install ~quelpa~, ~quelpa-use-package~ and ~use-package~ if ~guix~ is not found 
 
     (quelpa
      '(use-package
-       :fetcher git
-       :url "https://github.com/jwiegley/use-package"))
+        :fetcher git
+        :url "https://github.com/jwiegley/use-package"))
 
     (quelpa
      '(quelpa-use-package
@@ -222,15 +221,15 @@ Ensuring packages is not required when Guix is available, but useful otherwise.
   (unless (executable-find "guix")
     (require 'use-package-ensure)
     (setq use-package-always-ensure t)
-  )
+    )
 #+END_SRC
 
 ** Line numbers
 
 #+BEGIN_SRC elisp :noweb-ref emacs
-(use-package display-line-numbers
-  :defer
-  :config
+  (use-package display-line-numbers
+    :defer
+    :config
     ;; Set absolute line numbers.  A value of "relative" is also useful.
     (setq display-line-numbers-type t)
     (global-display-line-numbers-mode t)
@@ -242,8 +241,8 @@ Ensuring packages is not required when Guix is available, but useful otherwise.
                     eshell-mode-hook
                     eat-mode-hook
                     markdown-mode-hook
-                   ))
-            (add-hook mode (lambda () (display-line-numbers-mode nil)))))
+                    ))
+      (add-hook mode (lambda () (display-line-numbers-mode nil)))))
 #+END_SRC
 
 ** No littering
@@ -261,8 +260,7 @@ If guix is not installed, then install within Emacs using quelpa:
     (quelpa
      '(no-littering
        :fetcher github
-       :repo "emacscollective/no-littering"))
-  )
+       :repo "emacscollective/no-littering")))
 #+END_SRC
 
 Add the Guix package to the home config:
@@ -279,15 +277,15 @@ Add the Guix package to the home config:
   ;; Configure no-littering
   (use-package no-littering
     :init
-      ;; Move auto-save files to var
-      (setq auto-save-file-name-transforms
-            `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
-      ;; Store custom-file in etc
-      (setq custom-file (no-littering-expand-etc-file-name "custom.el"))
-      (load custom-file 'noerror 'nomessage)
-      ;; Enable no-littering to configure auto-save, backup, etc.
-      (no-littering-theme-backups)
-  )
+    ;; Move auto-save files to var
+    (setq auto-save-file-name-transforms
+          `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
+    ;; Store custom-file in etc
+    (setq custom-file (no-littering-expand-etc-file-name "custom.el"))
+    (load custom-file 'noerror 'nomessage)
+    ;; Enable no-littering to configure auto-save, backup, etc.
+    (no-littering-theme-backups)
+    )
 #+END_SRC
 
 ** Fontaine
@@ -302,7 +300,7 @@ If guix is not installed, then install within Emacs using quelpa:
      '(fontaine
        :fetcher github
        :repo "protesilaos/fontaine"))
-  )
+    )
 #+END_SRC
 
 Add the Guix package to the home config:
@@ -318,37 +316,37 @@ Add the Guix package to the home config:
 #+BEGIN_SRC elisp :noweb-ref emacs
   (use-package fontaine
     :init
-      (setq fontaine-presets
-      '((regular
-         :default-height 120)
-        (medium
-         :default-weight semilight
-         :default-height 140)
-        (large
-         :default-weight semilight
-         :default-height 180
-         :bold-weight extrabold)
-        (t ; our shared fallback properties
-         :default-family "Consolas"
-         :default-weight normal
-         :variable-pitch-family "Arial"
-         :variable-pitch-height 1.05)))
+    (setq fontaine-presets
+          '((regular
+             :default-height 120)
+            (medium
+             :default-weight semilight
+             :default-height 140)
+            (large
+             :default-weight semilight
+             :default-height 180
+             :bold-weight extrabold)
+            (t ; our shared fallback properties
+             :default-family "Consolas"
+             :default-weight normal
+             :variable-pitch-family "Arial"
+             :variable-pitch-height 1.05)))
 
-      (setq fontaine-latest-state-file
-        (locate-user-emacs-file "fontaine-latest-state.eld"))
+    (setq fontaine-latest-state-file
+          (locate-user-emacs-file "fontaine-latest-state.eld"))
 
     :config
-      ;; Recover last preset or fall back to desired style from
-      ;; `fontaine-presets'.
-      (fontaine-set-preset (or (fontaine-restore-latest-preset) 'regular))
+    ;; Recover last preset or fall back to desired style from
+    ;; `fontaine-presets'.
+    (fontaine-set-preset (or (fontaine-restore-latest-preset) 'regular))
 
-      ;; The other side of `fontaine-restore-latest-preset'.
-      (add-hook 'kill-emacs-hook #'fontaine-store-latest-preset)
+    ;; The other side of `fontaine-restore-latest-preset'.
+    (add-hook 'kill-emacs-hook #'fontaine-store-latest-preset)
 
-      ;; Persist font configurations while switching themes (doing it with
-      ;; Prot's `modus-themes' and `ef-themes' via the hooks they provide).
-      (add-hook 'modus-themes-after-load-theme-hook #'fontaine-apply-current-preset)
-  )
+    ;; Persist font configurations while switching themes (doing it with
+    ;; Prot's `modus-themes' and `ef-themes' via the hooks they provide).
+    (add-hook 'modus-themes-after-load-theme-hook #'fontaine-apply-current-preset)
+    )
 #+END_SRC
 
 ** Modus themes
@@ -364,47 +362,47 @@ The themes modus-operandi and modus-vivendi are part of Emacs since version 28. 
   ;; (any change needs a theme re-load to take effect).
   (use-package emacs
     :init
-      ;; If you like two specific themes and want to switch between them, you
-      ;; can specify them in `modus-themes-to-toggle' and then invoke the command
-      ;; `modus-themes-toggle'.  All the themes are included in the variable
-      ;; `modus-themes-collection'.
-      (setq modus-themes-to-toggle '(modus-operandi modus-vivendi))
+    ;; If you like two specific themes and want to switch between them, you
+    ;; can specify them in `modus-themes-to-toggle' and then invoke the command
+    ;; `modus-themes-toggle'.  All the themes are included in the variable
+    ;; `modus-themes-collection'.
+    (setq modus-themes-to-toggle '(modus-operandi modus-vivendi))
 
-      ;; Set org blocks background
-      (setq modus-themes-org-blocks 'gray-background) ; {nil,'gray-background,'tinted-background}
+    ;; Set org blocks background
+    (setq modus-themes-org-blocks 'gray-background) ; {nil,'gray-background,'tinted-background}
 
-      (setq modus-themes-headings ; read the manual's entry or the doc string
-            '((0 variable-pitch light 1.9)
-              (1 variable-pitch light 1.8)
-              (2 variable-pitch regular 1.7)
-              (3 variable-pitch regular 1.6)
-              (4 variable-pitch regular 1.5)
-              (5 variable-pitch 1.4) ; absence of weight means `bold'
-              (6 variable-pitch 1.3)
-              (7 variable-pitch 1.2)
-              (t variable-pitch 1.1)))
+    (setq modus-themes-headings ; read the manual's entry or the doc string
+          '((0 variable-pitch light 1.9)
+            (1 variable-pitch light 1.8)
+            (2 variable-pitch regular 1.7)
+            (3 variable-pitch regular 1.6)
+            (4 variable-pitch regular 1.5)
+            (5 variable-pitch 1.4) ; absence of weight means `bold'
+            (6 variable-pitch 1.3)
+            (7 variable-pitch 1.2)
+            (t variable-pitch 1.1)))
 
-      ;; They are nil by default...
-      (setq modus-themes-mixed-fonts t
-            modus-themes-variable-pitch-ui t)
+    ;; They are nil by default...
+    (setq modus-themes-mixed-fonts t
+          modus-themes-variable-pitch-ui t)
 
-      ;; Configure modeline
-      (setq modus-themes-mode-line '(accented borderless 4 0.9))
+    ;; Configure modeline
+    (setq modus-themes-mode-line '(accented borderless 4 0.9))
 
-      ;; Add background for fringe area
-      (setq modus-themes-fringes 'subtle)
+    ;; Add background for fringe area
+    (setq modus-themes-fringes 'subtle)
 
-      ;; Read the doc string or manual for this one.  The symbols can be
-      ;; combined in any order.
-      (setq modus-themes-region '(intense no-extend neutral))
+    ;; Read the doc string or manual for this one.  The symbols can be
+    ;; combined in any order.
+    (setq modus-themes-region '(intense no-extend neutral))
 
-      ;; Disable all other themes to avoid awkward blending:
-      (mapc #'disable-theme custom-enabled-themes)
+    ;; Disable all other themes to avoid awkward blending:
+    (mapc #'disable-theme custom-enabled-themes)
 
     :config
-      ;; We use the built-in theme
-      (load-theme 'modus-operandi)
-  )
+    ;; We use the built-in theme
+    (load-theme 'modus-operandi)
+    )
 #+END_SRC
 
 ** Which key
@@ -422,8 +420,8 @@ The themes modus-operandi and modus-vivendi are part of Emacs since version 28. 
 #+BEGIN_SRC elisp :noweb-ref emacs
   (use-package which-key
     :init
-      (which-key-mode)
-  )
+    (which-key-mode)
+    )
 #+END_SRC
 
 ** Olivetti
@@ -454,14 +452,14 @@ Add the Guix packages to the home config:
   (use-package olivetti
     :diminish
     :config
-      (setq olivetti-minimum-body-width 40
-            olivetti-recall-visual-line-mode-entry-state t
-            olivetti-style 'fancy
-            olivetti-margin-width 3)
+    (setq olivetti-minimum-body-width 40
+          olivetti-recall-visual-line-mode-entry-state t
+          olivetti-style 'fancy
+          olivetti-margin-width 3)
 
     :hook (org-mode . olivetti-mode)
     :hook (markdown-mode . olivetti-mode)
-  )
+    )
 #+END_SRC
 
 ** svg-tag-mode
@@ -566,7 +564,7 @@ Add the Guix packages to the home config:
              ((lambda (tag)
                 (svg-tag-make tag :end -1 :inverse t :crop-left t :margin 0))))
 
-            ;; Inactive date  (with or without day name, with or without time)
+            ;; Inactive date (with or without day name, with or without time)
             (,(format "\\(\\[%s\\]\\)" date-re) .
              ((lambda (tag)
                 (svg-tag-make tag :beg 1 :end -1 :margin 0 :face 'org-date))))
@@ -577,13 +575,13 @@ Add the Guix packages to the home config:
              ((lambda (tag)
                 (svg-tag-make tag :end -1 :inverse t :crop-left t :margin 0 :face 'org-date))))
 
-            ;; ;; Progress
+            ;; Progress
             ("\\(\\[[0-9]\\{1,3\\}%\\]\\)" . ((lambda (tag)
                                                 (svg-progress-percent (substring tag 1 -2)))))
             ("\\(\\[[0-9]+/[0-9]+\\]\\)" . ((lambda (tag)
                                               (svg-progress-count (substring tag 1 -1)))))
             ))
-    :hook ((prog-mode . svg-tag-mode)
+    :hook (;(prog-mode . svg-tag-mode)
            (org-mode . svg-tag-mode))
     )
 #+END_SRC
@@ -619,11 +617,11 @@ Add the Guix packages to the home config:
     (setq exec-path-from-shell-arguments (list "-l"))
     ;; There is an issue setting PATH in Windows, set the shell variables depending on the OS
     (if (eq system-type 'windows-nt)
-      (setq exec-path-from-shell-variables '("SSH_AUTH_SOCK" "SSH_AGENT_PID"))
+        (setq exec-path-from-shell-variables '("SSH_AUTH_SOCK" "SSH_AGENT_PID"))
       (setq exec-path-from-shell-variables '("PATH" "SSH_AUTH_SOCK" "SSH_AGENT_PID")))
     :config
     (exec-path-from-shell-initialize)
-  )
+    )
 #+END_SRC
 
 ** Vertico
@@ -632,9 +630,9 @@ Add the Guix packages to the home config:
   ;; Configure vertico
   (use-package vertico
     :init
-      (vertico-mode)
-      (setq enable-recursive-minibuffers t)
-  )
+    (vertico-mode)
+    (setq enable-recursive-minibuffers t)
+    )
 #+END_SRC
 
 Add the Guix package to the home config:
@@ -668,17 +666,17 @@ https://cgit.freedesktop.org/libreoffice/dictionaries/tree
 #+BEGIN_SRC elisp :noweb-ref emacs
   (use-package flyspell
     :init
-      ;; Configure hunspell
-      (setq ispell-program-name "hunspell")
-      (setq ispell-hunspell-dict-paths-alist
-        '(("hu_HU" (concat (if (eq system-type 'windows-nt) (getenv "USERPROFILE") "~") (if (executable-find "guix") "/.guix-home/profile" "/.local") "/share/hunspell/hu_HU.aff"))
-          ("en_US" (concat (if (eq system-type 'windows-nt) (getenv "USERPROFILE") "~") (if (executable-find "guix") "/.guix-home/profile" "/.local") "/share/hunspell/en_US.aff"))
-         ))
-      (setq ispell-local-dictionary-alist
-        '(("Hungarian" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "hu_HU") nil utf-8)
-          ("English"   "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US") nil utf-8)
-         ))
-  )
+    ;; Configure hunspell
+    (setq ispell-program-name "hunspell")
+    (setq ispell-hunspell-dict-paths-alist
+          '(("hu_HU" (concat (if (eq system-type 'windows-nt) (getenv "USERPROFILE") "~") (if (executable-find "guix") "/.guix-home/profile" "/.local") "/share/hunspell/hu_HU.aff"))
+            ("en_US" (concat (if (eq system-type 'windows-nt) (getenv "USERPROFILE") "~") (if (executable-find "guix") "/.guix-home/profile" "/.local") "/share/hunspell/en_US.aff"))
+            ))
+    (setq ispell-local-dictionary-alist
+          '(("Hungarian" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "hu_HU") nil utf-8)
+            ("English"   "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US") nil utf-8)
+            ))
+    )
 #+END_SRC
 
 ** Org-mode
@@ -698,16 +696,16 @@ If guix is not installed, then install within Emacs using quelpa:
        :stable nil
        :files (:defaults
                "lisp")))
-  )
+    )
 #+END_SRC
 
 Add the Guix packages to the home config:
 
 #+BEGIN_SRC scheme :noweb-ref guix-home
-    (define %home-packages
-      (append %home-packages
-              (list "emacs-org-modern"
-                    "emacs-org-contrib")))
+  (define %home-packages
+    (append %home-packages
+            (list "emacs-org-modern"
+                  "emacs-org-contrib")))
 #+END_SRC
 
 *** Configuration
@@ -739,9 +737,9 @@ Add the Guix packages to the home config:
       (set-face-attribute (car face) nil :font "cantarell" :weight 'regular :height (cdr face)))
 
     ;; Ensure that anything that should be fixed-pitch in Org files appears that way
-    (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
-    (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
-    (set-face-attribute 'org-table nil   :inherit '(shadow fixed-pitch))
+    (set-face-attribute 'org-block nil    :inherit 'fixed-pitch)
+    (set-face-attribute 'org-code nil     :inherit '(shadow fixed-pitch))
+    (set-face-attribute 'org-table nil    :inherit '(shadow fixed-pitch))
     (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
     (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
     (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
@@ -756,13 +754,11 @@ Add the Guix packages to the home config:
     :hook (org-mode . myhooks/org-font-setup)
     :init
     (setq org-ellipsis " ▾")
-    ;; Hide leading stars
-    (setq org-hide-leading-stars nil)
+    (setq org-hide-leading-stars nil)  ; Hide leading stars
+    (setq org-src-fontify-natively t)
 
     ;; Org Agenda
     (setq org-agenda-files (list (my-notes)))
-
-    (setq org-src-fontify-natively t)
     )
 
   ;; Active Babel languages
@@ -802,8 +798,7 @@ If guix is not installed, then install within Emacs using quelpa:
     (quelpa
      '(php-mode
        :fetcher github
-       :repo "emacs-php/php-mode"))
-  )
+       :repo "emacs-php/php-mode")))
 #+END_SRC
 
 Add the Guix package to the home config:
@@ -833,8 +828,7 @@ If guix is not installed, then install within Emacs using quelpa:
     (quelpa
      '(paredit
        :fetcher github
-       :repo "emacsmirror/paredit"))
-  )
+       :repo "emacsmirror/paredit")))
 #+END_SRC
 
 Add the Guix package to the home config:
@@ -908,7 +902,7 @@ Add the Guix package to the home config:
 #+BEGIN_SRC elisp :noweb-ref emacs
   (unless (eq system-type 'windows-nt)
     (use-package geiser-guile)
-  )
+    )
 #+END_SRC
 
 ** Denote
@@ -923,7 +917,7 @@ If guix is not installed, then install within Emacs using quelpa:
      '(denote
        :fetcher github
        :repo "protesilaos/denote"))
-  )
+    )
 #+END_SRC
 
 Add the Guix package to the home config:
@@ -939,25 +933,25 @@ Add the Guix package to the home config:
 #+BEGIN_SRC elisp :noweb-ref emacs
   (use-package denote
     :init
-      ;; Remember to check the doc strings of those variables.
-      (setq denote-directory (my-notes))
-      (setq denote-known-keywords '())
-      (setq denote-infer-keywords t)
-      (setq denote-sort-keywords t)
-      (setq denote-file-type nil) ; Org is the default, set others here
-      (setq denote-prompts '(subdirectory title keywords))
-      (setq denote-excluded-directories-regexp nil)
-      (setq denote-excluded-keywords-regexp nil)
+    ;; Remember to check the doc strings of those variables.
+    (setq denote-directory (my-notes))
+    (setq denote-known-keywords '())
+    (setq denote-infer-keywords t)
+    (setq denote-sort-keywords t)
+    (setq denote-file-type nil) ; Org is the default, set others here
+    (setq denote-prompts '(subdirectory title keywords))
+    (setq denote-excluded-directories-regexp nil)
+    (setq denote-excluded-keywords-regexp nil)
 
-      ;; Pick dates, where relevant, with Org's advanced interface:
-      (setq denote-date-prompt-use-org-read-date t)
+    ;; Pick dates, where relevant, with Org's advanced interface:
+    (setq denote-date-prompt-use-org-read-date t)
 
-      (setq denote-allow-multi-word-keywords t)
+    (setq denote-allow-multi-word-keywords t)
 
-      ;; By default, we do not show the context of links.  We just display
-      ;; file names.  This provides a more informative view.
-      (setq denote-backlinks-show-context t)
-  )
+    ;; By default, we do not show the context of links.  We just display
+    ;; file names.  This provides a more informative view.
+    (setq denote-backlinks-show-context t)
+    )
 #+END_SRC
 
 ** Markdown mode
@@ -982,17 +976,17 @@ Add the Guix package to the home config:
 
   (use-package markdown-mode
     :init
-      (add-to-list 'auto-mode-alist
-                   '("\\.\\(?:md\\|markdown\\|mkd\\|mdown\\|mkdn\\|mdwn\\)\\'" . markdown-mode))
+    (add-to-list 'auto-mode-alist
+                 '("\\.\\(?:md\\|markdown\\|mkd\\|mdown\\|mkdn\\|mdwn\\)\\'" . markdown-mode))
 
-      (autoload 'gfm-mode "markdown-mode"
-        "Major mode for editing GitHub Flavored Markdown files" t)
-      (add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode))
+    (autoload 'gfm-mode "markdown-mode"
+      "Major mode for editing GitHub Flavored Markdown files" t)
+    (add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode))
 
-      (add-hook 'markdown-mode-hook #'myhooks/markdown-font-setup)
-      (add-hook 'markdown-mode-hook #'myhooks/markdown-mode-setup)
-      (add-hook 'markdown-mode-hook #'myhooks/visual-fill)
-  )
+    (add-hook 'markdown-mode-hook #'myhooks/markdown-font-setup)
+    (add-hook 'markdown-mode-hook #'myhooks/markdown-mode-setup)
+    (add-hook 'markdown-mode-hook #'myhooks/visual-fill)
+    )
 #+END_SRC
 
 Add the Guix package to the home config:
@@ -1008,8 +1002,8 @@ Add the Guix package to the home config:
 #+BEGIN_SRC elisp :noweb-ref emacs
   (use-package yaml-mode
     :init
-      (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
-  )
+    (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
+    )
 #+END_SRC
 
 Add the Guix package to the home config:
@@ -1032,7 +1026,7 @@ If guix is not installed, then install within Emacs using quelpa:
      '(pdf-tools
        :fetcher github
        :repo "vedang/pdf-tools"))
-  )
+    )
 #+END_SRC
 
 Add the Guix packages to the home config:
@@ -1064,7 +1058,7 @@ If guix is not installed, then install within Emacs using quelpa:
      '(emms-setup
        :fetcher github
        :repo "emacsmirror/emms"))
-  )
+    )
 #+END_SRC
 
 Add the Guix packages to the home config:
@@ -1082,11 +1076,11 @@ Add the Guix packages to the home config:
   ;; EMMS
   (use-package emms-setup
     :init
-      (setq emms-player-list '(emms-player-mpv)
-            emms-info-functions '(emms-info-native))
+    (setq emms-player-list '(emms-player-mpv)
+          emms-info-functions '(emms-info-native))
     :config
-      (emms-all)
-  )
+    (emms-all)
+    )
 #+END_SRC
 
 ** Tramp
@@ -1094,19 +1088,19 @@ Add the Guix packages to the home config:
 #+BEGIN_SRC elisp :noweb-ref emacs
   (use-package tramp
     :config
-      ;; Based on tramp-sh.el https://git.savannah.gnu.org/cgit/tramp.git/tree/lisp/tramp-sh.el
-      (add-to-list 'tramp-methods
-                   '("mysudo"
-                     (tramp-login-program        "env")
-                     (tramp-login-args           (("SUDO_PROMPT=P\"\"a\"\"s\"\"s\"\"w\"\"o\"\"r\"\"d\"\":")
-                                                  ("sudo") ("su") ("-") ("%u") ))
-                     (tramp-remote-shell         "/bin/sh")
-                     (tramp-remote-shell-login   ("-l"))
-                     (tramp-remote-shell-args    ("-c"))
-                     (tramp-connection-timeout   10)
-                     (tramp-session-timeout      300)
-                     (tramp-password-previous-hop t)))
-  )
+    ;; Based on tramp-sh.el https://git.savannah.gnu.org/cgit/tramp.git/tree/lisp/tramp-sh.el
+    (add-to-list 'tramp-methods
+                 '("mysudo"
+                   (tramp-login-program        "env")
+                   (tramp-login-args           (("SUDO_PROMPT=P\"\"a\"\"s\"\"s\"\"w\"\"o\"\"r\"\"d\"\":")
+                                                ("sudo") ("su") ("-") ("%u") ))
+                   (tramp-remote-shell         "/bin/sh")
+                   (tramp-remote-shell-login   ("-l"))
+                   (tramp-remote-shell-args    ("-c"))
+                   (tramp-connection-timeout   10)
+                   (tramp-session-timeout      300)
+                   (tramp-password-previous-hop t)))
+    )
 #+END_SRC
 
 ** Envrc
@@ -1114,8 +1108,8 @@ Add the Guix packages to the home config:
 #+BEGIN_SRC elisp :noweb-ref emacs
   (use-package envrc
     :init
-      (envrc-global-mode)
-  )
+    (envrc-global-mode)
+    )
 #+END_SRC
 
 Add the Guix packages to the home config:
@@ -1139,7 +1133,7 @@ If guix is not installed, then install within Emacs using quelpa:
      '(emms-setup
        :fetcher github
        :repo "magit/magit"))
-  )
+    )
 #+END_SRC
 
 Add the Guix packages to the home config:
@@ -1156,7 +1150,24 @@ Add the Guix packages to the home config:
   (use-package magit)
 #+END_SRC
 
-** Various other packages
+** Eat
+
+*** Installation
+
+If guix is not installed, then install within Emacs using quelpa:
+
+#+BEGIN_SRC elisp :noweb-ref emacs
+  (unless (executable-find "guix")
+    (quelpa
+     '(eat
+       :fetcher github
+       :repo "kephale/emacs-eat"
+       :files ("*.el" ("term" "term/*.el") "*.texi"
+               "*.ti" ("terminfo/e" "terminfo/e/*")
+               ("terminfo/65" "terminfo/65/*")
+               ("integration" "integration/*")
+               (:exclude ".dir-locals.el" "*-tests.el")))))
+#+END_SRC
 
 Add the Guix packages to the home config:
 
@@ -1164,6 +1175,12 @@ Add the Guix packages to the home config:
   (define %home-packages
     (append %home-packages
             (list "emacs-eat")))
+#+END_SRC
+
+*** Configuration
+
+#+BEGIN_SRC elisp :noweb-ref emacs
+  (use-package eat)
 #+END_SRC
 
 * Guix config
