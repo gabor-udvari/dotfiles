@@ -42,8 +42,7 @@ install: --config-home --install-home
 		fi
 	}
 
-.ONESHELL:
---update-channels:
+update-channels:
 	@{
 		echo -e "${GREEN_TERMINAL_OUTPUT}--> [Makefile] Updating channels.scm...${CLEAR}"
 		mkdir -p build

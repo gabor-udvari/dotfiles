@@ -8,7 +8,8 @@ Add the bash package to the Guix home config:
 #+BEGIN_SRC scheme :noweb-ref guix-home
   (define %home-packages
     (append %home-packages
-            (list "bash")))
+            (list "bash"
+                  "bash-completion")))
 #+END_SRC
 
 * Configuration
@@ -272,6 +273,8 @@ Have a single ~.profile~ file for Bash and everything else. Bash will not read t
       . /usr/share/bash-completion/bash_completion
     elif [ -f /etc/bash_completion ]; then
       . /etc/bash_completion
+    elif [ -f "$HOME"/.guix-home/profile/etc/profile.d/bash_completion.sh ]; then
+      . "$HOME"/.guix-home/profile/etc/profile.d/bash_completion.sh
     fi
 
     if [ -d "$HOME"/.homesick/repos/homeshick ]; then
