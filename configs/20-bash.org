@@ -538,7 +538,9 @@ Guix service for linking all the files inside ~.config/bash~:
             (list
              (simple-service 'dotfiles-symlinking-service
                              home-files-service-type
-                             `((".config/bash/bashrc.d/shell_prompt.sh"
+                             `(
+                               ;; Do not put shell_prompt.sh into bashrc.d, because we need to load it conditionally
+                               (".config/bash/shell_prompt.sh"
                                 ,(local-file "home/.config/bash/shell_prompt.sh" "shell_prompt"))
                                (".config/bash/bashrc.d/sync-history.sh"
                                 ,(local-file "home/.config/bash/bashrc.d/sync-history.sh" "sync-history"))
