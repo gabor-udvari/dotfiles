@@ -99,9 +99,6 @@ Change some of the defaults to make a more minimal interface.
   ;; Automatically revert buffers
   (global-auto-revert-mode 1)
 
-  ;; Make ESC quit prompts
-  (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
-
   ;; Support for colors in the compilation buffer
   (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
 
@@ -329,7 +326,7 @@ Add the Guix package to the home config:
             (t ; our shared fallback properties
              :default-family "Consolas"
              :default-weight normal
-             :variable-pitch-family "Arial"
+             :variable-pitch-family "Sans"
              :variable-pitch-height 1.05)))
 
     (setq fontaine-latest-state-file
@@ -626,6 +623,28 @@ Add the Guix packages to the home config:
 
 ** Vertico
 
+*** Installation
+
+If guix is not installed, then install within Emacs using quelpa:
+
+#+BEGIN_SRC elisp :noweb-ref emacs
+  (unless (executable-find "guix")
+    (quelpa
+     '(vertico
+       :fetcher github
+       :repo "minad/vertico")))
+#+END_SRC
+
+Add the Guix package to the home config:
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (define %home-packages
+    (append %home-packages
+            (list "emacs-vertico")))
+#+END_SRC
+
+*** Configuration
+
 #+BEGIN_SRC elisp :noweb-ref emacs
   ;; Configure vertico
   (use-package vertico
@@ -635,12 +654,35 @@ Add the Guix packages to the home config:
     )
 #+END_SRC
 
-Add the Guix package to the home config:
+** Orderless
+
+*** Installation
+
+If guix is not installed, then install within Emacs using quelpa:
+
+#+BEGIN_SRC elisp :noweb-ref emacs
+  (unless (executable-find "guix")
+    (quelpa
+     '(orderless
+       :fetcher github
+       :repo "oantolin/orderless")))
+#+END_SRC
+
+Add the Guix packages to the home config:
 
 #+BEGIN_SRC scheme :noweb-ref guix-home
   (define %home-packages
     (append %home-packages
-            (list "emacs-vertico")))
+            (list "emacs-orderless")))
+#+END_SRC
+
+*** Configuration
+
+#+BEGIN_SRC elisp :noweb-ref emacs
+  (use-package orderless
+    :custom
+    (completion-styles '(orderless basic))
+    (completion-category-overrides '((file (styles basic partial-completion)))))
 #+END_SRC
 
 ** Spell checking
