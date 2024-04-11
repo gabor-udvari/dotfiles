@@ -15,6 +15,7 @@
                (append (list "bind:utils"
                              "fontconfig"
                              "font-abattis-cantarell"
+                             "font-fira-code"
                              "shellcheck"
                              "jq"
                              "python-yamllint"

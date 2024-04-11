@@ -24,7 +24,14 @@ Here are some steps to be able to bootstrap the above tools:
    [[https://github.com/chocolatey/choco/blob/stable/src/chocolatey.resources/redirects/RefreshEnv.cmd]]
 3. Download Zstd from the official repository, so that we can uncompress Msys2 packages:
    [[https://github.com/facebook/zstd/releases/latest]]
-4. Download and install the Cygwin, Gettext, Make package with these commands:
+4. Add the Zstd folder to your users environment variables. Press Windows+R, and launch the following command to open up the environment variable editing window:
+
+   #+BEGIN_SRC shell
+     rundll32.exe sysdm.cpl,EditEnvironmentVariables
+   #+END_SRC
+
+   Once you added it, use the RefreshEnv.cmd from step 2 to update the variables.
+5. Download and install the Cygwin, Gettext, Make package with these commands:
 
    #+BEGIN_SRC shell
      mkdir -p ~/.local

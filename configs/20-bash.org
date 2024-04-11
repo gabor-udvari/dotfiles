@@ -9,7 +9,8 @@ Add the bash package to the Guix home config:
   (define %home-packages
     (append %home-packages
             (list "bash"
-                  "bash-completion")))
+                  "bash-completion"
+                  "direnv")))
 #+END_SRC
 
 * Configuration

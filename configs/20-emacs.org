@@ -40,7 +40,7 @@ The different emacs packages will be installed through Guix home, therefore we w
 
         cursor-in-non-selected-windows nil) ;; Disable cursor in inactive windows)
 
-  ;; (menu-bar-mode -1) ;; Disable menubar
+  (menu-bar-mode -1) ;; Disable menubar
   ;; (scroll-bar-mode -1) ;; Disable visible scrollbar
   (tool-bar-mode -1) ;; Disable the toolbar
   (tooltip-mode -1) ;; Disable tooltips
@@ -56,7 +56,7 @@ The different emacs packages will be installed through Guix home, therefore we w
   (setq file-name-handler-alist nil)
 
   (defvar my-vc-handled-backends vc-handled-backends)
-  (setq vc-handled-backends nil)
+  (setq vc-handled-backends '(Git))
 
   (add-hook 'emacs-startup-hook
             (lambda ()
@@ -105,8 +105,7 @@ Change some of the defaults to make a more minimal interface.
   ;; Load all lisp files from the init.d folder
   (if (eq system-type 'windows-nt)
       (mapc 'load (file-expand-wildcards "~/.emacs.d/init.d/*.el"))
-    (mapc 'load (file-expand-wildcards "~/.config/emacs/init.d/*.el"))
-    )
+    (mapc 'load (file-expand-wildcards "~/.config/emacs/init.d/*.el")))
 
   (setq use-short-answers t) ;; y/n for answering yes/no questions
 
@@ -120,12 +119,12 @@ Change some of the defaults to make a more minimal interface.
   (setq frame-resize-pixelwise t)
 
   ;; Buffer encoding
-  (prefer-coding-system       'utf-8)
-  (set-default-coding-systems 'utf-8)
-  (set-terminal-coding-system 'utf-8)
-  (set-keyboard-coding-system 'utf-8)
+  (prefer-coding-system                    'utf-8-unix)
+  (set-default-coding-systems              'utf-8-unix)
+  (set-terminal-coding-system              'utf-8-unix)
+  (set-keyboard-coding-system              'utf-8-unix)
+  (setq-default buffer-file-coding-system  'utf-8-unix)
   (set-language-environment   'utf-8)
-  (setq-default buffer-file-coding-system 'utf-8)
 
   ;; Unique buffer names
   (require 'uniquify)
@@ -165,60 +164,23 @@ As seen on https://www.youtube.com/watch?v=74zOY-vgkyw, and from the nano-defaul
 
 ** Package handling
 
-Enable packages.
+Enable packages and use-package in all cases regardless of version (I use at least Emacs 29 everywhere) or OS.
 
 #+BEGIN_SRC elisp :noweb-ref emacs
   (require 'package)
+  (eval-when-compile
+    (require 'use-package))
 #+END_SRC
 
-Install ~quelpa~, ~quelpa-use-package~ and ~use-package~ if ~guix~ is not found on the system.
+Packages should not be ensured when Guix is available, but useful otherwise.
 
 #+BEGIN_SRC elisp :noweb-ref emacs
   (unless (executable-find "guix")
     (unless (package-installed-p 'quelpa)
       (with-temp-buffer
-        (url-insert-file-contents "https://github.com/quelpa/quelpa/raw/master/quelpa.el")
+        (url-insert-file-contents "https://raw.githubusercontent.com/quelpa/quelpa/master/quelpa.el")
         (eval-buffer)
-        (quelpa-self-upgrade)))
-
-    ;; Build stable packages
-    (setq quelpa-stable-p t)
-    ;; Do not update MELPA repo list on startup
-    (setq quelpa-update-melpa-p nil)
-    (setq quelpa-checkout-melpa-p nil)
-
-    (quelpa
-     '(use-package
-        :fetcher git
-        :url "https://github.com/jwiegley/use-package"))
-
-    (quelpa
-     '(quelpa-use-package
-       :fetcher git
-       :url "https://github.com/quelpa/quelpa-use-package.git"))
-
-    (require 'quelpa-use-package)
-
-    ;; Make quelpa the function for use-package ensure
-    (setq use-package-ensure-function 'quelpa)
-    )
-#+END_SRC
-
-Require use-package in all cases regardless of version or OS.
-
-#+BEGIN_SRC elisp :noweb-ref emacs
-  (eval-when-compile
-    (require 'use-package)
-    )
-#+END_SRC
-
-Ensuring packages is not required when Guix is available, but useful otherwise.
-
-#+BEGIN_SRC elisp :noweb-ref emacs
-  (unless (executable-find "guix")
-    (require 'use-package-ensure)
-    (setq use-package-always-ensure t)
-    )
+        (quelpa-self-upgrade))))
 #+END_SRC
 
 ** Line numbers
@@ -246,18 +208,17 @@ Ensuring packages is not required when Guix is available, but useful otherwise.
 
 *** Installation
 
-If guix is not installed, then install within Emacs using quelpa:
+If Guix is not installed, then install within Emacs with Quelpa:
 
 #+BEGIN_SRC elisp :noweb-ref emacs
-  (unless (executable-find "guix")
-    (quelpa
+  (quelpa
      '(compat
        :fetcher github
        :repo "emacs-compat/compat"))
-    (quelpa
+  (quelpa
      '(no-littering
        :fetcher github
-       :repo "emacscollective/no-littering")))
+       :repo "emacscollective/no-littering"))
 #+END_SRC
 
 Add the Guix package to the home config:
@@ -265,7 +226,7 @@ Add the Guix package to the home config:
 #+BEGIN_SRC scheme :noweb-ref guix-home
   (define %home-packages
     (append %home-packages
-            (list "emacs-no-littering")))
+            (list "emacs-no-littering@1.5.0")))
 #+END_SRC
 
 *** Config
@@ -285,65 +246,35 @@ Add the Guix package to the home config:
     )
 #+END_SRC
 
-** Fontaine
+** Fonts
 
-*** Installation
+*** Config
 
-If guix is not installed, then install within Emacs using quelpa:
-
-#+BEGIN_SRC elisp :noweb-ref emacs
-  (unless (executable-find "guix")
-    (quelpa
-     '(fontaine
-       :fetcher github
-       :repo "protesilaos/fontaine"))
-    )
-#+END_SRC
-
-Add the Guix package to the home config:
-
-#+BEGIN_SRC scheme :noweb-ref guix-home
-  (define %home-packages
-    (append %home-packages
-            (list "emacs-fontaine")))
-#+END_SRC
-
-*** Configuration
+Do not use any packages for this, just the built-in ~set-face-attribute~.
 
 #+BEGIN_SRC elisp :noweb-ref emacs
-  (use-package fontaine
-    :init
-    (setq fontaine-presets
-          '((regular
-             :default-height 120)
-            (medium
-             :default-weight semilight
-             :default-height 140)
-            (large
-             :default-weight semilight
-             :default-height 180
-             :bold-weight extrabold)
-            (t ; our shared fallback properties
-             :default-family "Consolas"
-             :default-weight normal
-             :variable-pitch-family "Sans"
-             :variable-pitch-height 1.05)))
+  (defun apply-fonts (variable-font fixed-font)
+    (progn (let ((font fixed-font))
+               (if (member font (font-family-list))
+                   (progn (set-face-attribute 'default nil :font font :height 100)
+                          (set-face-attribute 'fixed-pitch nil :font font :height 100))))
+             (let ((font variable-font))
+               (if (member font (font-family-list))
+                   (progn (set-face-attribute 'mode-line nil :font font :height 120)
+                          (set-face-attribute 'variable-pitch nil :font font :height 120))))))
+#+END_SRC
 
-    (setq fontaine-latest-state-file
-          (locate-user-emacs-file "fontaine-latest-state.eld"))
+We set separate fonts on Windows and where Guix is available, because Guix can install our custom fonts, but [[https://github.com/microsoft/terminal/issues/3257][Windows currently has issues]] with user installed fonts. Use Calibri and Cascadia Mono on Windows and use Cantarell and Fira Code where Guix is available:
 
-    :config
-    ;; Recover last preset or fall back to desired style from
-    ;; `fontaine-presets'.
-    (fontaine-set-preset (or (fontaine-restore-latest-preset) 'regular))
+#+BEGIN_SRC elisp :noweb-ref emacs
+  (defun my-fonts ()
+    (cond ((eq system-type 'windows-nt) (apply-fonts "Calibri" "Cascadia Mono"))
+          ((executable-find "guix") (apply-fonts "Cantarell" "Fira Code"))))
+#+END_SRC
 
-    ;; The other side of `fontaine-restore-latest-preset'.
-    (add-hook 'kill-emacs-hook #'fontaine-store-latest-preset)
-
-    ;; Persist font configurations while switching themes (doing it with
-    ;; Prot's `modus-themes' and `ef-themes' via the hooks they provide).
-    (add-hook 'modus-themes-after-load-theme-hook #'fontaine-apply-current-preset)
-    )
+#+BEGIN_SRC elisp :noweb-ref emacs
+  (my-fonts)
+  (add-hook 'server-after-make-frame-hook #'my-fonts)
 #+END_SRC
 
 ** Modus themes
@@ -406,10 +337,23 @@ The themes modus-operandi and modus-vivendi are part of Emacs since version 28. 
 
 *** Installation
 
+If guix is not installed, then install within Emacs using quelpa:
+
+#+BEGIN_SRC elisp :noweb-ref emacs
+  (unless (executable-find "guix")
+    (quelpa
+     '(which-key
+       :fetcher github
+       :repo "justbur/emacs-which-key"
+       :version "3.6.0")))
+#+END_SRC
+
+Add the Guix packages to the home config:
+
 #+BEGIN_SRC scheme :noweb-ref guix-home
   (define %home-packages
     (append %home-packages
-            (list "emacs-which-key")))
+            (list "emacs-which-key@3.6.0")))
 #+END_SRC
 
 *** Configuration
@@ -421,42 +365,36 @@ The themes modus-operandi and modus-vivendi are part of Emacs since version 28. 
     )
 #+END_SRC
 
-** Olivetti
+** Spacious padding
 
 *** Installation
 
-If guix is not installed, then install within Emacs using quelpa:
+Install within Emacs using Quelpa, because it is not yet packaged into Guix:
 
 #+BEGIN_SRC elisp :noweb-ref emacs
-  (unless (executable-find "guix")
-    (quelpa
-     '(olivetti
-       :fetcher github
-       :repo "rnkn/olivetti")))
-#+END_SRC
-
-Add the Guix packages to the home config:
-
-#+BEGIN_SRC scheme :noweb-ref guix-home
-  (define %home-packages
-    (append %home-packages
-            (list "emacs-olivetti")))
+  (quelpa
+   '(spacious-padding
+     :fetcher github
+     :repo "protesilaos/spacious-padding"))
 #+END_SRC
 
 *** Configuration
 
 #+BEGIN_SRC elisp :noweb-ref emacs
-  (use-package olivetti
-    :diminish
+  (use-package spacious-padding
     :config
-    (setq olivetti-minimum-body-width 40
-          olivetti-recall-visual-line-mode-entry-state t
-          olivetti-style 'fancy
-          olivetti-margin-width 3)
-
-    :hook (org-mode . olivetti-mode)
-    :hook (markdown-mode . olivetti-mode)
-    )
+    (setq spacious-padding-widths
+      '( :internal-border-width 15
+         :header-line-width 4
+         :mode-line-width 6
+         :tab-width 4
+         :right-divider-width 30
+         :scroll-bar-width 20
+         :fringe-width 8))
+    ;; Emacs server-client mode has an ugly black border, this fixes it
+    (if (daemonp)
+        (add-hook 'server-after-make-frame-hook (lambda () (spacious-padding-mode 1)))
+        (spacious-padding-mode 1)))
 #+END_SRC
 
 ** svg-tag-mode
@@ -525,8 +463,8 @@ Add the Guix packages to the home config:
     (setq svg-tag-tags
           `(
             ;; Org tags
-            (":\\([A-Za-z0-9]+\\)" . ((lambda (tag) (svg-tag-make tag))))
-            (":\\([A-Za-z0-9]+[ \-]\\)" . ((lambda (tag) tag)))
+            ; (":\\([A-Za-z0-9]+\\)" . ((lambda (tag) (svg-tag-make tag))))
+            ; (":\\([A-Za-z0-9]+[ \-]\\)" . ((lambda (tag) tag)))
 
             ;; Task priority
             ("\\[#[A-Z]\\]" . ( (lambda (tag)
@@ -738,7 +676,10 @@ If guix is not installed, then install within Emacs using quelpa:
        :stable nil
        :files (:defaults
                "lisp")))
-    )
+    (quelpa
+     '(org-modern
+       :fetcher github
+       :repo "minad/org-modern")))
 #+END_SRC
 
 Add the Guix packages to the home config:
@@ -776,7 +717,7 @@ Add the Guix packages to the home config:
                     (org-level-6 . 1.1)
                     (org-level-7 . 1.1)
                     (org-level-8 . 1.1)))
-      (set-face-attribute (car face) nil :font "cantarell" :weight 'regular :height (cdr face)))
+      (set-face-attribute (car face) nil :height (cdr face)))
 
     ;; Ensure that anything that should be fixed-pitch in Org files appears that way
     (set-face-attribute 'org-block nil    :inherit 'fixed-pitch)
@@ -998,6 +939,29 @@ Add the Guix package to the home config:
 
 ** Markdown mode
 
+*** Installation
+
+If guix is not installed, then install within Emacs using quelpa:
+
+#+BEGIN_SRC elisp :noweb-ref emacs
+  (unless (executable-find "guix")
+    (quelpa
+     '(markdown-mode
+       :fetcher github
+       :repo "jrblevin/markdown-mode"))
+    )
+#+END_SRC
+
+Add the Guix package to the home config:
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (define %home-packages
+    (append %home-packages
+            (list "emacs-markdown-mode")))
+#+END_SRC
+
+*** Configuration
+
 #+BEGIN_SRC elisp :noweb-ref emacs
   (defun myhooks/markdown-mode-setup ()
     (variable-pitch-mode 1)
@@ -1013,7 +977,7 @@ Add the Guix package to the home config:
                     (markdown-header-face-6 . 1.1)
                     (markdown-markup-face . 1.0)
                     ))
-      (set-face-attribute (car face) nil :font "cantarell" :weight 'regular :height (cdr face)))
+      (set-face-attribute (car face) nil :height (cdr face)))
     )
 
   (use-package markdown-mode
@@ -1031,20 +995,18 @@ Add the Guix package to the home config:
     )
 #+END_SRC
 
-Add the Guix package to the home config:
-
-#+BEGIN_SRC scheme :noweb-ref guix-home
-  (define %home-packages
-    (append %home-packages
-            (list "emacs-markdown-mode")))
-#+END_SRC
-
 ** YAML mode
 
+*** Installation
+
+If guix is not installed, then install within Emacs using quelpa:
+
 #+BEGIN_SRC elisp :noweb-ref emacs
-  (use-package yaml-mode
-    :init
-    (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
+  (unless (executable-find "guix")
+    (quelpa
+     '(yaml-mode
+       :fetcher github
+       :repo "yoshiki/yaml-mode"))
     )
 #+END_SRC
 
@@ -1054,6 +1016,15 @@ Add the Guix package to the home config:
   (define %home-packages
     (append %home-packages
             (list "emacs-yaml-mode")))
+#+END_SRC
+
+*** Configuration
+
+#+BEGIN_SRC elisp :noweb-ref emacs
+  (use-package yaml-mode
+    :init
+    (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
+    )
 #+END_SRC
 
 ** PDF Tools
@@ -1147,10 +1118,16 @@ Add the Guix packages to the home config:
 
 ** Envrc
 
+*** Installation
+
+If guix is not installed, then install within Emacs using quelpa:
+
 #+BEGIN_SRC elisp :noweb-ref emacs
-  (use-package envrc
-    :init
-    (envrc-global-mode)
+  (unless (executable-find "guix")
+    (quelpa
+     '(envrc
+       :fetcher github
+       :repo "purcell/envrc"))
     )
 #+END_SRC
 
@@ -1159,8 +1136,16 @@ Add the Guix packages to the home config:
 #+BEGIN_SRC scheme :noweb-ref guix-home
   (define %home-packages
     (append %home-packages
-            (list "emacs-envrc"
-                  "direnv")))
+            (list "emacs-envrc")))
+#+END_SRC
+
+*** Configuration
+
+#+BEGIN_SRC elisp :noweb-ref emacs
+  (use-package envrc
+    :init
+    (envrc-global-mode)
+    )
 #+END_SRC
 
 ** Magit
@@ -1172,7 +1157,7 @@ If guix is not installed, then install within Emacs using quelpa:
 #+BEGIN_SRC elisp :noweb-ref emacs
   (unless (executable-find "guix")
     (quelpa
-     '(emms-setup
+     '(magit
        :fetcher github
        :repo "magit/magit"))
     )
