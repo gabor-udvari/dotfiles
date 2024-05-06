@@ -1,20 +1,17 @@
-* Gabor Udvari's dotfiles
+#+title: Gábor Udvari's dotfiles
+#+author: Gábor Udvari
 
 All the dotfiles are maintained in org-mode files as literate configuration. This was done in the hope that the different snippets can be understood and copied separately regardless of your own dotfiles solution. Feel free to browse through the different files and use whatever you like.
 
-** Installation
+* Installation
 
 You can compile the whole config by running make in the repository. The Makefile will extract all the actual configuration files first, and then it will do a guix reconfigure based on the target. If ~guix~ is not found, then it will try to link the config files with ~stow~. You can find more explanation regarding these two steps below.
 
-*** 0. Requirements
+** 0. Requirements
 
-For installation you will need ~make~ and ~emacs~. You need to make sure to install a ~make~ with ~guile~ support, you can test it with the following command:
+For installation you will need ~make~ and ~emacs~.
 
-#+BEGIN_SRC shell
-  make --eval '$(info $(filter guile,$(.FEATURES)))' 2>/dev/null
-#+END_SRC
-
-**** Windows
+*** Windows
 
 Here are some steps to be able to bootstrap the above tools:
 
@@ -31,29 +28,42 @@ Here are some steps to be able to bootstrap the above tools:
    #+END_SRC
 
    Once you added it, use the RefreshEnv.cmd from step 2 to update the variables.
-5. Download and install the Cygwin, Gettext, Make package with these commands:
 
-   #+BEGIN_SRC shell
-     mkdir -p ~/.local
-     cd "$(mktemp -d)"
-     export MIRROR='https://mirror.accum.se/mirror/cygwin/x86_64/release'
-     curl -L -O -w '%{filename_effective}' "$MIRROR"/cygwin/cygwin-3.6.0-0.115.g579064bf4d40.tar.xz | xargs tar -C ~/.local -xvJf
-     curl -L -O -w '%{filename_effective}' "$MIRROR"/gcc/libgcc1/libgcc1-13.2.1+20240203-0.1.tar.zst | xargs tar -C ~/.local --zstd -xvf
-     curl -L -O -w '%{filename_effective}' "$MIRROR"/zstd/zstd-1.5.6-1.tar.zst | xargs tar -C ~/.local --zstd -xvf
-     curl -L -O -w '%{filename_effective}' "$MIRROR"/zlib/zlib-1.3.1-1.tar.zst| xargs tar -C ~/.local --zstd -xvf
-     curl -L -O -w '%{filename_effective}' "$MIRROR"/libiconv/libiconv2/libiconv2-1.17-1.tar.xz | xargs tar -C ~/.local -xvJf
-     curl -L -O -w '%{filename_effective}' "$MIRROR"/gettext/libintl8/libintl8-0.22.4-1.tar.xz | xargs tar -C ~/.local -xvJf
-     curl -L -O -w '%{filename_effective}' "$MIRROR"/make/make-4.4.1-2.tar.xz | xargs tar -C ~/.local -xvJf
+From this point onwards you have two options, either use MSYS2 or Cygwin packages. The difference between the two is that Cygwin aims to be an environment to simulate Unix, while MSYS2 packages are native Windows applications. A practical example of this is that the Cygwin packaged tmux only works if you launch it from the Cygwin packaged bash, but not from the MSYS2 packaged bash. Also Git for Windows is based on MSYS2 as well, so you might already have it installed.
 
-     curl -L -O -w '%{filename_effective}' "$MIRROR"/libxcrypt/libcrypt2/libcrypt2-4.4.20-1.tar.xz | xargs tar -C ~/.local -xvJf
-     curl -L -O -w '%{filename_effective}' "$MIRROR"/libffi/libffi8/libffi8-3.4.6-1.tar.xz | xargs tar -C ~/.local -xvJf
-     curl -L -O -w '%{filename_effective}' "$MIRROR"/libgc/libgc1/libgc1-8.2.6-1.tar.xz | xargs tar -C ~/.local -xvJf
-     curl -L -O -w '%{filename_effective}' "$MIRROR"/gmp/libgmp10/libgmp10-6.3.0-1.tar.zst | xargs tar -C ~/.local --zstd -xvf
-     curl -L -O -w '%{filename_effective}' "$MIRROR"/libunistring/libunistring5/libunistring5-1.2-1.tar.xz | xargs tar -C ~/.local -xvJf
-     curl -L -O -w '%{filename_effective}' "$MIRROR"/guile3.0/libguile3.0_1/libguile3.0_1-3.0.9-3.tar.xz | xargs tar -C ~/.local -xvJf
-   #+END_SRC
+**** MSYS2
 
-**** Linux
+Download the Make package with this command, all the dependencies should be covered with Git for Windows:
+
+#+BEGIN_SRC shell
+  curl -L -O -w '%{filename_effective}' https://mirror.msys2.org/msys/x86_64/make-4.4.1-2-x86_64.pkg.tar.zst | xargs tar -C ~/.local --zstd -xvf
+#+END_SRC
+
+**** Cygwin
+
+Download and install the Cygwin, Gettext, Make packages with these commands:
+
+#+BEGIN_SRC shell
+  mkdir -p ~/.local
+  cd "$(mktemp -d)"
+  export MIRROR='https://mirror.accum.se/mirror/cygwin/x86_64/release'
+  curl -L -O -w '%{filename_effective}' "$MIRROR"/cygwin/cygwin-3.6.0-0.115.g579064bf4d40.tar.xz | xargs tar -C ~/.local -xvJf
+  curl -L -O -w '%{filename_effective}' "$MIRROR"/gcc/libgcc1/libgcc1-13.2.1+20240203-0.1.tar.zst | xargs tar -C ~/.local --zstd -xvf
+  curl -L -O -w '%{filename_effective}' "$MIRROR"/zstd/zstd-1.5.6-1.tar.zst | xargs tar -C ~/.local --zstd -xvf
+  curl -L -O -w '%{filename_effective}' "$MIRROR"/zlib/zlib-1.3.1-1.tar.zst| xargs tar -C ~/.local --zstd -xvf
+  curl -L -O -w '%{filename_effective}' "$MIRROR"/libiconv/libiconv2/libiconv2-1.17-1.tar.xz | xargs tar -C ~/.local -xvJf
+  curl -L -O -w '%{filename_effective}' "$MIRROR"/gettext/libintl8/libintl8-0.22.4-1.tar.xz | xargs tar -C ~/.local -xvJf
+  curl -L -O -w '%{filename_effective}' "$MIRROR"/make/make-4.4.1-2.tar.xz | xargs tar -C ~/.local -xvJf
+
+  curl -L -O -w '%{filename_effective}' "$MIRROR"/libxcrypt/libcrypt2/libcrypt2-4.4.20-1.tar.xz | xargs tar -C ~/.local -xvJf
+  curl -L -O -w '%{filename_effective}' "$MIRROR"/libffi/libffi8/libffi8-3.4.6-1.tar.xz | xargs tar -C ~/.local -xvJf
+  curl -L -O -w '%{filename_effective}' "$MIRROR"/libgc/libgc1/libgc1-8.2.6-1.tar.xz | xargs tar -C ~/.local -xvJf
+  curl -L -O -w '%{filename_effective}' "$MIRROR"/gmp/libgmp10/libgmp10-6.3.0-1.tar.zst | xargs tar -C ~/.local --zstd -xvf
+  curl -L -O -w '%{filename_effective}' "$MIRROR"/libunistring/libunistring5/libunistring5-1.2-1.tar.xz | xargs tar -C ~/.local -xvJf
+  curl -L -O -w '%{filename_effective}' "$MIRROR"/guile3.0/libguile3.0_1/libguile3.0_1-3.0.9-3.tar.xz | xargs tar -C ~/.local -xvJf
+#+END_SRC
+
+*** Linux
 
 If you already have ~guix~ installed on your system, then you can launch a shell with all of the required libraries with the following command:
 
@@ -63,35 +73,35 @@ If you already have ~guix~ installed on your system, then you can launch a shell
 
 The repository also has a direnv config file, if you also have that, then the above command will be run for you whenever you step into the directory of the repository.
 
-*** 1. Entanglement
+** 1. Entanglement
 
 You will need to start from an Emacs installation with org-mode configured. All the actual configuration files are stored in org-mode files and they need to be extracted into their own actual files.
 
 #+begin_src shell
-emacs --batch --eval "(require 'org)" --eval '(org-babel-tangle-file "README.org")'
+  emacs --batch --eval "(require 'org)" --eval '(org-babel-tangle-file "README.org")'
 #+end_src
 
-*** 2.A Guix reconfiguration
+** 2.A Guix reconfiguration
 
 Once the configuration files are extracted from the org-mode documentations, either the Guix Home or the Guix System needs to be reconfigured depending what you want to refresh.
 
 #+begin_src shell
-guix home reconfigure -L build guix-home-config.scm
+  guix home reconfigure -L build guix-home-config.scm
 #+end_src
 
 #+begin_src shell
-guix system reconfigure -L build guix-system-config.scm
+  guix system reconfigure -L build guix-system-config.scm
 #+end_src
 
-*** 2.B Stow linking
+** 2.B Stow linking
 
 If ~guix~ cannot be found, then ~make~ will search for ~stow~. If it finds ~stow~, then it will link all the ~build/home~ files with it to the home directory.
 
 #+begin_src shell
-stow --no-folding --dir=./build --target ~/ home
+  stow --no-folding --dir=./build --target ~/ home
 #+end_src
 
-** Other literate configs for inspiration
+* Other literate configs for inspiration
 
 - https://github.com/dustinlyons/guix-config/tree/main
 - https://github.com/hiecaq/guix-config#references-and-recommendations
