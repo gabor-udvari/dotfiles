@@ -272,6 +272,8 @@ Have a single ~.profile~ file for Bash and everything else. Bash will not read t
     # Only source completions when POSIX compatibility is not set
     if [ -f /usr/share/bash-completion/bash_completion ]; then
       . /usr/share/bash-completion/bash_completion
+    elif [ -f ~/.local/usr/share/bash-completion/bash_completion ]; then
+      . ~/.local/usr/share/bash-completion/bash_completion
     elif [ -f /etc/bash_completion ]; then
       . /etc/bash_completion
     elif [ -f "$HOME"/.guix-home/profile/etc/profile.d/bash_completion.sh ]; then

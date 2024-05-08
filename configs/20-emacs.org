@@ -102,10 +102,14 @@ Change some of the defaults to make a more minimal interface.
   ;; Support for colors in the compilation buffer
   (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
 
-  ;; Load all lisp files from the init.d folder
+  ;; Change the default dir on Windows
   (if (eq system-type 'windows-nt)
-      (mapc 'load (file-expand-wildcards "~/.emacs.d/init.d/*.el"))
-    (mapc 'load (file-expand-wildcards "~/.config/emacs/init.d/*.el")))
+      (setq default-directory (expand-file-name (concat (getenv "HOMEPATH") "/"))))
+
+  ;; Load all lisp files from the init.d folder
+  ;(if (eq system-type 'windows-nt)
+  ;    (mapc 'load (file-expand-wildcards "~/.emacs.d/init.d/*.el"))
+    (mapc 'load (file-expand-wildcards "~/.config/emacs/init.d/*.el"));)
 
   (setq use-short-answers t) ;; y/n for answering yes/no questions
 
@@ -134,10 +138,6 @@ Change some of the defaults to make a more minimal interface.
         uniquify-ignore-buffers-re "^\\*")
 
   (setq default-major-mode 'text-mode) ;; Default major mode
-
-  ;; Change the default dir on Windows
-  (if (eq system-type 'windows-nt)
-      (setq default-directory (expand-file-name (concat (getenv "HOMEPATH") "/"))))
 #+END_SRC
 
 ** Simpler UI
@@ -1234,7 +1234,7 @@ Add the Guix packages to the home config:
 ** Symlinking the init.el file
 
 #+BEGIN_SRC scheme :noweb-ref guix-home
-    (define %home-services
+  (define %home-services
       (append %home-services
               (list
                (simple-service 'emacs-symlinking-service
@@ -1242,6 +1242,16 @@ Add the Guix packages to the home config:
                                `((".config/emacs/early-init.el"
                                   ,(local-file "home/.config/emacs/early-init.el" "emacs-early-init"))
                                  (".config/emacs/init.el"
-                                  ,(local-file "home/.config/emacs/init.el" "emacs-init"))
-  )))))
+                                  ,(local-file "home/.config/emacs/init.el" "emacs-init")))))))
+#+END_SRC
+
+* Windows automatic starting
+
+#+BEGIN_SRC text :noweb yes :exports none :mkdirp yes :tangle home/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/emacs-daemon.bat
+  <<emacs-daemon-windows>>
+#+END_SRC
+
+#+BEGIN_SRC bat :noweb-ref emacs-daemon-windows
+  del /q %USERPROFILE%\.config\emacs\server\*
+  "C:\Program Files\Emacs\emacs-29.3_2\bin\runemacs.exe" --daemon --init-directory %USERPROFILE%\.config\emacs
 #+END_SRC

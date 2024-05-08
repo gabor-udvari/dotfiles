@@ -5,7 +5,7 @@ All the dotfiles are maintained in org-mode files as literate configuration. Thi
 
 * Installation
 
-You can compile the whole config by running make in the repository. The Makefile will extract all the actual configuration files first, and then it will do a guix reconfigure based on the target. If ~guix~ is not found, then it will try to link the config files with ~stow~. You can find more explanation regarding these two steps below.
+You can compile the whole config by running make in the repository. The Makefile will extract all the actual configuration files first, and then it will do a guix reconfigure based on the target. If ~guix~ is not found, then it will try to link the config files with ~stow~ or ~chezmoi~. You can find more explanation regarding these two steps below.
 
 ** 0. Requirements
 
@@ -95,11 +95,23 @@ Once the configuration files are extracted from the org-mode documentations, eit
 
 ** 2.B Stow linking
 
-If ~guix~ cannot be found, then ~make~ will search for ~stow~. If it finds ~stow~, then it will link all the ~build/home~ files with it to the home directory.
+https://www.gnu.org/software/stow/
+
+If ~guix~ cannot be found, then ~make~ will search for ~stow~. If it finds ~stow~, then it will link all the ~build/home~ files with it to the users actual home directory.
 
 #+begin_src shell
   stow --no-folding --dir=./build --target ~/ home
 #+end_src
+
+*Note:* Stow can run under Windows, but the symbolic links created with Stow does not seem to work with the Windows version of Emacs. If you are on Windows use Rsync as described below.
+
+** 2.C Rsync linking
+
+If neither ~guix~ nor ~stow~ cannot be found, then ~make~ will search for ~rsync~. If it finds ~rsync~, then it will link all the ~build/home~ files to the users actual home directory.
+
+#+BEGIN_SRC shell
+  rsync -avr build/home/ ~/
+#+END_SRC
 
 * Other literate configs for inspiration
 
