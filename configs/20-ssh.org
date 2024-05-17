@@ -12,7 +12,7 @@ All the below will go into ~ ~/.ssh/config.d/10-general.config~, and then my .ba
 #+BEGIN_SRC text :noweb-ref ssh-general
   # Search for wildcard after FQDN expansion
   CanonicalizeHostname yes
-  
+
   # General host configs
   Host *
     ServerAliveInterval 240
@@ -33,6 +33,19 @@ We will symlink the above files with guix.
                              home-files-service-type
                              `((".ssh/config.d/10-general.config"
                                 ,(local-file "home/.ssh/config.d/10-general.config" "ssh-conf")))))))
+#+END_SRC
+
+* Pageant support for SSH
+
+#+BEGIN_SRC text :noweb yes :exports none :mkdirp yes :tangle home/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/ssh-pageant.bat
+  <<ssh-pageant>>
+#+END_SRC
+
+#+BEGIN_SRC bat :noweb-ref ssh-pageant
+  @ECHO OFF
+  START /B "" "C:\Program Files\PuTTY\pageant.exe"
+  SETX SSH_AUTH_SOCK \\.\pipe\ssh-pageant >NUL
+  START /B "" "%USERPROFILE%\.local\bin\wsl-ssh-pageant-amd64-gui.exe" --systray --winssh ssh-pageant
 #+END_SRC
 
 * Guix packages

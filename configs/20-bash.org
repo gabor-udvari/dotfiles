@@ -422,11 +422,11 @@ Have a single ~.profile~ file for Bash and everything else. Bash will not read t
 
 ** History sync
 
-#+BEGIN_SRC text :noweb yes :exports none :mkdirp yes :tangle home/.config/bash/bashrc.d/history_sync.sh
-  <<history-sync.sh>>
+#+BEGIN_SRC text :noweb yes :exports none :mkdirp yes :tangle home/.config/bash/bashrc.d/sync-history.sh
+  <<sync-history>>
 #+END_SRC
 
-#+BEGIN_SRC bash
+#+BEGIN_SRC bash :noweb-ref sync-history
   #!/usr/bin/env bash
 
   # As taken from:

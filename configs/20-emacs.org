@@ -104,12 +104,14 @@ Change some of the defaults to make a more minimal interface.
 
   ;; Change the default dir on Windows
   (if (eq system-type 'windows-nt)
-      (setq default-directory (expand-file-name (concat (getenv "HOMEPATH") "/"))))
+      (progn
+        (setq default-directory (expand-file-name (concat (getenv "HOMEPATH") "/")))
+        (setq server-auth-dir (expand-file-name (concat (getenv "HOMEPATH") "/.config/emacs/server/")))))
 
   ;; Load all lisp files from the init.d folder
-  ;(if (eq system-type 'windows-nt)
-  ;    (mapc 'load (file-expand-wildcards "~/.emacs.d/init.d/*.el"))
-    (mapc 'load (file-expand-wildcards "~/.config/emacs/init.d/*.el"));)
+  (if (eq system-type 'windows-nt)
+      (mapc 'load (file-expand-wildcards (expand-file-name (concat (getenv "HOMEPATH") "/.config/emacs/init.d/*.el"))))
+    (mapc 'load (file-expand-wildcards "~/.config/emacs/init.d/*.el")))
 
   (setq use-short-answers t) ;; y/n for answering yes/no questions
 
@@ -1252,6 +1254,13 @@ Add the Guix packages to the home config:
 #+END_SRC
 
 #+BEGIN_SRC bat :noweb-ref emacs-daemon-windows
-  del /q %USERPROFILE%\.config\emacs\server\*
-  "C:\Program Files\Emacs\emacs-29.3_2\bin\runemacs.exe" --daemon --init-directory %USERPROFILE%\.config\emacs
+  @ECHO OFF
+  del /q %USERPROFILE%/.config/emacs/server/*
+  START /B "" "C:\Program Files\Emacs\emacs-29.3_2\bin\runemacs.exe" --daemon --init-directory %USERPROFILE%/.config/emacs
 #+END_SRC
+
+*Note:* the init.el above moves the server auth directory to the ~%USERPROFILE%/.config/emacs~ folder, similar to the XDG standard. You will need to launch the emacsclient with that in mind, eg.:
+
+#+BEGIN_EXAMPLE
+emacsclientw.exe --server-file %USERPROFILE%/.config/emacs/server/server -r
+#+END_EXAMPLE
