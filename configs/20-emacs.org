@@ -177,12 +177,11 @@ Enable packages and use-package in all cases regardless of version (I use at lea
 Packages should not be ensured when Guix is available, but useful otherwise.
 
 #+BEGIN_SRC elisp :noweb-ref emacs
-  (unless (executable-find "guix")
-    (unless (package-installed-p 'quelpa)
-      (with-temp-buffer
-        (url-insert-file-contents "https://raw.githubusercontent.com/quelpa/quelpa/master/quelpa.el")
-        (eval-buffer)
-        (quelpa-self-upgrade))))
+  (unless (package-installed-p 'quelpa)
+    (with-temp-buffer
+      (url-insert-file-contents "https://raw.githubusercontent.com/quelpa/quelpa/master/quelpa.el")
+      (eval-buffer)
+      (quelpa-self-upgrade)))
 #+END_SRC
 
 ** Line numbers
@@ -213,14 +212,15 @@ Packages should not be ensured when Guix is available, but useful otherwise.
 If Guix is not installed, then install within Emacs with Quelpa:
 
 #+BEGIN_SRC elisp :noweb-ref emacs
-  (quelpa
+  (unless (executable-find "guix")
+    (quelpa
      '(compat
        :fetcher github
        :repo "emacs-compat/compat"))
-  (quelpa
+    (quelpa
      '(no-littering
        :fetcher github
-       :repo "emacscollective/no-littering"))
+       :repo "emacscollective/no-littering")))
 #+END_SRC
 
 Add the Guix package to the home config:
