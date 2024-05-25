@@ -705,20 +705,15 @@ Add the Guix packages to the home config:
     (visual-line-mode 1))
 
   (defun myhooks/org-font-setup ()
-    ;; Replace list hyphen with dot
-    (font-lock-add-keywords 'org-mode
-                            '(("^ *\\([-]\\) "
-                               (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
-
     ;; Set faces for heading levels
-    (dolist (face '((org-level-1 . 1.2)
-                    (org-level-2 . 1.1)
-                    (org-level-3 . 1.05)
-                    (org-level-4 . 1.0)
-                    (org-level-5 . 1.1)
-                    (org-level-6 . 1.1)
-                    (org-level-7 . 1.1)
-                    (org-level-8 . 1.1)))
+    (dolist (face '((org-level-1 . 1.3)
+                    (org-level-2 . 1.25)
+                    (org-level-3 . 1.2)
+                    (org-level-4 . 1.1)
+                    (org-level-5 . 1.05)
+                    (org-level-6 . 1.05)
+                    (org-level-7 . 1.05)
+                    (org-level-8 . 1.05)))
       (set-face-attribute (car face) nil :height (cdr face)))
 
     ;; Ensure that anything that should be fixed-pitch in Org files appears that way
@@ -730,21 +725,13 @@ Add the Guix packages to the home config:
     (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
     (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch))
 
-  (defun my-notes ()
-    (expand-file-name
-     (concat (if (eq system-type 'windows-nt) (getenv "USERPROFILE") "~") "/Jegyzetek")))
-
   (use-package org
     :hook (org-mode . myhooks/org-mode-setup)
     :hook (org-mode . myhooks/org-font-setup)
     :init
     (setq org-ellipsis " ▾")
     (setq org-hide-leading-stars nil)  ; Hide leading stars
-    (setq org-src-fontify-natively t)
-
-    ;; Org Agenda
-    (setq org-agenda-files (list (my-notes)))
-    )
+    (setq org-src-fontify-natively t))
 
   ;; Active Babel languages
   (org-babel-do-load-languages
@@ -887,55 +874,6 @@ Add the Guix package to the home config:
 #+BEGIN_SRC elisp :noweb-ref emacs
   (unless (eq system-type 'windows-nt)
     (use-package geiser-guile)
-    )
-#+END_SRC
-
-** Denote
-
-*** Installation
-
-If guix is not installed, then install within Emacs using quelpa:
-
-#+BEGIN_SRC elisp :noweb-ref emacs
-  (unless (executable-find "guix")
-    (quelpa
-     '(denote
-       :fetcher github
-       :repo "protesilaos/denote"))
-    )
-#+END_SRC
-
-Add the Guix package to the home config:
-
-#+BEGIN_SRC scheme :noweb-ref guix-home
-  (define %home-packages
-    (append %home-packages
-            (list "emacs-denote")))
-#+END_SRC
-
-*** Configuration
-
-#+BEGIN_SRC elisp :noweb-ref emacs
-  (use-package denote
-    :init
-    ;; Remember to check the doc strings of those variables.
-    (setq denote-directory (my-notes))
-    (setq denote-known-keywords '())
-    (setq denote-infer-keywords t)
-    (setq denote-sort-keywords t)
-    (setq denote-file-type nil) ; Org is the default, set others here
-    (setq denote-prompts '(subdirectory title keywords))
-    (setq denote-excluded-directories-regexp nil)
-    (setq denote-excluded-keywords-regexp nil)
-
-    ;; Pick dates, where relevant, with Org's advanced interface:
-    (setq denote-date-prompt-use-org-read-date t)
-
-    (setq denote-allow-multi-word-keywords t)
-
-    ;; By default, we do not show the context of links.  We just display
-    ;; file names.  This provides a more informative view.
-    (setq denote-backlinks-show-context t)
     )
 #+END_SRC
 
@@ -1255,8 +1193,8 @@ Add the Guix packages to the home config:
 
 #+BEGIN_SRC bat :noweb-ref emacs-daemon-windows
   @ECHO OFF
-  del /q %USERPROFILE%/.config/emacs/server/*
-  START /B "" "C:\Program Files\Emacs\emacs-29.3_2\bin\runemacs.exe" --daemon --init-directory %USERPROFILE%/.config/emacs
+  del /q %USERPROFILE%\.config\emacs\server\*
+  START /B "" "C:\Program Files\Emacs\emacs-29.3_2\bin\runemacs.exe" --daemon --init-directory %USERPROFILE%"/.config/emacs"
 #+END_SRC
 
 *Note:* the init.el above moves the server auth directory to the ~%USERPROFILE%/.config/emacs~ folder, similar to the XDG standard. You will need to launch the emacsclient with that in mind, eg.:
