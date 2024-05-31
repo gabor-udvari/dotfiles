@@ -184,27 +184,6 @@ Packages should not be ensured when Guix is available, but useful otherwise.
       (quelpa-self-upgrade)))
 #+END_SRC
 
-** Line numbers
-
-#+BEGIN_SRC elisp :noweb-ref emacs
-  (use-package display-line-numbers
-    :defer
-    :config
-    ;; Set absolute line numbers.  A value of "relative" is also useful.
-    (setq display-line-numbers-type t)
-    (global-display-line-numbers-mode t)
-
-    ;; Disable line numbers for some modes
-    (dolist (mode '(org-mode-hook
-                    term-mode-hook
-                    shell-mode-hook
-                    eshell-mode-hook
-                    eat-mode-hook
-                    markdown-mode-hook
-                    ))
-      (add-hook mode (lambda () (display-line-numbers-mode nil)))))
-#+END_SRC
-
 ** No littering
 
 *** Installation
@@ -335,38 +314,6 @@ The themes modus-operandi and modus-vivendi are part of Emacs since version 28. 
     )
 #+END_SRC
 
-** Which key
-
-*** Installation
-
-If guix is not installed, then install within Emacs using quelpa:
-
-#+BEGIN_SRC elisp :noweb-ref emacs
-  (unless (executable-find "guix")
-    (quelpa
-     '(which-key
-       :fetcher github
-       :repo "justbur/emacs-which-key"
-       :version "3.6.0")))
-#+END_SRC
-
-Add the Guix packages to the home config:
-
-#+BEGIN_SRC scheme :noweb-ref guix-home
-  (define %home-packages
-    (append %home-packages
-            (list "emacs-which-key@3.6.0")))
-#+END_SRC
-
-*** Configuration
-
-#+BEGIN_SRC elisp :noweb-ref emacs
-  (use-package which-key
-    :init
-    (which-key-mode)
-    )
-#+END_SRC
-
 ** Spacious padding
 
 *** Installation
@@ -397,6 +344,27 @@ Install within Emacs using Quelpa, because it is not yet packaged into Guix:
     (if (daemonp)
         (add-hook 'server-after-make-frame-hook (lambda () (spacious-padding-mode 1)))
         (spacious-padding-mode 1)))
+#+END_SRC
+
+** Line numbers
+
+#+BEGIN_SRC elisp :noweb-ref emacs
+  (use-package display-line-numbers
+    :defer
+    :config
+    ;; Set absolute line numbers.  A value of "relative" is also useful.
+    (setq display-line-numbers-type t)
+    (global-display-line-numbers-mode t)
+
+    ;; Disable line numbers for some modes
+    (dolist (mode '(org-mode-hook
+                    term-mode-hook
+                    shell-mode-hook
+                    eshell-mode-hook
+                    eat-mode-hook
+                    markdown-mode-hook
+                    ))
+      (add-hook mode (lambda () (display-line-numbers-mode nil)))))
 #+END_SRC
 
 ** svg-tag-mode
@@ -520,6 +488,38 @@ Add the Guix packages to the home config:
             ))
     :hook (;(prog-mode . svg-tag-mode)
            (org-mode . svg-tag-mode))
+    )
+#+END_SRC
+
+** Which key
+
+*** Installation
+
+If guix is not installed, then install within Emacs using quelpa:
+
+#+BEGIN_SRC elisp :noweb-ref emacs
+  (unless (executable-find "guix")
+    (quelpa
+     '(which-key
+       :fetcher github
+       :repo "justbur/emacs-which-key"
+       :version "3.6.0")))
+#+END_SRC
+
+Add the Guix packages to the home config:
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (define %home-packages
+    (append %home-packages
+            (list "emacs-which-key@3.6.0")))
+#+END_SRC
+
+*** Configuration
+
+#+BEGIN_SRC elisp :noweb-ref emacs
+  (use-package which-key
+    :init
+    (which-key-mode)
     )
 #+END_SRC
 
@@ -661,7 +661,7 @@ https://cgit.freedesktop.org/libreoffice/dictionaries/tree
     )
 #+END_SRC
 
-** Org-mode
+** Org mode
 
 *** Installation
 
@@ -682,6 +682,15 @@ If guix is not installed, then install within Emacs using quelpa:
      '(org-modern
        :fetcher github
        :repo "minad/org-modern")))
+#+END_SRC
+
+The package org-margin is not yet packaged for Guix, always install with quelpa:
+
+#+BEGIN_SRC elisp :noweb-ref emacs
+  (quelpa
+   '(org-margin
+     :fetcher github
+     :repo "rougier/org-margin"))
 #+END_SRC
 
 Add the Guix packages to the home config:
@@ -729,7 +738,7 @@ Add the Guix packages to the home config:
     :hook (org-mode . myhooks/org-mode-setup)
     :hook (org-mode . myhooks/org-font-setup)
     :init
-    (setq org-ellipsis " ▾")
+    (setq org-ellipsis "…")  ; Calibri also needs to support this
     (setq org-hide-leading-stars nil)  ; Hide leading stars
     (setq org-src-fontify-natively t))
 
@@ -749,14 +758,19 @@ Add the Guix packages to the home config:
     ;; Disable fringe, because Olivetti will move it to the left
     ;; and it looks ugly:
     (setq org-modern-block-fringe nil)
+    ;; Disable org-modern-star, titles will be styled by the org-margin package
+    (setq org-modern-star nil)
     ;; Disable a few org-modern stylings, where svg-tag-mode is better
     (setq org-modern-timestamp nil
           org-modern-priority nil
           org-modern-todo nil
           org-modern-tag nil
           org-modern-progress nil)
-    (with-eval-after-load 'org (global-org-modern-mode))
-    )
+    (with-eval-after-load 'org (global-org-modern-mode)))
+
+  (use-package org-margin
+    :after org
+    :hook (org-mode . org-margin-mode))
 #+END_SRC
 
 ** PHP mode
