@@ -118,3 +118,9 @@ If neither ~guix~ nor ~stow~ cannot be found, then ~make~ will search for ~rsync
 - https://github.com/dustinlyons/guix-config/tree/main
 - https://github.com/hiecaq/guix-config#references-and-recommendations
 - https://github.com/caisah/emacs.dz
+
+* TODO Concat the org files inside Emacs
+
+Currently the final org file is created with ~cat~, the order of the sections is kept due to the numbered filenames. There must be something better, eg. Algernon is using ~org-roam-list-files~:
+
+https://git.madhouse-project.org/algernon/infrastructure.org/src/branch/main/tools/entangle.el
