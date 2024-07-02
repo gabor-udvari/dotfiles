@@ -105,6 +105,9 @@ Change some of the defaults to make a more minimal interface.
   ;; Change the default dir on Windows
   (if (eq system-type 'windows-nt)
       (progn
+        ;; Note: the ~/ gets to be assigned to the HOME environment variable,
+        ;; you need to set that one outside of Emacs
+        (cd (expand-file-name (concat (getenv "HOMEPATH") "/")))
         (setq default-directory (expand-file-name (concat (getenv "HOMEPATH") "/")))
         (setq server-auth-dir (expand-file-name (concat (getenv "HOMEPATH") "/.config/emacs/server/")))))
 
@@ -491,6 +494,16 @@ Add the Guix packages to the home config:
     )
 #+END_SRC
 
+** Dired
+
+*** Configuration
+
+#+BEGIN_SRC elisp :noweb-ref emacs
+  (use-package dired
+    :config
+    (setq dired-kill-when-opening-new-dired-buffer 1))
+#+END_SRC
+
 ** Which key
 
 *** Installation
@@ -659,6 +672,34 @@ https://cgit.freedesktop.org/libreoffice/dictionaries/tree
             ("English"   "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US") nil utf-8)
             ))
     )
+#+END_SRC
+
+** Pass
+
+*** Installation
+
+If guix is not installed, then install within Emacs using quelpa:
+
+#+BEGIN_SRC elisp :noweb-ref emacs
+  (unless (executable-find "guix")
+    (quelpa
+     '(pass
+       :fetcher github
+       :repo "NicolasPetton/pass")))
+#+END_SRC
+
+Add the Guix packages to the home config:
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (define %home-packages
+    (append %home-packages
+            (list "emacs-pass")))
+#+END_SRC
+
+*** Configuration
+
+#+BEGIN_SRC elisp :noweb-ref emacs
+  (use-package pass)
 #+END_SRC
 
 ** Org mode
@@ -1208,6 +1249,7 @@ Add the Guix packages to the home config:
 #+BEGIN_SRC bat :noweb-ref emacs-daemon-windows
   @ECHO OFF
   del /q %USERPROFILE%\.config\emacs\server\*
+  setx HOME %USERPROFILE%
   START /B "" "C:\Program Files\Emacs\emacs-29.3_2\bin\runemacs.exe" --daemon --init-directory %USERPROFILE%"/.config/emacs"
 #+END_SRC
 
