@@ -210,7 +210,7 @@ Add the Guix package to the home config:
 #+BEGIN_SRC scheme :noweb-ref guix-home
   (define %home-packages
     (append %home-packages
-            (list "emacs-no-littering@1.5.0")))
+            (list "emacs-no-littering")))
 #+END_SRC
 
 *** Config

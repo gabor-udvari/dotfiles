@@ -157,6 +157,32 @@ The following category configs are customized how I am grouping my transfers. Yo
   REXTRA KFT
   Parfum-Eden
   CSITARY G. EMIL USZODA
+  Tizproba Magyarorszag
+  HELLOVITAL.HU
+  égközpont
+  OTPMOBL\*SHOP\.ROSSMANN
+  HELLO SKIN 20 KFT
+  SumUp  \*Hajnal
+  SumUp  \*DIETA MARKET
+  SumUp  \*Tothne
+  ROSSMANN
+  GYÓGYÁSZATI SEGÉD
+  PUREGOLDPRO
+  MAGAN\.EP\.FELTO
+  C MED REHABILIT\.KOZP
+  PRAXISPONT
+  WHITELAB\.HU
+  SZEMÉSZET
+  SZFV SZUPERMARKET GYOG
+  OTP EP MOBIL APP
+  PLÁZA PATIKA
+  LUXURYNAILS
+  REXTRA KFT
+  Parfum-Eden
+  CSITARY G\. EMIL USZODA
+  Tizproba Magyarorszag
+  HELLOVITAL\.HU
+  OPTIKSHOP\.HU
     account2 Kiadások:Egészség
 
   if NEMZETI DOHÁNYBOLT
@@ -194,6 +220,8 @@ The following category configs are customized how I am grouping my transfers. Yo
   OFFICE DEPOT
   ANDI PEKSEG
   Dafina Pekseg
+  SZEKESFEHERVAR ZO
+  ECOFAMILY
     account2 Kiadások:Bevásárlás
 
   if
@@ -230,6 +258,9 @@ The following category configs are customized how I am grouping my transfers. Yo
   DON-PEPE
   ARCO SERVICE
   KAPOSVARI CAMPUS ÉTT
+  Fekete - THQ
+  MAGENTA KANTIN
+  OAZIS ETTEREM
     account2 Kiadások:Étel
 
   if
@@ -247,6 +278,7 @@ The following category configs are customized how I am grouping my transfers. Yo
   PHILIPS ESHOP
   Hi-tech Arts Kft
   WWW\.CONRAD\.HU
+  FURBIFY.HU
     account2 Kiadások:Műszaki cikk
 
   if
@@ -265,7 +297,14 @@ The following category configs are customized how I am grouping my transfers. Yo
   PEPITA\.HU
   SCOLAR KFT
   ELMENYPLAZA\.HU
+  REGIO JÁTÉK SF
     account2 Kiadások:Ajándék
+
+  if
+  SIMPLE MOBILJEGY
+  BKK BUDAPESTGO
+  NEMZETIMOBILFI
+    account2 Kiadások:Közlekedés:Tömegközlekedés
 
   if
   120230080015431800100001
@@ -280,6 +319,10 @@ The following category configs are customized how I am grouping my transfers. Yo
   GUMIFLEX SZFVAR
   BKK BUDAPESTGO
     account2 Kiadások:Közlekedés:Autó
+
+  if
+  GROUPAMA BIZTOSITÓ ZRT\. KÖTELEZŐ GÉPJÁRMŰ BIZT\.
+   account2 Kiadások:Közlekedés:Autó:Biztosítás
 
   if
   MOL Nyrt
@@ -340,7 +383,6 @@ The following category configs are customized how I am grouping my transfers. Yo
   ALBA-TEXTILHÁZ
   IKEA
   WWW.MENTAVILL.HU
-  GROUPAMA BIZTOSITÓ
   Diego
   GARDINO.HU
   MEZOGAZDASAGI BOLT
@@ -352,12 +394,13 @@ The following category configs are customized how I am grouping my transfers. Yo
     account2 Kiadások:Ingatlan
 
   if
-  GROUPAMA BIZTOSÍTÓ
+  GROUPAMA BIZTOSITÓ ZRT. OTTHONBIZT.EGYÉNI
     account2 Kiadások:Ingatlan:Biztosítás
 
   if
   DÍJNET FIZETÉS DÍJÁNAK JÓVÁÍRÁSA
   KÖLTSÉG ÉS JUTALÉK
+  KÉSEDELMI/FEDEZETLENSÉGI KAMAT
     account2 Kiadások:Banki költségek
 
   if
@@ -409,6 +452,7 @@ The following category configs are customized how I am grouping my transfers. Yo
   okosjatek.hu
   FEZEN
   TROPICARIUM
+  HELLOPAY KER
     account2 Kiadások:Szórakozás
 #+END_SRC
 
