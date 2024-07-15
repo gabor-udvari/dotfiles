@@ -638,11 +638,44 @@ Add the Guix packages to the home config:
     (completion-category-overrides '((file (styles basic partial-completion)))))
 #+END_SRC
 
+** Syntax checking
+
+*** Installation
+
+If guix is not installed, then install within Emacs using quelpa:
+
+#+BEGIN_SRC elisp :noweb-ref emacs
+  (unless (executable-find "guix")
+    (quelpa
+     '(flycheck
+       :fetcher github
+       :repo "flycheck/flycheck"
+       :files (:defaults
+             "flycheck-readme.txt"))))
+#+END_SRC
+
+Add the Guix packages to the home config:
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (define %home-packages
+    (append %home-packages
+            (list "emacs-flycheck")))
+#+END_SRC
+
+*** Configuration
+
+#+BEGIN_SRC elisp :noweb-ref emacs
+  (use-package flycheck
+    :init (global-flycheck-mode))
+#+END_SRC
+
 ** Spell checking
 
 *** Installation
 
-Add the Guix packages to the home config:
+Flyspell is part of Emacs, no need to install the Emacs package separately.
+
+Add the language file Guix packages to the home config:
 
 #+BEGIN_SRC scheme :noweb-ref guix-home
   (define %home-packages
