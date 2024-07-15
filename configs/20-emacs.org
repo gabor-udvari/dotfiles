@@ -1055,6 +1055,36 @@ Add the Guix package to the home config:
     )
 #+END_SRC
 
+** Dockerfile mode
+
+*** Installation
+
+If guix is not installed, then install within Emacs using quelpa:
+
+#+BEGIN_SRC elisp :noweb-ref emacs
+  (unless (executable-find "guix")
+    (quelpa
+     '(dockerfile-mode
+       :fetcher github
+       :repo "spotify/dockerfile-mode"))
+    )
+#+END_SRC
+
+Add the Guix packages to the home config:
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (define %home-packages
+    (append %home-packages
+            (list "emacs-dockerfile-mode")))
+#+END_SRC
+
+*** Configuration
+
+#+BEGIN_SRC elisp :noweb-ref emacs
+  (use-package dockerfile-mode
+    :mode ("Dockerfile" . dockerfile-mode))
+#+END_SRC
+
 ** PDF Tools
 
 *** Installation
