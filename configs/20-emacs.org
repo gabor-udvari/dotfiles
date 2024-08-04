@@ -1313,7 +1313,9 @@ Add the Guix packages to the home config:
   @ECHO OFF
   del /q %USERPROFILE%\.config\emacs\server\*
   setx HOME %USERPROFILE%
-  START /B "" "C:\Program Files\Emacs\emacs-29.3_2\bin\runemacs.exe" --daemon --init-directory %USERPROFILE%"/.config/emacs"
+  if exist "C:\Program Files\Emacs\emacs-29.4\bin\runemacs.exe" (
+    START /B "" "C:\Program Files\Emacs\emacs-29.4\bin\runemacs.exe" --daemon --init-directory %USERPROFILE%"/.config/emacs"
+  )
 #+END_SRC
 
 *Note:* the init.el above moves the server auth directory to the ~%USERPROFILE%/.config/emacs~ folder, similar to the XDG standard. You will need to launch the emacsclient with that in mind, eg.:

@@ -43,9 +43,13 @@ We will symlink the above files with guix.
 
 #+BEGIN_SRC bat :noweb-ref ssh-pageant
   @ECHO OFF
-  START /B "" "C:\Program Files\PuTTY\pageant.exe"
-  SETX SSH_AUTH_SOCK \\.\pipe\ssh-pageant >NUL
-  START /B "" "%USERPROFILE%\.local\bin\wsl-ssh-pageant-amd64-gui.exe" --systray --winssh ssh-pageant
+  if exist "C:\Program Files\PuTTY\pageant.exe" (
+    START /B "" "C:\Program Files\PuTTY\pageant.exe"
+    SETX SSH_AUTH_SOCK \\.\pipe\ssh-pageant >NUL
+  )
+  if exist "%USERPROFILE%\.local\bin\wsl-ssh-pageant-amd64-gui.exe" (
+    START /B "" "%USERPROFILE%\.local\bin\wsl-ssh-pageant-amd64-gui.exe" --systray --winssh ssh-pageant
+  )
 #+END_SRC
 
 * Guix packages

@@ -15,13 +15,11 @@ For installation you will need ~make~ and ~emacs~.
 
 Here are some steps to be able to bootstrap the above tools:
 
-1. Download and install Git for Windows:
-   [[https://gitforwindows.org/]]
-2. Download the RefreshEnv.cmd from the Chocolatey Project to make editing the PATH variable quicker:
+1. Download the RefreshEnv.cmd from the Chocolatey Project to make editing the PATH variable quicker:
    [[https://github.com/chocolatey/choco/blob/stable/src/chocolatey.resources/redirects/RefreshEnv.cmd]]
-3. Download Zstd from the official repository, so that we can uncompress Msys2 packages:
+2. Download Zstd from the official repository, so that we can uncompress Msys2 packages:
    [[https://github.com/facebook/zstd/releases/latest]]
-4. Add the Zstd folder to your users environment variables. Press Windows+R, and launch the following command to open up the environment variable editing window:
+3. Add the Zstd folder to your users environment variables. Press Windows+R, and launch the following command to open up the environment variable editing window:
 
    #+BEGIN_SRC shell
      rundll32.exe sysdm.cpl,EditEnvironmentVariables
@@ -33,11 +31,24 @@ From this point onwards you have two options, either use MSYS2 or Cygwin package
 
 **** MSYS2
 
-Download the Make package with this command, all the dependencies should be covered with Git for Windows:
+1. Save time and effort by installing Git for Windows. This will get you a good base and some additional packages.
+   [[https://gitforwindows.org/]]
 
-#+BEGIN_SRC shell
-  curl -L -O -w '%{filename_effective}' https://mirror.msys2.org/msys/x86_64/make-4.4.1-2-x86_64.pkg.tar.zst | xargs tar -C ~/.local --zstd -xvf
-#+END_SRC
+2. Download the Make package with this command, all the dependencies are covered with Git for Windows:
+
+   _NOTE_: there is a bug in curl 8.8.0, the below command will fail with an error message. Curl 8.7 and 8.9 are not affected.
+   [[https://github.com/curl/curl/issues/13845]]
+
+   #+BEGIN_SRC shell
+     curl -L -O -w '%{filename_effective}' https://mirror.msys2.org/msys/x86_64/make-4.4.1-2-x86_64.pkg.tar.zst | xargs tar -C ~/.local --zstd -xvf
+   #+END_SRC
+
+3. Download the Rsync packages with the following commands, all the other dependencies are covered with Git for Windows:
+
+   #+BEGIN_SRC shell
+     curl -L -O -w '%{filename_effective}' https://mirror.msys2.org/msys/x86_64/rsync-3.3.0-1-x86_64.pkg.tar.zst | xargs tar -C ~/.local --zstd -xvf
+     curl -L -O -w '%{filename_effective}' https://mirror.msys2.org/msys/x86_64/libxxhash-0.8.2-1-x86_64.pkg.tar.zst | xargs tar -C ~/.local --zstd -xvf
+   #+END_SRC
 
 **** Cygwin
 
@@ -111,6 +122,14 @@ If neither ~guix~ nor ~stow~ cannot be found, then ~make~ will search for ~rsync
 
 #+BEGIN_SRC shell
   rsync -avr build/home/ ~/
+#+END_SRC
+
+* Windows notes
+
+The default folder for Emacs configuration in Windows is the ~AppData/Roaming~ folder. The dotfiles configuration will move them inside the usual ~~/.config/emacs~ folder. Because of this you need to launch Emacs with the following command:
+
+#+BEGIN_SRC shell
+  runemacs --init-directory %USERPROFILE%/.config/emacs
 #+END_SRC
 
 * Other literate configs for inspiration
