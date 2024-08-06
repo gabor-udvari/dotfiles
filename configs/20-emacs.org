@@ -1311,10 +1311,11 @@ Add the Guix packages to the home config:
 
 #+BEGIN_SRC bat :noweb-ref emacs-daemon-windows
   @ECHO OFF
-  del /q %USERPROFILE%\.config\emacs\server\*
-  setx HOME %USERPROFILE%
-  if exist "C:\Program Files\Emacs\emacs-29.4\bin\runemacs.exe" (
-    START /B "" "C:\Program Files\Emacs\emacs-29.4\bin\runemacs.exe" --daemon --init-directory %USERPROFILE%"/.config/emacs"
+  DEL /Q %USERPROFILE%\.config\emacs\server\*
+  SETX HOME %USERPROFILE%
+  WHERE /Q runemacs.exe
+  if ERRORLEVEL 0 (
+    START /B "" runemacs.exe --daemon --init-directory %USERPROFILE%"/.config/emacs"
   )
 #+END_SRC
 
