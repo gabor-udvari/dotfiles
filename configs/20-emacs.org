@@ -515,8 +515,7 @@ If guix is not installed, then install within Emacs using quelpa:
     (quelpa
      '(which-key
        :fetcher github
-       :repo "justbur/emacs-which-key"
-       :version "3.6.0")))
+       :repo "justbur/emacs-which-key")))
 #+END_SRC
 
 Add the Guix packages to the home config:
@@ -524,7 +523,7 @@ Add the Guix packages to the home config:
 #+BEGIN_SRC scheme :noweb-ref guix-home
   (define %home-packages
     (append %home-packages
-            (list "emacs-which-key@3.6.0")))
+            (list "emacs-which-key")))
 #+END_SRC
 
 *** Configuration

@@ -107,6 +107,7 @@ The following category configs are customized how I am grouping my transfers. Yo
   if
   KAMATJÓVÁÍRÁS
   OTP KEDVEZMÉNYPROGR
+  SMS DÍJ JÓVÁÍRÁS
     account2 Bevételek:Banki kamat
 
   if
@@ -119,6 +120,7 @@ The following category configs are customized how I am grouping my transfers. Yo
   KP.FELVÉT/-BEFIZ. DÍJA
   BANKKÁRTYÁVAL KAPCS. DÍJ
   Elhalálozási rendelkezés díja
+  KÁRTYA KIBOCSÁTÁSI DÍJ
     account2 Kiadások:Banki költségek
 
   if
@@ -183,9 +185,12 @@ The following category configs are customized how I am grouping my transfers. Yo
   Tizproba Magyarorszag
   HELLOVITAL\.HU
   OPTIKSHOP\.HU
+  KIWI SZOLARIUM
     account2 Kiadások:Egészség
 
-  if NEMZETI DOHÁNYBOLT
+  if
+  NEMZETI DOHÁNYBOLT
+  Nemzeti Dohanybolt
     account2 Kiadások:Cigi
 
   if
@@ -261,6 +266,7 @@ The following category configs are customized how I am grouping my transfers. Yo
   Fekete - THQ
   MAGENTA KANTIN
   OAZIS ETTEREM
+  Wolt
     account2 Kiadások:Étel
 
   if
@@ -312,13 +318,20 @@ The following category configs are customized how I am grouping my transfers. Yo
   ONKORMANYZATI BEFIZ
   HU-GO\.HU
   NAV belföldi gépjárműadó
-  PARKOLÓ
   TOYOTA MAYER
   KOZPONT PARKOLASI CSOP
-  BALATON PLÁZA
   GUMIFLEX SZFVAR
   BKK BUDAPESTGO
+  autofelszerelesek\.hu
+  AUTÓALKATRÉSZ
+  MIKROSPORT KFT
     account2 Kiadások:Közlekedés:Autó
+
+  if
+  ALBA PLÁZA
+  BALATON PLÁZA
+  PARKOLÓ
+    account2 Kiadások:Közlekedés:Autó:Parkolás
 
   if
   GROUPAMA BIZTOSITÓ ZRT\. KÖTELEZŐ GÉPJÁRMŰ BIZT\.
@@ -330,14 +343,17 @@ The following category configs are customized how I am grouping my transfers. Yo
   MOL * sz\. toltoall
   SZÉKESFEHÉRVÁR BENZ
   MOL 21202 sz\. toltoall
+  Orlen HU
     account2 Kiadások:Közlekedés:Autó:Tankolás
 
   if
   FACEBK
+  FOTOPLUS\.hu
     account2 Kiadások:Fotózás
 
   if
   OTPMOBL\*EON\.HU
+  E\.ON ARAMSZOLGALTATO KFT
     account2 Kiadások:Szolgáltatók:Áram
 
   if
@@ -391,6 +407,7 @@ The following category configs are customized how I am grouping my transfers. Yo
   FOLDHIVATAL\.HU
   AQUALING KFT
   DEPONIA KFT
+  DOPA Invest Kft
     account2 Kiadások:Ingatlan
 
   if
@@ -429,6 +446,7 @@ The following category configs are customized how I am grouping my transfers. Yo
 
   if
   BABAVÁRÓ KÖLCSÖN KEZ. VÁLL. DÍJ
+  SZEMÉLYI KÖLCSÖN TÖRLESZTÉS
     account2 Kiadások:Hitel:Babaváró
 
   if
@@ -448,11 +466,16 @@ The following category configs are customized how I am grouping my transfers. Yo
   if
   GOG.COM
   GOG sp
+  Steam Purchase
   RÉGIO JÁTÉK
   okosjatek.hu
   FEZEN
   TROPICARIUM
   HELLOPAY KER
+  Bázis számla ÁTUTALÁS BANKON BELÜL
+  MCC FESZT VÁSÁRLÁS KÁRTYÁVAL
+  Vargesztesi Villapark
+  SZUSZ PARK
     account2 Kiadások:Szórakozás
 #+END_SRC
 
