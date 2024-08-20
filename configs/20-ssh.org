@@ -61,5 +61,5 @@ We will symlink the above files with guix.
 
   (define %home-packages
     (append %home-packages
-            (list "openssh")))
+            (list openssh)))
 #+END_SRC

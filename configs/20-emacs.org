@@ -18,9 +18,12 @@ The Emacs configurations will go into the init.el file.
 The different emacs packages will be installed through Guix home, therefore we will add all the packages to the guix home configuration as well.
 
 #+BEGIN_SRC scheme :noweb-ref guix-home
+  (use-modules (gnu packages emacs))
+  (use-modules (gnu packages emacs-xyz))
+
   (define %home-packages
     (append %home-packages
-            (list "emacs-pgtk")))
+            (list emacs-pgtk)))
 #+END_SRC
 
 ** early-init.el
@@ -210,7 +213,7 @@ Add the Guix package to the home config:
 #+BEGIN_SRC scheme :noweb-ref guix-home
   (define %home-packages
     (append %home-packages
-            (list "emacs-no-littering")))
+            (list emacs-no-littering)))
 #+END_SRC
 
 *** Config
@@ -396,7 +399,7 @@ Add the Guix packages to the home config:
 #+BEGIN_SRC scheme :noweb-ref guix-home
   (define %home-packages
     (append %home-packages
-            (list "emacs-svg-lib" "emacs-svg-tag-mode")))
+            (list emacs-svg-lib emacs-svg-tag-mode)))
 #+END_SRC
 
 *** Configuration
@@ -523,7 +526,7 @@ Add the Guix packages to the home config:
 #+BEGIN_SRC scheme :noweb-ref guix-home
   (define %home-packages
     (append %home-packages
-            (list "emacs-which-key")))
+            (list emacs-which-key)))
 #+END_SRC
 
 *** Configuration
@@ -554,7 +557,7 @@ Add the Guix packages to the home config:
 #+BEGIN_SRC scheme :noweb-ref guix-home
   (define %home-packages
     (append %home-packages
-            (list "emacs-exec-path-from-shell")))
+            (list emacs-exec-path-from-shell)))
 #+END_SRC
 
 *** Configuration
@@ -592,7 +595,7 @@ Add the Guix package to the home config:
 #+BEGIN_SRC scheme :noweb-ref guix-home
   (define %home-packages
     (append %home-packages
-            (list "emacs-vertico")))
+            (list emacs-vertico)))
 #+END_SRC
 
 *** Configuration
@@ -625,7 +628,7 @@ Add the Guix packages to the home config:
 #+BEGIN_SRC scheme :noweb-ref guix-home
   (define %home-packages
     (append %home-packages
-            (list "emacs-orderless")))
+            (list emacs-orderless)))
 #+END_SRC
 
 *** Configuration
@@ -658,7 +661,7 @@ Add the Guix packages to the home config:
 #+BEGIN_SRC scheme :noweb-ref guix-home
   (define %home-packages
     (append %home-packages
-            (list "emacs-flycheck")))
+            (list emacs-flycheck)))
 #+END_SRC
 
 *** Configuration
@@ -677,11 +680,13 @@ Flyspell is part of Emacs, no need to install the Emacs package separately.
 Add the language file Guix packages to the home config:
 
 #+BEGIN_SRC scheme :noweb-ref guix-home
+  (use-modules (gnu packages hunspell))
+  
   (define %home-packages
     (append %home-packages
-            (list "hunspell"
-                  "hunspell-dict-hu"
-                  "hunspell-dict-en")))
+            (list hunspell
+                  hunspell-dict-hu
+                  hunspell-dict-en)))
 #+END_SRC
 
 If you are not on Guix you can download the dictionaries from the LibreOffice repository:
@@ -723,9 +728,12 @@ If guix is not installed, then install within Emacs using quelpa:
 Add the Guix packages to the home config:
 
 #+BEGIN_SRC scheme :noweb-ref guix-home
+  (use-modules (gnu packages password-utils))
+
   (define %home-packages
     (append %home-packages
-            (list "emacs-pass")))
+            (list emacs-pass
+                  password-store)))
 #+END_SRC
 
 *** Configuration
@@ -771,8 +779,8 @@ Add the Guix packages to the home config:
 #+BEGIN_SRC scheme :noweb-ref guix-home
   (define %home-packages
     (append %home-packages
-            (list "emacs-org-modern"
-                  "emacs-org-contrib")))
+            (list emacs-org-modern
+                  emacs-org-contrib)))
 #+END_SRC
 
 *** Configuration
@@ -865,7 +873,7 @@ Add the Guix package to the home config:
 #+BEGIN_SRC scheme :noweb-ref guix-home
   (define %home-packages
     (append %home-packages
-            (list "emacs-php-mode")))
+            (list emacs-php-mode)))
 #+END_SRC
 
 *** Configuration
@@ -895,7 +903,7 @@ Add the Guix package to the home config:
 #+BEGIN_SRC scheme :noweb-ref guix-home
   (define %home-packages
     (append %home-packages
-            (list "emacs-paredit")))
+            (list emacs-paredit)))
 #+END_SRC
 
 *** Configuration
@@ -953,7 +961,8 @@ Add the Guix package to the home config:
 #+BEGIN_SRC scheme :noweb-ref guix-home
   (define %home-packages
     (append %home-packages
-            (list "emacs-geiser" "emacs-geiser-guile")))
+            (list emacs-geiser
+                  emacs-geiser-guile)))
 #+END_SRC
 
 *** Configuration
@@ -984,7 +993,7 @@ Add the Guix package to the home config:
 #+BEGIN_SRC scheme :noweb-ref guix-home
   (define %home-packages
     (append %home-packages
-            (list "emacs-markdown-mode")))
+            (list emacs-markdown-mode)))
 #+END_SRC
 
 *** Configuration
@@ -1042,7 +1051,7 @@ Add the Guix package to the home config:
 #+BEGIN_SRC scheme :noweb-ref guix-home
   (define %home-packages
     (append %home-packages
-            (list "emacs-yaml-mode")))
+            (list emacs-yaml-mode)))
 #+END_SRC
 
 *** Configuration
@@ -1074,7 +1083,7 @@ Add the Guix packages to the home config:
 #+BEGIN_SRC scheme :noweb-ref guix-home
   (define %home-packages
     (append %home-packages
-            (list "emacs-dockerfile-mode")))
+            (list emacs-dockerfile-mode)))
 #+END_SRC
 
 *** Configuration
@@ -1104,7 +1113,7 @@ Add the Guix packages to the home config:
 #+BEGIN_SRC scheme :noweb-ref guix-home
   (define %home-packages
     (append %home-packages
-            (list "emacs-pdf-tools")))
+            (list emacs-pdf-tools)))
 #+END_SRC
 
 *** Configuration
@@ -1134,10 +1143,12 @@ If guix is not installed, then install within Emacs using quelpa:
 Add the Guix packages to the home config:
 
 #+BEGIN_SRC scheme :noweb-ref guix-home
+  (use-modules (gnu packages video))
+
   (define %home-packages
     (append %home-packages
-            (list "emacs-emms"
-                  "mpv")))
+            (list emacs-emms
+                  mpv)))
 #+END_SRC
 
 *** Configuration
@@ -1193,7 +1204,7 @@ Add the Guix packages to the home config:
 #+BEGIN_SRC scheme :noweb-ref guix-home
   (define %home-packages
     (append %home-packages
-            (list "emacs-envrc")))
+            (list emacs-envrc)))
 #+END_SRC
 
 *** Configuration
@@ -1225,7 +1236,7 @@ Add the Guix packages to the home config:
 #+BEGIN_SRC scheme :noweb-ref guix-home
   (define %home-packages
     (append %home-packages
-            (list "emacs-magit")))
+            (list emacs-magit)))
 #+END_SRC
 
 *** Configuration
@@ -1258,7 +1269,7 @@ Add the Guix packages to the home config:
 #+BEGIN_SRC scheme :noweb-ref guix-home
   (define %home-packages
     (append %home-packages
-            (list "emacs-eat")))
+            (list emacs-eat)))
 #+END_SRC
 
 *** Configuration

@@ -1,4 +1,9 @@
-* Guix home
+#+title: Guix home configuration
+#+author: Gábor Udvari
+
+* Guix home configuration
+
+The final ~home-environment~ call.
 
 #+BEGIN_SRC scheme :noweb-ref guix-home
   (define my-glibc-locales
@@ -11,61 +16,10 @@
    ;; Below is the list of packages that will show up in your
    ;; Home profile, under ~/.guix-home/profile.
    (packages (append
-              (specifications->packages
-               (append (list "bind:utils"
-                             "fontconfig"
-                             "font-abattis-cantarell"
-                             "font-fira-code"
-                             "shellcheck"
-                             "jq"
-                             "python-yamllint"
-                             "grep"
-                             "git"
-                             "git-annex"
-                             "findutils"
-                             "pdfgrep"
-                             "qpdf"
-                             "podman"
-                             "docker-compose"
-                             )
-                       %home-packages))
+              %home-packages
               (list my-glibc-locales)))
 
    ;; Below is the list of Home services.  To search for available
    ;; services, run 'guix home search KEYWORD' in a terminal.
-   (services
-    (append %home-services
-            (list (simple-service 'env-vars-service
-                                  home-environment-variables-service-type
-                                  `(("DOCKER_HOST" .  ,(string-append "unix://"
-                                                                      (or (getenv "XDG_RUNTIME_DIR")
-                                                                          (format #f "/run/user/~a"
-                                                                                  (getuid)))
-                                                                      "/podman/podman.sock"))
-                                    ))
-
-                  ;; Socket activated podman, you can compare with the systemd unit files here:
-                  ;; https://github.com/containers/podman/issues/9633
-                  (simple-service 'podman-socket
-                                  home-shepherd-service-type
-                                  (list (shepherd-service
-                                         (provision '(podman))
-                                         (documentation "Start a systemd like podman.socket")
-                                         (start #~(make-systemd-constructor
-                                                   (list #$(file-append podman "/bin/podman")
-                                                         "system" "service" "-t" "0")
-                                                   (list (endpoint
-                                                          (make-socket-address
-                                                           AF_UNIX
-                                                           (string-append (or (getenv "XDG_RUNTIME_DIR")
-                                                                              (format #f "/run/user/~a"
-                                                                                      (getuid)))
-                                                                          "/podman/podman.sock"))))
-                                                   #:environment-variables (append (default-environment-variables)
-                                                                                   (list (string-append "CONTAINERS_REGISTRIES_CONF="
-                                                                                                        (getenv "HOME")
-                                                                                                        "/.config/containers/registries.conf")))
-                                                   #:log-file #$(home-log "podman")))
-                                         (stop #~(make-systemd-destructor)))))
-                  ))))
+   (services %home-services))
 #+END_SRC

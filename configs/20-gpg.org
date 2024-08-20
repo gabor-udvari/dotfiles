@@ -50,6 +50,6 @@ We also need to link the ~gpg.conf~ file to its final folder.
 
   (define %home-packages
     (append %home-packages
-            (list "gnupg"
-                  "pinentry")))
+            (list gnupg
+                  pinentry)))
 #+END_SRC

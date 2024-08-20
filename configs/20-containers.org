@@ -1,0 +1,54 @@
+#+title: Container configurations
+#+author: Gábor Udvari
+
+* Guix packages
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (use-modules (gnu packages containers))
+
+  (define %home-packages
+    (append %home-packages
+            (list podman)))
+#+END_SRC
+
+* Guix home service
+
+We need to start the Podman service.
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (define %home-services
+    (append %home-services
+            (list (simple-service 'env-vars-service
+                                  home-environment-variables-service-type
+                                  `(("DOCKER_HOST" .  ,(string-append "unix://"
+                                                                      (or (getenv "XDG_RUNTIME_DIR")
+                                                                          (format #f "/run/user/~a"
+                                                                                  (getuid)))
+                                                                      "/podman/podman.sock"))
+                                    ))
+
+                  ;; Socket activated podman, you can compare with the systemd unit files here:
+                  ;; https://github.com/containers/podman/issues/9633
+                  (simple-service 'podman-socket
+                                  home-shepherd-service-type
+                                  (list (shepherd-service
+                                         (provision '(podman))
+                                         (documentation "Start a systemd like podman.socket")
+                                         (start #~(make-systemd-constructor
+                                                   (list #$(file-append podman "/bin/podman")
+                                                         "system" "service" "-t" "0")
+                                                   (list (endpoint
+                                                          (make-socket-address
+                                                           AF_UNIX
+                                                           (string-append (or (getenv "XDG_RUNTIME_DIR")
+                                                                              (format #f "/run/user/~a"
+                                                                                      (getuid)))
+                                                                          "/podman/podman.sock"))))
+                                                   #:environment-variables (append (default-environment-variables)
+                                                                                   (list (string-append "CONTAINERS_REGISTRIES_CONF="
+                                                                                                        (getenv "HOME")
+                                                                                                        "/.config/containers/registries.conf")))
+                                                   #:log-file #$(home-log "podman")))
+                                         (stop #~(make-systemd-destructor)))))
+                  )))
+#+END_SRC

@@ -6,12 +6,18 @@
 Add the bash package to the Guix home config:
 
 #+BEGIN_SRC scheme :noweb-ref guix-home
+  (use-modules (gnu packages bash)
+               (gnu packages haskell-apps)
+               (gnu packages shellutils)
+               (gnu packages file))
+
   (define %home-packages
     (append %home-packages
-            (list "bash"
-                  "bash-completion"
-                  "file"
-                  "direnv")))
+            (list bash
+                  bash-completion
+                  file
+                  direnv
+                  shellcheck)))
 #+END_SRC
 
 * Configuration

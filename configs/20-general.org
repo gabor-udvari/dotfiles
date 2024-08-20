@@ -1,0 +1,76 @@
+#+title: General packages and configs
+#+author: Gábor Udvari
+
+* Dig utility
+
+I use the ~dig~ command frequently to troubleshoot DNS issues. Guix has it in the bind utils package.
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (use-modules (gnu packages dns))
+
+  (define %home-packages
+    (append %home-packages
+            (map specification->package+output
+                 (list "bind:utils"))))
+#+END_SRC
+
+* Fonts
+
+I use Cantarell and Fire Code fonts in Emacs.
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (use-modules (gnu packages fontutils))
+  (use-modules (gnu packages fonts))
+
+  (define %home-packages
+    (append %home-packages
+            (list fontconfig
+                  font-fira-code
+                  font-abattis-cantarell)))
+#+END_SRC
+
+* GNU tools
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (use-modules (gnu packages base))
+
+  (define %home-packages
+    (append %home-packages
+            (list grep
+                  findutils)))
+#+END_SRC
+
+* Git
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (use-modules (gnu packages version-control)
+               (gnu packages haskell-apps))
+
+  (define %home-packages
+    (append %home-packages
+            (list git
+                  git-annex)))
+#+END_SRC
+
+* Linters
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (use-modules (gnu packages python-xyz)
+               (gnu packages web))
+
+  (define %home-packages
+    (append %home-packages
+            (list jq
+                  python-yamllint)))
+#+END_SRC
+
+* PDF tools
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (use-modules (gnu packages pdf))
+
+  (define %home-packages
+    (append %home-packages
+            (list pdfgrep
+                  qpdf)))
+#+END_SRC

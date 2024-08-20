@@ -6,9 +6,11 @@
 Add the vim package to the Guix home config:
 
 #+BEGIN_SRC scheme :noweb-ref guix-home
+  (use-modules (gnu packages vim))
+
   (define %home-packages
     (append %home-packages
-            (list "vim")))
+            (list vim)))
 #+END_SRC
 
 * Configuration
