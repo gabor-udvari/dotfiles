@@ -356,21 +356,12 @@ Install within Emacs using Quelpa, because it is not yet packaged into Guix:
 
 #+BEGIN_SRC elisp :noweb-ref emacs
   (use-package display-line-numbers
-    :defer
     :config
     ;; Set absolute line numbers.  A value of "relative" is also useful.
     (setq display-line-numbers-type t)
-    (global-display-line-numbers-mode t)
 
-    ;; Disable line numbers for some modes
-    (dolist (mode '(org-mode-hook
-                    term-mode-hook
-                    shell-mode-hook
-                    eshell-mode-hook
-                    eat-mode-hook
-                    markdown-mode-hook
-                    ))
-      (add-hook mode (lambda () (display-line-numbers-mode nil)))))
+    ;; Enable line numbers for programming modes
+    (add-hook 'prog-mode-hook (lambda () (display-line-numbers-mode 1))))
 #+END_SRC
 
 ** svg-tag-mode
