@@ -1,0 +1,54 @@
+#+title: Git configuration
+#+author: Gábor Udvari
+
+* Git config
+
+Place the config in the ~XDG_CONFIG_HOME~ folder.
+
+#+BEGIN_SRC text :noweb yes :exports none :mkdirp yes :tangle home/.config/git/config
+  <<gitconfig>>
+#+END_SRC
+
+#+BEGIN_SRC text :noweb-ref gitconfig
+  [user]
+  	email = gabor.udvari@gmail.com
+  	name = Gábor Udvari
+
+  [init]
+    defaultBranch = main
+
+  [core]
+    quotepath = off
+
+  [pull]
+    ff = only
+#+END_SRC
+
+* Guix
+
+** Packages
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (use-modules (gnu packages version-control)
+               (gnu packages haskell-apps))
+
+  (define %home-packages
+    (append %home-packages
+            (list git
+                  git-annex)))
+#+END_SRC
+
+** Config linking service
+
+Guix service for linking the git config file:
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (define %home-services
+    (append %home-services
+            (list
+             (simple-service 'gitconfig-symlinking-service
+                             home-files-service-type
+                             `(
+                               (".config/git/config"
+                                ,(local-file "home/.config/git/config" "gitconfig")))))))
+#+END_SRC

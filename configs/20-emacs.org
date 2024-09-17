@@ -61,6 +61,12 @@ The different emacs packages will be installed through Guix home, therefore we w
   (defvar my-vc-handled-backends vc-handled-backends)
   (setq vc-handled-backends '(Git))
 
+  ;; Windows accented usernames cause issues, maybe this helps?
+  (set-language-environment "UTF-8")
+
+  ;; Do not resize Emacs to column size
+  (setq frame-inhibit-implied-resize t)
+
   (add-hook 'emacs-startup-hook
             (lambda ()
               (setq gc-cons-threshold my-gc-cons-threshold
@@ -127,8 +133,21 @@ Change some of the defaults to make a more minimal interface.
   (setq-default indent-tabs-mode nil) ;; No tabs
   (setq-default tab-width 2) ;; 2 spaces as tabs
 
-  ;; Do not resize window based on the character count
+  ;; Resize frames based on the pixel size
   (setq frame-resize-pixelwise t)
+  ;; Do not resize windows based on pixelwise, it may cause crashing
+  (setq window-resize-pixelwise nil)
+  (setq resize-mini-windows 'grow-only)
+
+  ;; Faster scroll, but inaccurate syntax highlighting
+  (setq fast-but-imprecise-scrolling t)
+
+  ;; Move point to top/bottom of buffer before signaling a scrolling error.
+  (setq scroll-error-top-bottom t)
+
+  ;; Keeps screen position if the scroll command moved it vertically out of the
+  ;; window.
+  (setq scroll-preserve-screen-position t)
 
   ;; Buffer encoding
   (prefer-coding-system                    'utf-8-unix)
@@ -136,7 +155,6 @@ Change some of the defaults to make a more minimal interface.
   (set-terminal-coding-system              'utf-8-unix)
   (set-keyboard-coding-system              'utf-8-unix)
   (setq-default buffer-file-coding-system  'utf-8-unix)
-  (set-language-environment   'utf-8)
 
   ;; Unique buffer names
   (require 'uniquify)
@@ -146,6 +164,10 @@ Change some of the defaults to make a more minimal interface.
         uniquify-ignore-buffers-re "^\\*")
 
   (setq default-major-mode 'text-mode) ;; Default major mode
+
+  ;; Configure Ediff to use a single frame and split windows horizontally
+  (setq ediff-window-setup-function #'ediff-setup-windows-plain
+        ediff-split-window-function #'split-window-horizontally)
 #+END_SRC
 
 ** Simpler UI
@@ -596,8 +618,7 @@ Add the Guix package to the home config:
   (use-package vertico
     :init
     (vertico-mode)
-    (setq enable-recursive-minibuffers t)
-    )
+    (setq enable-recursive-minibuffers t))
 #+END_SRC
 
 ** Orderless
@@ -817,7 +838,8 @@ Add the Guix packages to the home config:
   ;; Active Babel languages
   (org-babel-do-load-languages
    'org-babel-load-languages
-   '((shell . t)))
+   '((shell . t)
+     (sql . t)))
 
   (use-package ox-md)
 
@@ -1274,9 +1296,46 @@ Add the Guix packages to the home config:
 ** Herd service
 
 #+BEGIN_SRC scheme :noweb-ref guix-home
+  ;; As taken from RDE:
+  ;; https://git.sr.ht/~abcdw/rde/commit/0c5047816d6a804ae69199c54f66c4f4cb50e7e6
+  ;;
+  ;; This function was used, when shepherd get started before graphical
+  ;; environment.
+  (define (update-emacs-server-env-variables emacs-client)
+    "Returns a PROGRAM-FILE, which get the current environment variables and make
+    emacs servers' environment variables to same values."
+    (program-file
+     "update-emacs-server-env-variables"
+     #~(system*
+        #$emacs-client "--eval"
+        (string-append
+         "(mapcar (lambda (lst) (apply #'setenv lst)) '"
+         (let* ((port   ((@ (ice-9 popen) open-input-pipe)
+                         (string-append "env")))
+                (result ((@ (ice-9 rdelim) read-delimited) "" port))
+                (vars (map (lambda (x)
+                             (let ((si (string-index x #\=)))
+                               (list (string-take x si)
+                                     (string-drop x (+ 1 si)))))
+                           ((@ (srfi srfi-1) remove)
+                            string-null? (string-split
+                                          result #\newline)))))
+           (close-port port)
+           (format #f "~s" vars))
+         ")"))))
+
   (define %home-services
     (append %home-services
             (list
+             (simple-service 'emacs-update-environment
+                             home-shepherd-service-type
+                             (list (shepherd-service
+                                    (provision '(emacs-update))
+                                    (documentation "Update emacs server environment variables")
+                                    (start #~(make-forkexec-constructor
+                                              (list "sleep 2s && " ;; Need to wait until emacs daemon is loaded
+                                                    '(update-emacs-server-env-variables emacs-client)))))))
+
              (simple-service 'emacsdaemon
                              home-shepherd-service-type
                              (list (shepherd-service
