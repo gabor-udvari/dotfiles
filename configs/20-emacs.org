@@ -833,13 +833,18 @@ Add the Guix packages to the home config:
     :init
     (setq org-ellipsis "…")  ; Calibri also needs to support this
     (setq org-hide-leading-stars nil)  ; Hide leading stars
-    (setq org-src-fontify-natively t))
+    (setq org-src-fontify-natively t)
 
-  ;; Active Babel languages
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((shell . t)
-     (sql . t)))
+    ;; Active Babel languages
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((shell . t)
+       (sql . t))))
+
+  (use-package org-agenda
+    :init
+    ;; (setq org-agenda-files '("~/Notes"))
+    (setq org-agenda-files (directory-files-recursively (concat (getenv "HOMEPATH") "/Notes/") "\\.org$")))
 
   (use-package ox-md)
 
