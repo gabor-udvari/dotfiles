@@ -149,12 +149,18 @@ Change some of the defaults to make a more minimal interface.
   ;; window.
   (setq scroll-preserve-screen-position t)
 
+  ;; Move through windows with Ctrl-<arrow keys>
+  (windmove-default-keybindings 'control)
+
   ;; Buffer encoding
   (prefer-coding-system                    'utf-8-unix)
   (set-default-coding-systems              'utf-8-unix)
   (set-terminal-coding-system              'utf-8-unix)
   (set-keyboard-coding-system              'utf-8-unix)
   (setq-default buffer-file-coding-system  'utf-8-unix)
+
+  ;; Fix archaic defaults
+  (setopt sentence-end-double-space nil)
 
   ;; Unique buffer names
   (require 'uniquify)
@@ -361,10 +367,11 @@ Install within Emacs using Quelpa, because it is not yet packaged into Guix:
   (use-package spacious-padding
     :config
     (setq spacious-padding-widths
-      '( :internal-border-width 15
+      '( :internal-border-width 0
          :header-line-width 4
          :mode-line-width 6
          :tab-width 4
+         :tab-bar-width 0
          :right-divider-width 30
          :scroll-bar-width 20
          :fringe-width 8))
@@ -846,9 +853,13 @@ Add the Guix packages to the home config:
     ;; (setq org-agenda-files '("~/Notes"))
     (setq org-agenda-files (directory-files-recursively (concat (getenv "HOMEPATH") "/Notes/") "\\.org$")))
 
-  (use-package ox-md)
-
+  (use-package org-tempo)
   (use-package org-contrib)
+
+  (use-package ox-beamer)
+  (use-package ox-latex)
+
+  (use-package ox-md)
   (use-package ox-confluence)
 
   (use-package org-modern
