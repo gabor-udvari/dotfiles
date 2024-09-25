@@ -850,14 +850,17 @@ Add the Guix packages to the home config:
 
   (use-package org-agenda
     :init
-    ;; (setq org-agenda-files '("~/Notes"))
-    (setq org-agenda-files (directory-files-recursively (concat (getenv "HOMEPATH") "/Notes/") "\\.org$")))
+    (if (eq system-type 'windows-nt)
+            (setq org-agenda-files (directory-files-recursively (concat (getenv "HOMEPATH") "/Notes/") "\\.org$"))
+      (setq org-agenda-files (directory-files-recursively (concat (getenv "HOME") "/Notes/") "\\.org$"))))
 
   (use-package org-tempo)
   (use-package org-contrib)
 
   (use-package ox-beamer)
-  (use-package ox-latex)
+  (use-package ox-latex
+    :init
+    (setq latex-run-command "xelatex"))
 
   (use-package ox-md)
   (use-package ox-confluence)
@@ -881,6 +884,34 @@ Add the Guix packages to the home config:
   (use-package org-margin
     :after org
     :hook (org-mode . org-margin-mode))
+#+END_SRC
+
+** Htmlize
+
+*** Installation
+
+If guix is not installed, then install within Emacs using quelpa:
+
+#+BEGIN_SRC elisp :noweb-ref emacs
+  (unless (executable-find "guix")
+    (quelpa
+     '(php-mode
+       :fetcher github
+       :repo "hnikisic/emacs-htmlize")))
+#+END_SRC
+
+Add the Guix package to the home config:
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (define %home-packages
+    (append %home-packages
+            (list emacs-htmlize)))
+#+END_SRC
+
+*** Configuration
+
+#+BEGIN_SRC elisp :noweb-ref emacs
+  (use-package htmlize)
 #+END_SRC
 
 ** PHP mode
