@@ -11,7 +11,7 @@ install: --config-home --install-home
 		echo -e "${GREEN_TERMINAL_OUTPUT}--> Building Home...${CLEAR}"
 		mkdir -p build
 		cat configs/*.org >build/tangle.org
-		emacs --batch --eval "(require 'org)" \
+		emacs -Q --batch --eval "(require 'org)" \
 			--eval "(add-hook 'org-babel-pre-tangle-hook (lambda () (setq coding-system-for-write 'utf-8-unix)))" \
 			--eval '(org-babel-tangle-file "build/tangle.org")'
 		shopt -s dotglob
