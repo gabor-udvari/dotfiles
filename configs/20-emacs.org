@@ -111,6 +111,9 @@ Change some of the defaults to make a more minimal interface.
   ;; Support for colors in the compilation buffer
   (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
 
+  ;; Set the compilation buffer to auto scroll
+  (setq compilation-scroll-output 1)
+
   ;; Change the default dir on Windows
   (if (eq system-type 'windows-nt)
       (progn
@@ -912,6 +915,36 @@ Add the Guix package to the home config:
 
 #+BEGIN_SRC elisp :noweb-ref emacs
   (use-package htmlize)
+#+END_SRC
+
+** Engrave-faces
+
+*** Installation
+
+If guix is not installed, then install within Emacs using quelpa:
+
+#+BEGIN_SRC elisp :noweb-ref emacs
+  (unless (executable-find "guix")
+    (quelpa
+     '(engrave-faces
+       :fetcher github
+       :repo "tecosaur/engrave-faces")))
+#+END_SRC
+
+Add the Guix package to the home config:
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (define %home-packages
+    (append %home-packages
+            (list emacs-engrave-faces)))
+#+END_SRC
+
+*** Configuration
+
+#+BEGIN_SRC elisp :noweb-ref emacs
+  (use-package engrave-faces
+    :init
+    (setq org-latex-src-block-backend 'engraved))
 #+END_SRC
 
 ** PHP mode

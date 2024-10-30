@@ -37,7 +37,8 @@ I use Cantarell and Fire Code fonts in Emacs.
   (define %home-packages
     (append %home-packages
             (list grep
-                  findutils)))
+                  findutils
+                  gnu-make)))
 #+END_SRC
 
 * Git
