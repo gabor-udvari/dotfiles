@@ -69,7 +69,11 @@ The following category configs are customized how I am grouping my transfers. Yo
 
   if
   %local_account 1177148551877138
-    account1 Eszközök:Gábor netkártya
+    account1 Eszközök:Közös netkártya
+
+  if
+  %local_account 1177336002746928
+    account1 Eszközök:Gábor folyószámla
 
   # Set account2 based on the transfer_account field
   if
@@ -186,6 +190,7 @@ The following category configs are customized how I am grouping my transfers. Yo
   HELLOVITAL\.HU
   OPTIKSHOP\.HU
   KIWI SZOLARIUM
+  Hortobágyi Sarolta
     account2 Kiadások:Egészség
 
   if
@@ -227,6 +232,7 @@ The following category configs are customized how I am grouping my transfers. Yo
   Dafina Pekseg
   SZEKESFEHERVAR ZO
   ECOFAMILY
+  Temu\.com
     account2 Kiadások:Bevásárlás
 
   if
@@ -267,6 +273,8 @@ The following category configs are customized how I am grouping my transfers. Yo
   MAGENTA KANTIN
   OAZIS ETTEREM
   Wolt
+  BURGER KING
+  KAPOS ITÁLIA ÉTTEREM
     account2 Kiadások:Étel
 
   if
@@ -285,12 +293,14 @@ The following category configs are customized how I am grouping my transfers. Yo
   Hi-tech Arts Kft
   WWW\.CONRAD\.HU
   FURBIFY.HU
+  OTPMOBL\*IPON\.HU
     account2 Kiadások:Műszaki cikk
 
   if
   AWS EMEA
   DotRoll
   RACKHOST KFT
+  AWH WEB\* KOSAR
     account2 Kiadások:Szolgáltatók:Webtárhely
 
   if
@@ -310,6 +320,8 @@ The following category configs are customized how I am grouping my transfers. Yo
   SIMPLE MOBILJEGY
   BKK BUDAPESTGO
   NEMZETIMOBILFI
+  OTPMOBL\*VIMPAY\.MAV-STA
+  OTPMOBL\*JEGY\.MAV\.HU
     account2 Kiadások:Közlekedés:Tömegközlekedés
 
   if
@@ -325,6 +337,7 @@ The following category configs are customized how I am grouping my transfers. Yo
   autofelszerelesek\.hu
   AUTÓALKATRÉSZ
   MIKROSPORT KFT
+  WWW\.GUMIFLEX\.HU
     account2 Kiadások:Közlekedés:Autó
 
   if
@@ -411,13 +424,14 @@ The following category configs are customized how I am grouping my transfers. Yo
     account2 Kiadások:Ingatlan
 
   if
-  GROUPAMA BIZTOSITÓ ZRT. OTTHONBIZT.EGYÉNI
+  GROUPAMA BIZTOSITÓ ZRT\. OTTHONBIZT\.EGYÉNI
     account2 Kiadások:Ingatlan:Biztosítás
 
   if
   DÍJNET FIZETÉS DÍJÁNAK JÓVÁÍRÁSA
   KÖLTSÉG ÉS JUTALÉK
   KÉSEDELMI/FEDEZETLENSÉGI KAMAT
+  OTPdirekt HAVIDÍJ
     account2 Kiadások:Banki költségek
 
   if
@@ -476,6 +490,7 @@ The following category configs are customized how I am grouping my transfers. Yo
   MCC FESZT VÁSÁRLÁS KÁRTYÁVAL
   Vargesztesi Villapark
   SZUSZ PARK
+  KEK\.SH PRO
     account2 Kiadások:Szórakozás
 #+END_SRC
 
