@@ -1257,6 +1257,38 @@ Add the Guix packages to the home config:
     )
 #+END_SRC
 
+** Bluetooth
+
+*** Installation
+
+If guix is not installed, then install within Emacs using quelpa:
+
+#+begin_src elisp :noweb-ref emacs
+  (unless (executable-find "guix")
+    (quelpa
+     '(bluetooth
+       :fetcher github
+       :repo "emacsmirror/bluetooth")))
+#+end_src
+
+Add the Guix packages to the home config:
+
+#+begin_src scheme :noweb-ref guix-home
+  (use-modules (gnu packages emacs-xyz))
+
+  (define %home-packages
+    (append %home-packages
+            (list emacs-bluetooth)))
+#+end_src
+
+*** Configuration
+
+#+begin_src elisp :noweb-ref emacs
+  (use-package bluetooth
+    :init
+    (setq bluetooth-bluez-bus :system))
+#+end_src
+
 ** Tramp
 
 #+BEGIN_SRC elisp :noweb-ref emacs

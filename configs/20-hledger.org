@@ -191,6 +191,7 @@ The following category configs are customized how I am grouping my transfers. Yo
   OPTIKSHOP\.HU
   KIWI SZOLARIUM
   Hortobágyi Sarolta
+  OTPMOBL\*EP egyenleg
     account2 Kiadások:Egészség
 
   if
@@ -250,6 +251,7 @@ The following category configs are customized how I am grouping my transfers. Yo
   OVISJEL\.HU
   ÁZSIA HÁZ
   shein\.com
+  Azsia Aruhaz
     account2 Kiadások:Ruha
 
   if
@@ -275,6 +277,8 @@ The following category configs are customized how I am grouping my transfers. Yo
   Wolt
   BURGER KING
   KAPOS ITÁLIA ÉTTEREM
+  BUFE A SZARNY
+  NYX\*InnovatorKft
     account2 Kiadások:Étel
 
   if
@@ -294,6 +298,7 @@ The following category configs are customized how I am grouping my transfers. Yo
   WWW\.CONRAD\.HU
   FURBIFY.HU
   OTPMOBL\*IPON\.HU
+  all4mobi\.hu
     account2 Kiadások:Műszaki cikk
 
   if
@@ -322,6 +327,7 @@ The following category configs are customized how I am grouping my transfers. Yo
   NEMZETIMOBILFI
   OTPMOBL\*VIMPAY\.MAV-STA
   OTPMOBL\*JEGY\.MAV\.HU
+  OTPMOBL\*BudapestGO
     account2 Kiadások:Közlekedés:Tömegközlekedés
 
   if
@@ -362,11 +368,13 @@ The following category configs are customized how I am grouping my transfers. Yo
   if
   FACEBK
   FOTOPLUS\.hu
+  OTPMOBL\*szamlazz
     account2 Kiadások:Fotózás
 
   if
   OTPMOBL\*EON\.HU
   E\.ON ARAMSZOLGALTATO KFT
+  MVM NEXT ENERGIAK
     account2 Kiadások:Szolgáltatók:Áram
 
   if
@@ -393,7 +401,7 @@ The following category configs are customized how I am grouping my transfers. Yo
   if
   NKM ENERGIA
   NKM FÖLDGÁZSZOLGÁLTATÓ
-  MVM NEXT
+  MVM NEXT ENERGIAKERESKEDELMI ZRT GÁZDÍJ
     account2 Kiadások:Szolgáltatók:Gáz
 
   if
@@ -486,7 +494,7 @@ The following category configs are customized how I am grouping my transfers. Yo
   FEZEN
   TROPICARIUM
   HELLOPAY KER
-  Bázis számla ÁTUTALÁS BANKON BELÜL
+  Bázis számla ÁTUTALÁS
   MCC FESZT VÁSÁRLÁS KÁRTYÁVAL
   Vargesztesi Villapark
   SZUSZ PARK

@@ -1,0 +1,28 @@
+#+title: Pipewire
+#+author: Gábor Udvari
+
+* Guix
+
+** Packages
+
+#+begin_src scheme :noweb-ref guix-home
+  (use-modules (gnu packages linux))
+
+  (define %home-packages
+    (append %home-packages
+            (list pipewire)))
+#+end_src
+
+** Services
+
+Guix service for linking the git config file:
+
+#+begin_src scheme :noweb-ref guix-home
+  (use-modules (gnu home services sound)
+               (gnu home services desktop))
+
+  (define %home-services
+      (append %home-services
+              (list (service home-pipewire-service-type)
+                    (service home-dbus-service-type))))
+#+end_src
