@@ -215,10 +215,15 @@ Packages should not be ensured when Guix is available, but useful otherwise.
 
 #+BEGIN_SRC elisp :noweb-ref emacs
   (unless (package-installed-p 'quelpa)
-    (with-temp-buffer
-      (url-insert-file-contents "https://raw.githubusercontent.com/quelpa/quelpa/master/quelpa.el")
-      (eval-buffer)
-      (quelpa-self-upgrade)))
+    (package-vc-install "https://github.com/quelpa/quelpa")
+
+    ;; This is the officialy recommended way to bootstrap quelpa, but the
+    ;; raw.githubusercontent.com domain might be prohibited
+    ; (with-temp-buffer
+    ;   (url-insert-file-contents "https://raw.githubusercontent.com/quelpa/quelpa/master/quelpa.el")
+    ;   (eval-buffer)
+    ;  (quelpa-self-upgrade)))
+    )
 #+END_SRC
 
 ** No littering
@@ -898,9 +903,9 @@ If guix is not installed, then install within Emacs using quelpa:
 #+BEGIN_SRC elisp :noweb-ref emacs
   (unless (executable-find "guix")
     (quelpa
-     '(php-mode
+     '(htmlize
        :fetcher github
-       :repo "hnikisic/emacs-htmlize")))
+       :repo "hniksic/emacs-htmlize")))
 #+END_SRC
 
 Add the Guix package to the home config:
@@ -915,6 +920,41 @@ Add the Guix package to the home config:
 
 #+BEGIN_SRC elisp :noweb-ref emacs
   (use-package htmlize)
+#+END_SRC
+
+** PlantUML mode
+
+*** Installation
+
+If guix is not installed, then install within Emacs using quelpa:
+
+#+BEGIN_SRC elisp :noweb-ref emacs
+  (unless (executable-find "guix")
+    (quelpa
+     '(plantuml-mode
+       :fetcher github
+       :repo "skuro/plantuml-mode")))
+#+END_SRC
+
+Add the Guix package to the home config:
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (define %home-packages
+    (append %home-packages
+            (list emacs-plantuml-mode)))
+#+END_SRC
+
+*** Configuration
+
+#+BEGIN_SRC elisp :noweb-ref emacs
+  (use-package plantuml-mode
+    :init
+    ;; Set the execution mode to server
+    (setq plantuml-default-exec-mode 'server)
+    ;; Add support for org source blocks
+    (add-to-list
+     'org-src-lang-modes '("plantuml" . plantuml))
+    )
 #+END_SRC
 
 ** Engrave-faces
