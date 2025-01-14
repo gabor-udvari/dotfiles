@@ -1,0 +1,40 @@
+#+title: AutoHotkey
+#+author: Gábor Udvari
+
+* Configuration
+
+** Installation
+
+AutoHotkey is for Windows, we cannot automate Windows installations yet.
+
+** Config
+
+Tangle all the configs to the autohotkey.ahk file.
+
+#+begin_src text :noweb yes :exports none :mkdirp yes :tangle home/.config/autohotkey/autohotkey.ahk
+  <<autohotkey-config>>
+#+end_src
+
+Send the content of the clipboard as keys when Shift+Win+V is pressed:
+
+#+begin_src text :noweb-ref autohotkey-config
+  *#v::
+  {
+    SendRaw %clipboard%
+  }
+#+end_src
+
+* Windows automatic startup
+
+#+begin_src text :noweb yes :exports none :mkdirp yes :tangle home/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/autohotkey.bat
+  <<autohotkey-windows>>
+#+end_src
+
+#+begin_src bat :noweb-ref autohotkey-windows
+  @ECHO OFF
+  SETX HOME %USERPROFILE%
+  WHERE /Q autohotkey.exe
+  if ERRORLEVEL 0 (
+    START /B "" autohotkey.exe %USERPROFILE%"/.config/autohotkey/autohotkey.ahk"
+  )
+#+end_src
