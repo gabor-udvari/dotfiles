@@ -299,6 +299,8 @@ The following category configs are customized how I am grouping my transfers. Yo
   FURBIFY.HU
   OTPMOBL\*IPON\.HU
   all4mobi\.hu
+  MAKSZUTOV\.HU TAVCSOBOL
+  Premier Farnell
     account2 Kiadások:Műszaki cikk
 
   if
@@ -499,6 +501,7 @@ The following category configs are customized how I am grouping my transfers. Yo
   Vargesztesi Villapark
   SZUSZ PARK
   KEK\.SH PRO
+  OTPMOBL\*BOOKLINE\.HU
     account2 Kiadások:Szórakozás
 #+END_SRC
 

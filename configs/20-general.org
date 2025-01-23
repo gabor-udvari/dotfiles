@@ -5,20 +5,20 @@
 
 I use the ~dig~ command frequently to troubleshoot DNS issues. Guix has it in the bind utils package.
 
-#+BEGIN_SRC scheme :noweb-ref guix-home
+#+begin_src scheme :noweb-ref guix-home
   (use-modules (gnu packages dns))
 
   (define %home-packages
     (append %home-packages
             (map specification->package+output
                  (list "bind:utils"))))
-#+END_SRC
+#+end_src
 
 * Fonts
 
 I use Cantarell and Fire Code fonts in Emacs.
 
-#+BEGIN_SRC scheme :noweb-ref guix-home
+#+begin_src scheme :noweb-ref guix-home
   (use-modules (gnu packages fontutils))
   (use-modules (gnu packages fonts))
 
@@ -27,11 +27,11 @@ I use Cantarell and Fire Code fonts in Emacs.
             (list fontconfig
                   font-fira-code
                   font-abattis-cantarell)))
-#+END_SRC
+#+end_src
 
 * GNU tools
 
-#+BEGIN_SRC scheme :noweb-ref guix-home
+#+begin_src scheme :noweb-ref guix-home
   (use-modules (gnu packages base))
 
   (define %home-packages
@@ -39,11 +39,11 @@ I use Cantarell and Fire Code fonts in Emacs.
             (list grep
                   findutils
                   gnu-make)))
-#+END_SRC
+#+end_src
 
 * Git
 
-#+BEGIN_SRC scheme :noweb-ref guix-home
+#+begin_src scheme :noweb-ref guix-home
   (use-modules (gnu packages version-control)
                (gnu packages haskell-apps))
 
@@ -51,11 +51,11 @@ I use Cantarell and Fire Code fonts in Emacs.
     (append %home-packages
             (list git
                   git-annex)))
-#+END_SRC
+#+end_src
 
 * Linters
 
-#+BEGIN_SRC scheme :noweb-ref guix-home
+#+begin_src scheme :noweb-ref guix-home
   (use-modules (gnu packages python-xyz)
                (gnu packages web))
 
@@ -63,20 +63,48 @@ I use Cantarell and Fire Code fonts in Emacs.
     (append %home-packages
             (list jq
                   python-yamllint)))
-#+END_SRC
+#+end_src
 
 * PDF tools
 
-#+BEGIN_SRC scheme :noweb-ref guix-home
+#+begin_src scheme :noweb-ref guix-home
   (use-modules (gnu packages pdf))
 
   (define %home-packages
     (append %home-packages
             (list pdfgrep
                   qpdf)))
-#+END_SRC
+#+end_src
 
 * AGE
+
+** General info
+
+Official homepage:
+
+- https://github.com/FiloSottile/age
+
+Arguments against using GPG:
+
+- https://blog.cryptographyengineering.com/2014/08/13/whats-matter-with-pgp/
+- https://www.latacora.com/blog/2019/07/16/the-pgp-problem/
+- https://soatok.blog/2024/11/15/what-to-use-instead-of-pgp/
+
+** Usage
+
+Generating an age keyfile with password:
+
+#+begin_src shell
+  age-keygen | age -p > key.age
+#+end_src
+
+Getting the file recipient part of a password protected age identity file:
+
+#+begin_src shell
+  age -d key.age | age-keygen -y -o ~/.passage/identities
+#+end_src
+
+** Guix Home config
 
 #+begin_src scheme :noweb-ref guix-home
   (use-modules (gnu packages golang-crypto)
