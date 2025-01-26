@@ -5,15 +5,11 @@
 
 Place the config in the ~XDG_CONFIG_HOME~ folder.
 
-#+BEGIN_SRC text :noweb yes :exports none :mkdirp yes :tangle home/.config/git/config
+#+begin_src text :noweb yes :exports none :mkdirp yes :tangle home/.config/git/config
   <<gitconfig>>
-#+END_SRC
+#+end_src
 
-#+BEGIN_SRC text :noweb-ref gitconfig
-  [user]
-  	email = gabor.udvari@gmail.com
-  	name = Gábor Udvari
-
+#+begin_src text :noweb-ref gitconfig
   [init]
     defaultBranch = main
 
@@ -22,7 +18,24 @@ Place the config in the ~XDG_CONFIG_HOME~ folder.
 
   [pull]
     ff = only
-#+END_SRC
+
+  ; Include for all repositories inside the Personal folder.
+  [includeIf "gitdir:~/Repositories/Personal/"]
+    path = ~/.config/git/personal-config
+
+  ; Include for all repositories inside the Work folder.
+  ; Note: this config file might not exist, usually a separate work
+  ; related repository will create it. Git will not throw any errors,
+  ; if this file does not exist.
+  [includeIf "gitdir:~/Repositories/Work/"]
+    path = ~/.config/git/work-config
+#+end_src
+
+#+begin_src :exports none :mkdirp yes :tangle home/.config/git/personal-config
+  [user]
+    email = gabor.udvari@gmail.com
+    name = Gábor Udvari
+#+end_src
 
 * Guix
 
