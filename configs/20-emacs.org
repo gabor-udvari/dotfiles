@@ -1293,10 +1293,40 @@ Add the Guix packages to the home config:
         ("https://24.hu/feed" hungary news)
         ("https://444.hu/feed" hungary news)
         ("https://www.phoronix.com/rss.php" open-source news)
-        ("https://www.met.hu/methu/rss/rss.php" hungary news weather))))
+        ("https://www.met.hu/methu/rss/rss.php" hungary news weather)
+        ("https://www.freakingpenguin.com/feed.xml" guix guile))))
 
   ;; https://lospec.com/ygloof
   ;; https://x.com/cyangmou
+#+end_src
+
+** Elfeed Tube
+
+*** Installation
+
+The package is not yet packed for Guix, install it using Quelpa:
+
+#+begin_src elisp :noweb-ref emacs
+  (quelpa
+   '(elfeed-tube
+     :fetcher github
+     :repo "karthink/elfeed-tube"))
+#+end_src
+
+*** Configuration
+
+#+begin_src elisp :noweb-ref emacs
+  (use-package elfeed-tube
+    :after elfeed
+    :config
+    (elfeed-tube-setup)
+
+    :bind (:map elfeed-show-mode-map
+           ("F" . elfeed-tube-fetch)
+           ([remap save-buffer] . elfeed-tube-save)
+           :map elfeed-search-mode-map
+           ("F" . elfeed-tube-fetch)
+           ([remap save-buffer] . elfeed-tube-save)))
 #+end_src
 
 ** Persist

@@ -10,7 +10,8 @@
 
   (define %home-packages
     (append %home-packages
-            (list pipewire)))
+            (list pipewire
+                  wireplumber)))
 #+end_src
 
 ** Services

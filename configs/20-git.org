@@ -63,5 +63,7 @@ Guix service for linking the git config file:
                              home-files-service-type
                              `(
                                (".config/git/config"
-                                ,(local-file "home/.config/git/config" "gitconfig")))))))
+                                ,(local-file "home/.config/git/config" "gitconfig"))
+                               (".config/git/personal-config"
+                                ,(local-file "home/.config/git/personal-config" "gitconfig-personal")))))))
 #+END_SRC
