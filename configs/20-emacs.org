@@ -96,7 +96,7 @@ The different emacs packages will be installed through Guix home, therefore we w
 
 Change some of the defaults to make a more minimal interface.
 
-#+BEGIN_SRC elisp :noweb-ref emacs
+#+begin_src elisp :noweb-ref emacs
   ;; Setup customization file
   (setq custom-file (make-temp-file "emacs-custom-"))
   ;; Never load it
@@ -177,7 +177,10 @@ Change some of the defaults to make a more minimal interface.
   ;; Configure Ediff to use a single frame and split windows horizontally
   (setq ediff-window-setup-function #'ediff-setup-windows-plain
         ediff-split-window-function #'split-window-horizontally)
-#+END_SRC
+
+  ;; Configure SHR images to be smaller (eg. in Elfeed)
+  (setq shr-max-image-proportion 0.6)
+#+end_src
 
 ** Simpler UI
 
@@ -1374,6 +1377,29 @@ Add the Guix packages to the home config:
     :init
     (setq mastodon-instance-url "https://fosstodon.org"
           mastodon-active-user "gaborudvari"))
+#+end_src
+
+** Mastodon Alt
+
+*** Installation
+
+The Emacs package is not yet packaged into guix, install it with Quelpa:
+
+#+begin_src elisp :noweb-ref emacs
+  (quelpa
+   '(mastodon-alt
+     :fetcher github
+     :repo "rougier/mastodon-alt"))
+#+end_src
+
+*** Configuration
+
+There is some issue with using mastodon-alt, not sure why, do not enable it until I figure it out.
+
+#+begin_src elisp :noweb-ref emacs
+  (use-package mastodon-alt
+    :config
+    (mastodon-alt-tl-deactivate))
 #+end_src
 
 ** EMMS

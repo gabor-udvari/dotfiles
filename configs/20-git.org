@@ -15,6 +15,7 @@ Place the config in the ~XDG_CONFIG_HOME~ folder.
 
   [core]
     quotepath = off
+    autocrlf = input
 
   [pull]
     ff = only
