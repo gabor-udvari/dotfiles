@@ -43,11 +43,16 @@ The different emacs packages will be installed through Guix home, therefore we w
 
         cursor-in-non-selected-windows nil) ;; Disable cursor in inactive windows)
 
+  (setq byte-compile-warnings '(not obsolete)
+        warning-suppress-log-types '((comp) (bytecomp)))
+
   (menu-bar-mode -1) ;; Disable menubar
-  ;; (scroll-bar-mode -1) ;; Disable visible scrollbar
-  (tool-bar-mode -1) ;; Disable the toolbar
   (tooltip-mode -1) ;; Disable tooltips
-  (set-fringe-mode 10) ;; Give some breathing room
+  (when (display-graphic-p)
+    (set-fringe-mode 10) ;; Give some breathing room
+    (tool-bar-mode -1) ;; Disable the toolbar
+    ;; (scroll-bar-mode -1) ;; Disable visible scrollbar
+  )
 
   ;; Save the original GC, file handler, VC handled backends values
   ;; set them to nil now, and restore them in an emacs-startup-hook.
@@ -862,8 +867,10 @@ Add the Guix packages to the home config:
   (use-package org-agenda
     :init
     (if (eq system-type 'windows-nt)
-            (setq org-agenda-files (directory-files-recursively (concat (getenv "HOMEPATH") "/Notes/") "\\.org$"))
-      (setq org-agenda-files (directory-files-recursively (concat (getenv "HOME") "/Notes/") "\\.org$"))))
+        (defvar my-notes-folder (concat (getenv "HOMEPATH") "/Notes/"))
+      (defvar my-notes-folder (concat (getenv "HOME") "/Notes/")))
+    (when (file-exists-p my-notes-folder)
+      (setq org-agenda-files (directory-files-recursively my-notes-folder "\\.org$"))))
 
   (use-package org-tempo)
   (use-package org-contrib)
@@ -1082,15 +1089,21 @@ Add the Guix package to the home config:
 
 If guix is not installed, then install within Emacs using quelpa:
 
-#+BEGIN_SRC elisp :noweb-ref emacs
+#+begin_src elisp :noweb-ref emacs
   (unless (or (eq system-type 'windows-nt) (executable-find "guix"))
     (quelpa
      '(geiser
        :fetcher github
        :repo "emacsmirror/geiser"
        :files (:defaults
-               "elisp"))))
-#+END_SRC
+               "elisp")))
+    (quelpa
+     '(geiser-guile
+       :fetcher github
+       :repo "emacsmirror/geiser-guile"
+       :files (:defaults
+               "src"))))
+#+end_src
 
 Add the Guix package to the home config:
 
@@ -1103,11 +1116,12 @@ Add the Guix package to the home config:
 
 *** Configuration
 
-#+BEGIN_SRC elisp :noweb-ref emacs
-  (unless (eq system-type 'windows-nt)
-    (use-package geiser-guile)
-    )
-#+END_SRC
+#+begin_src elisp :noweb-ref emacs
+  (use-package geiser-guile
+    :unless (eq system-type 'windows-nt)
+    :load-path (lambda () (file-name-concat (package-desc-dir (package-get-descriptor 'geiser))
+                                            "elisp")))
+#+end_src
 
 ** Markdown mode
 
