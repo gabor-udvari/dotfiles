@@ -46,14 +46,6 @@ The different emacs packages will be installed through Guix home, therefore we w
   (setq byte-compile-warnings '(not obsolete)
         warning-suppress-log-types '((comp) (bytecomp)))
 
-  (menu-bar-mode -1) ;; Disable menubar
-  (tooltip-mode -1) ;; Disable tooltips
-  (when (display-graphic-p)
-    (set-fringe-mode 10) ;; Give some breathing room
-    (tool-bar-mode -1) ;; Disable the toolbar
-    ;; (scroll-bar-mode -1) ;; Disable visible scrollbar
-  )
-
   ;; Save the original GC, file handler, VC handled backends values
   ;; set them to nil now, and restore them in an emacs-startup-hook.
   ;; This is taken from Prot's config, it should decrease startup time.
@@ -135,8 +127,10 @@ Change some of the defaults to make a more minimal interface.
 
   (setq use-short-answers t) ;; y/n for answering yes/no questions
 
-  (setq native-comp-async-report-warnings-errors 'silent) ; Emacs 28 with native compilation
-  (setq native-compile-prune-cache t) ; Emacs 29
+  ;; Make native compilation silent and prune its cache.
+  (when (native-comp-available-p)
+    (setq native-comp-async-report-warnings-errors 'silent) ; Emacs 28 with native compilation
+    (setq native-compile-prune-cache t)) ; Emacs 29
 
   (setq-default indent-tabs-mode nil) ;; No tabs
   (setq-default tab-width 2) ;; 2 spaces as tabs
@@ -192,21 +186,29 @@ Change some of the defaults to make a more minimal interface.
 As seen on https://www.youtube.com/watch?v=74zOY-vgkyw, and from the nano-defaults.el:
 
 #+BEGIN_SRC elisp :noweb-ref emacs
+  (menu-bar-mode -1) ;; Disable menubar
+  (tooltip-mode -1) ;; Disable tooltips
+  (when (display-graphic-p)
+    (set-fringe-mode 10) ;; Give some breathing room
+    (tool-bar-mode -1) ;; Disable the toolbar
+    ;; (scroll-bar-mode -1) ;; Disable visible scrollbar
+  )
+
   (setq indicate-empty-lines nil) ;; No empty line indicators
-  (setq font-lock-maximum-decoration nil) ;; Moderate font lock
-  (setq font-lock-maximum-size nil) ;; No limit on font lock
+    (setq font-lock-maximum-decoration nil) ;; Moderate font lock
+    (setq font-lock-maximum-size nil) ;; No limit on font lock
 
-  (setq fill-column 80) ;; Fill column at 80
-  (global-visual-line-mode 1) ;; Do line wrapping everywhere
+    (setq fill-column 80) ;; Fill column at 80
+    (global-visual-line-mode 1) ;; Do line wrapping everywhere
 
-  (setq visible-bell t) ;; Enable visible bell
+    (setq visible-bell t) ;; Enable visible bell
 
-  ;; Size of temporary buffers
-  (temp-buffer-resize-mode)
-  (setq temp-buffer-max-height 8)
+    ;; Size of temporary buffers
+    (temp-buffer-resize-mode)
+    (setq temp-buffer-max-height 8)
 
-  ;; Minimum window height
-  (setq window-min-height 1)
+    ;; Minimum window height
+    (setq window-min-height 1)
 #+END_SRC
 
 ** Package handling
@@ -811,12 +813,13 @@ The package org-margin is not yet packaged for Guix, always install with quelpa:
 
 Add the Guix packages to the home config:
 
-#+BEGIN_SRC scheme :noweb-ref guix-home
+#+begin_src scheme :noweb-ref guix-home
   (define %home-packages
     (append %home-packages
             (list emacs-org-modern
-                  emacs-org-contrib)))
-#+END_SRC
+                  emacs-org-contrib
+                  emacs-org-texlive-collection)))
+#+end_src
 
 *** Configuration
 
@@ -1403,6 +1406,7 @@ The Emacs package is not yet packaged into guix, install it with Quelpa:
   (quelpa
    '(mastodon-alt
      :fetcher github
+     :stable nil
      :repo "rougier/mastodon-alt"))
 #+end_src
 
@@ -1411,9 +1415,9 @@ The Emacs package is not yet packaged into guix, install it with Quelpa:
 There is some issue with using mastodon-alt, not sure why, do not enable it until I figure it out.
 
 #+begin_src elisp :noweb-ref emacs
-  (use-package mastodon-alt
-    :config
-    (mastodon-alt-tl-deactivate))
+  ;; (use-package mastodon-alt
+  ;;   :config
+  ;;   (mastodon-alt-tl-deactivate))
 #+end_src
 
 ** EMMS

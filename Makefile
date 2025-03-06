@@ -1,4 +1,5 @@
-SHELL=/bin/bash
+SHELL = /usr/bin/env
+.SHELLFLAGS = bash -c
 CYAN_TERMINAL_OUTPUT = \033[1;36m
 GREEN_TERMINAL_OUTPUT = \033[1;32m
 RED_TERMINAL_OUTPUT = \033[1;31m
@@ -24,6 +25,7 @@ install: --config-home --install-home
 	@{ \
 		if command -v guix; then
 			echo -e "${GREEN_TERMINAL_OUTPUT}--> Deploying Guix Home...${CLEAR}"
+			guix pull -C channels.scm
 			if guix time-machine -C channels.scm -- home reconfigure ./build/guix-home-config.scm; then
 				echo -e "${GREEN_TERMINAL_OUTPUT}--> Finished deploying home with Guix.${CLEAR}"
 			fi

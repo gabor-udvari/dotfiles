@@ -1,7 +1,9 @@
 #+title: Sway configuration
 #+author: Gábor Udvari
 
-* Sway config
+* Sway
+
+** Sway config
 
 #+begin_src text :noweb yes :exports none :mkdirp yes :tangle home/.config/sway/config
   <<swayconfig>>
@@ -217,7 +219,7 @@
       bindsym --locked XF86MonBrightnessDown exec brightnessctl set 5%-
       bindsym --locked XF86MonBrightnessUp exec brightnessctl set 5%+
       # Special key to take a screenshot with grim
-      bindsym Print exec grim
+      bindsym Print exec grim -g "$(slurp)"
 
   #
   # Status Bar:
@@ -238,16 +240,20 @@
   }
 
   include @sysconfdir@/sway/config.d/*
+
+  # Setting the correct environment variables for DBUS
+  exec dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
 #+end_src
 
-* Guix configuration
+** Guix configuration
 
-** Packages
+*** Packages
 
 #+begin_src scheme :noweb-ref guix-home
   (use-modules (gnu packages terminals)
                (gnu packages wm)
-               (gnu packages xdisorg))
+               (gnu packages xdisorg)
+               (gnu packages image))
 
   (define %home-packages
     (append %home-packages
@@ -256,10 +262,12 @@
                   swaylock
                   swayidle
                   foot
-                  wofi)))
+                  wofi
+                  grim
+                  slurp)))
 #+end_src
 
-** Config linking service
+*** Config linking service
 
 Guix service for linking the git config file:
 
@@ -273,3 +281,92 @@ Guix service for linking the git config file:
                                (".config/sway/config"
                                 ,(local-file "home/.config/sway/config" "swayconfig")))))))
 #+END_SRC
+
+* Pipewire
+
+** Guix configuration
+
+*** Packages
+
+#+begin_src scheme :noweb-ref guix-home
+  (use-modules (gnu packages linux))
+
+  (define %home-packages
+    (append %home-packages
+            (list pipewire
+                  wireplumber)))
+#+end_src
+
+*** Services
+
+Guix service for linking the git config file:
+
+#+begin_src scheme :noweb-ref guix-home
+  (use-modules (gnu home services sound)
+               (gnu home services desktop))
+
+  (define %home-services
+      (append %home-services
+              (list (service home-pipewire-service-type)
+                    (service home-dbus-service-type))))
+#+end_src
+
+* Foot
+
+** Foot config
+
+The default config can be found here:
+
+https://codeberg.org/dnkl/foot/src/branch/master/foot.ini
+
+#+begin_src text :noweb yes :exports none :mkdirp yes :tangle home/.config/foot/foot.ini
+  <<footconfig>>
+#+END_SRC
+
+#+begin_src text :noweb-ref footconfig
+  term=xterm-256color
+  font=Fira Code:size=10
+#+end_src
+
+** Guix configuration
+
+*** Packages
+
+#+begin_src scheme :noweb-ref guix-home
+  (use-modules (gnu packages terminals))
+
+  (define %home-packages
+    (append %home-packages
+            (list foot)))
+#+end_src
+
+*** Config linking service
+
+Guix service for linking the git config file:
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (define %home-services
+    (append %home-services
+            (list
+             (simple-service 'footconfig-symlinking-service
+                             home-files-service-type
+                             `(
+                               (".config/foot/foot.ini"
+                                ,(local-file "home/.config/foot/foot.ini" "footconfig")))))))
+#+END_SRC
+
+* XDG Portals
+
+** Guix configuration
+
+*** Packages
+
+#+begin_src scheme :noweb-ref guix-home
+  (use-modules (gnu packages freedesktop))
+
+  (define %home-packages
+    (append %home-packages
+            (list xdg-desktop-portal
+                  xdg-desktop-portal-wlr
+                  xdg-desktop-portal-gtk)))
+#+end_src

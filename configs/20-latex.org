@@ -1,0 +1,25 @@
+#+title: LaTeX
+#+author: Gábor Udvari
+
+* Guides on using LaTeX
+
+** Recommendation to use LuaTex
+
+https://www.texdev.net/2024/11/05/engine-news-from-the-latex-project 
+
+* Guix packages
+
+#+begin_src scheme :noweb-ref guix-home
+  (use-modules (gnu packages tex))
+
+  (define %home-packages
+    (append %home-packages
+            (list texlive-collection-basic
+                  texlive-collection-latex
+                  texlive-collection-luatex
+                  texlive-babel-hungarian
+                  texlive-huaz
+                  texlive-hulipsum
+                  texlive-hyphen-complete
+                  texlive-upquote)))
+#+end_src

@@ -57,7 +57,7 @@ The current OTP Internetbank was introduced in late 2021. The old OTP Portal for
 
 The following category configs are customized how I am grouping my transfers. You should take this as inspiration only.
 
-#+BEGIN_SRC text :noweb-ref otp
+#+begin_src text :noweb-ref otp
   # Default accounts
   account1 Eszközök:Közös folyószámla
   account2 Kiadások:Ismeretlen
@@ -92,6 +92,11 @@ The following category configs are customized how I am grouping my transfers. Yo
   if
   %transfer_account 1177348751877138
     account2 Eszközök:Közös folyószámla
+
+  if
+  %transfer_account 1177336002746928
+  %transfer_account 1177336002746942
+    account2 Kiadások:Szórakozás
 
   # General regex rules
   if
@@ -279,6 +284,8 @@ The following category configs are customized how I am grouping my transfers. Yo
   KAPOS ITÁLIA ÉTTEREM
   BUFE A SZARNY
   NYX\*InnovatorKft
+  OTPMOBL\*fannizero
+  Danuvius Vending Kft
     account2 Kiadások:Étel
 
   if
@@ -321,6 +328,7 @@ The following category configs are customized how I am grouping my transfers. Yo
   SCOLAR KFT
   ELMENYPLAZA\.HU
   REGIO JÁTÉK SF
+  Trendyol
     account2 Kiadások:Ajándék
 
   if
@@ -382,6 +390,7 @@ The following category configs are customized how I am grouping my transfers. Yo
   if
   UPC
   VODAFONE MAGYARORSZÁG ZRT
+  ONE MAGYARORSZÁG ZRT
     account2 Kiadások:Szolgáltatók:TV, internet, mobil
 
   if
@@ -502,8 +511,9 @@ The following category configs are customized how I am grouping my transfers. Yo
   SZUSZ PARK
   KEK\.SH PRO
   OTPMOBL\*BOOKLINE\.HU
+  GOOGLE \*Google Play
     account2 Kiadások:Szórakozás
-#+END_SRC
+#+end_src
 
 *** OTP SZÉP kártya
 
@@ -515,7 +525,7 @@ OTP SZÉP kártya is a cafeteria type card, it can be used in restaurants, hotel
   <<otp-szep>>
 #+END_SRC
 
-#+BEGIN_SRC text :noweb-ref otp-szep
+#+begin_src text :noweb-ref otp-szep
   # Use ; as separator
   separator ;
 
@@ -546,7 +556,7 @@ OTP SZÉP kártya is a cafeteria type card, it can be used in restaurants, hotel
   # Set account1 if there is a transaction to (less frequent)
   if %quant_to [1-9]
     account2 Bevételek:Gábor cafeteria
-#+END_SRC
+#+end_src
 
 ** Guix home config for linking the tangled config
 
