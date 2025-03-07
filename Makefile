@@ -42,7 +42,11 @@ install: --config-home --install-home
 				echo -e "${GREEN_TERMINAL_OUTPUT}--> Finished deploying home with Rsync.${CLEAR}"
 			fi
 		fi
+	}
 
+.ONESHELL:
+--install-terminfo:
+	@{ \
 		echo -e "${GREEN_TERMINAL_OUTPUT}--> Copying emacs-eat terminfo files${CLEAR}"
 		cp -pr "$$(emacs --batch --eval "(require 'eat)" --eval "(princ eat-term-terminfo-directory)")" "${HOME}"/.terminfo
 	}

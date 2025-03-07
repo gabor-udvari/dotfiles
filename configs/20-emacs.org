@@ -185,14 +185,20 @@ Change some of the defaults to make a more minimal interface.
 
 As seen on https://www.youtube.com/watch?v=74zOY-vgkyw, and from the nano-defaults.el:
 
-#+BEGIN_SRC elisp :noweb-ref emacs
+#+begin_src elisp :noweb-ref emacs
   (menu-bar-mode -1) ;; Disable menubar
   (tooltip-mode -1) ;; Disable tooltips
-  (when (display-graphic-p)
-    (set-fringe-mode 10) ;; Give some breathing room
-    (tool-bar-mode -1) ;; Disable the toolbar
-    ;; (scroll-bar-mode -1) ;; Disable visible scrollbar
-  )
+
+  (defun my-simple-ui ()
+      (when (display-graphic-p)
+        (set-fringe-mode 10)  ;; Give some breathing room
+        (tool-bar-mode -1)  ;; Disable the toolbar
+        ;; (scroll-bar-mode -1)  ;; Disable visible scrollbar
+        ))
+
+  (if (daemonp)
+      (add-hook 'server-after-make-frame-hook #'my-simple-ui)
+    (my-simple-ui))
 
   (setq indicate-empty-lines nil) ;; No empty line indicators
     (setq font-lock-maximum-decoration nil) ;; Moderate font lock
@@ -209,7 +215,7 @@ As seen on https://www.youtube.com/watch?v=74zOY-vgkyw, and from the nano-defaul
 
     ;; Minimum window height
     (setq window-min-height 1)
-#+END_SRC
+#+end_src
 
 ** Package handling
 
@@ -715,16 +721,15 @@ Add the Guix packages to the home config:
 Flyspell is part of Emacs, no need to install the Emacs package separately.
 
 Add the language file Guix packages to the home config:
-
-#+BEGIN_SRC scheme :noweb-ref guix-home
+#+begin_src scheme :noweb-ref guix-home
   (use-modules (gnu packages hunspell))
-  
+
   (define %home-packages
     (append %home-packages
             (list hunspell
                   hunspell-dict-hu
                   hunspell-dict-en)))
-#+END_SRC
+#+end_src
 
 If you are not on Guix you can download the dictionaries from the LibreOffice repository:
 
