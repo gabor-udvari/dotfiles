@@ -229,8 +229,8 @@ Enable packages and use-package in all cases regardless of version (I use at lea
 
 Packages should not be ensured when Guix is available, but useful otherwise.
 
-#+BEGIN_SRC elisp :noweb-ref emacs
-  (unless (package-installed-p 'quelpa)
+#+begin_src elisp :noweb-ref emacs
+  (unless (or (executable-find "guix") (package-installed-p 'quelpa))
     (package-vc-install "https://github.com/quelpa/quelpa")
 
     ;; This is the officialy recommended way to bootstrap quelpa, but the
@@ -240,7 +240,7 @@ Packages should not be ensured when Guix is available, but useful otherwise.
     ;   (eval-buffer)
     ;  (quelpa-self-upgrade)))
     )
-#+END_SRC
+#+end_src
 
 ** No littering
 
@@ -376,14 +376,23 @@ The themes modus-operandi and modus-vivendi are part of Emacs since version 28. 
 
 *** Installation
 
-Install within Emacs using Quelpa, because it is not yet packaged into Guix:
+If guix is not installed, then install within Emacs using quelpa:
 
-#+BEGIN_SRC elisp :noweb-ref emacs
-  (quelpa
-   '(spacious-padding
-     :fetcher github
-     :repo "protesilaos/spacious-padding"))
-#+END_SRC
+#+begin_src elisp :noweb-ref emacs
+  (unless (executable-find "guix")
+    (quelpa
+     '(spacious-padding
+       :fetcher github
+       :repo "protesilaos/spacious-padding")))
+#+end_src
+
+Add the Guix packages to the home config:
+
+#+begin_src scheme :noweb-ref guix-home
+  (define %home-packages
+    (append %home-packages
+            (list emacs-spacious-padding)))
+#+end_src
 
 *** Configuration
 
@@ -792,7 +801,7 @@ Org is bundled inside Emacs, so only need to install some extra packages, like e
 
 If guix is not installed, then install within Emacs using quelpa:
 
-#+BEGIN_SRC elisp :noweb-ref emacs
+#+begin_src elisp :noweb-ref emacs
   (unless (executable-find "guix")
     (quelpa
      '(org-contrib
@@ -804,17 +813,12 @@ If guix is not installed, then install within Emacs using quelpa:
     (quelpa
      '(org-modern
        :fetcher github
-       :repo "minad/org-modern")))
-#+END_SRC
-
-The package org-margin is not yet packaged for Guix, always install with quelpa:
-
-#+BEGIN_SRC elisp :noweb-ref emacs
-  (quelpa
-   '(org-margin
-     :fetcher github
-     :repo "rougier/org-margin"))
-#+END_SRC
+       :repo "minad/org-modern"))
+    (quelpa
+     '(org-margin
+       :fetcher github
+       :repo "rougier/org-margin")))
+#+end_src
 
 Add the Guix packages to the home config:
 
@@ -823,7 +827,8 @@ Add the Guix packages to the home config:
     (append %home-packages
             (list emacs-org-modern
                   emacs-org-contrib
-                  emacs-org-texlive-collection)))
+                  emacs-org-texlive-collection
+                  emacs-org-margin)))
 #+end_src
 
 *** Configuration
@@ -865,6 +870,7 @@ Add the Guix packages to the home config:
     (setq org-ellipsis "…")  ; Calibri also needs to support this
     (setq org-hide-leading-stars nil)  ; Hide leading stars
     (setq org-src-fontify-natively t)
+    (setq org-startup-folded 'nofold)
 
     ;; Active Babel languages
     (org-babel-do-load-languages
@@ -1325,35 +1331,6 @@ Add the Guix packages to the home config:
   ;; https://x.com/cyangmou
 #+end_src
 
-** Elfeed Tube
-
-*** Installation
-
-The package is not yet packed for Guix, install it using Quelpa:
-
-#+begin_src elisp :noweb-ref emacs
-  (quelpa
-   '(elfeed-tube
-     :fetcher github
-     :repo "karthink/elfeed-tube"))
-#+end_src
-
-*** Configuration
-
-#+begin_src elisp :noweb-ref emacs
-  (use-package elfeed-tube
-    :after elfeed
-    :config
-    (elfeed-tube-setup)
-
-    :bind (:map elfeed-show-mode-map
-           ("F" . elfeed-tube-fetch)
-           ([remap save-buffer] . elfeed-tube-save)
-           :map elfeed-search-mode-map
-           ("F" . elfeed-tube-fetch)
-           ([remap save-buffer] . elfeed-tube-save)))
-#+end_src
-
 ** Persist
 
 This is a depencency for Mastodon, the manual install is only required if there is no guix.
@@ -1399,30 +1376,6 @@ Add the Guix packages to the home config:
     :init
     (setq mastodon-instance-url "https://fosstodon.org"
           mastodon-active-user "gaborudvari"))
-#+end_src
-
-** Mastodon Alt
-
-*** Installation
-
-The Emacs package is not yet packaged into guix, install it with Quelpa:
-
-#+begin_src elisp :noweb-ref emacs
-  (quelpa
-   '(mastodon-alt
-     :fetcher github
-     :stable nil
-     :repo "rougier/mastodon-alt"))
-#+end_src
-
-*** Configuration
-
-There is some issue with using mastodon-alt, not sure why, do not enable it until I figure it out.
-
-#+begin_src elisp :noweb-ref emacs
-  ;; (use-package mastodon-alt
-  ;;   :config
-  ;;   (mastodon-alt-tl-deactivate))
 #+end_src
 
 ** EMMS
@@ -1608,6 +1561,40 @@ Add the Guix packages to the home config:
 #+BEGIN_SRC elisp :noweb-ref emacs
   (use-package eat)
 #+END_SRC
+
+** Chess
+
+*** Installation
+
+If guix is not installed, then install within Emacs using quelpa:
+
+#+begin_src elisp :noweb-ref emacs
+  (unless (executable-find "guix")
+    (quelpa
+     '(chess
+       :fetcher github
+       :repo "jwiegley/emacs-chess")))
+#+end_src
+
+Add the Guix packages to the home config:
+
+#+begin_src scheme :noweb-ref guix-home
+  (use-modules (gnu packages games))
+
+  (define %home-packages
+      (append %home-packages
+              (list emacs-chess
+                    chess)))
+#+end_src
+
+*** Configuration
+
+#+begin_src elisp :noweb-ref emacs
+    (use-package chess
+      :init
+      (setq chess-images-separate-frame nil
+            chess-images-default-size 40))
+#+end_src
 
 * Guix config
 

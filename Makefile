@@ -25,7 +25,6 @@ install: --config-home --install-home
 	@{ \
 		if command -v guix; then
 			echo -e "${GREEN_TERMINAL_OUTPUT}--> Deploying Guix Home...${CLEAR}"
-			guix pull -C channels.scm
 			if guix time-machine -C channels.scm -- home reconfigure ./build/guix-home-config.scm; then
 				echo -e "${GREEN_TERMINAL_OUTPUT}--> Finished deploying home with Guix.${CLEAR}"
 			fi
@@ -57,6 +56,7 @@ update-channels:
 		mkdir -p build
 		sed -e '/commit/,+1d' channels.scm >build/channels-update.scm
 		guix time-machine -C build/channels-update.scm -- describe --format=channels >channels.scm
+		guix pull -C channels.scm
 	}
 
 clean:

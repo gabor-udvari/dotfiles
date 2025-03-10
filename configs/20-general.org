@@ -10,8 +10,11 @@ I use the ~dig~ command frequently to troubleshoot DNS issues. Guix has it in th
 
   (define %home-packages
     (append %home-packages
-            (map specification->package+output
-                 (list "bind:utils"))))
+            ;; TODO The below works, but package+output seems to be internal
+            ;; only. Replace it with specifications->manifest somehow:
+            ;; https://issues.guix.gnu.org/62698
+            (map (compose list specification->package+output)
+               '("bind:utils"))))
 #+end_src
 
 * Fonts
