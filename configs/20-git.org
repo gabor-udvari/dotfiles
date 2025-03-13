@@ -20,6 +20,9 @@ Place the config in the ~XDG_CONFIG_HOME~ folder.
   [pull]
     ff = only
 
+  [url "https://github.com/"]
+	  insteadOf = git://github.com/
+
   ; Include for all repositories inside the Personal folder.
   [includeIf "gitdir:~/Repositories/Personal/"]
     path = ~/.config/git/personal-config
