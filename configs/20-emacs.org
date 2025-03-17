@@ -1325,7 +1325,22 @@ Add the Guix packages to the home config:
         ("https://444.hu/feed" hungary news)
         ("https://www.phoronix.com/rss.php" open-source news)
         ("https://www.met.hu/methu/rss/rss.php" hungary news weather)
-        ("https://www.freakingpenguin.com/feed.xml" guix guile))))
+        ("https://www.freakingpenguin.com/feed.xml" guix guile)
+        ;; Modern Vintage Gamer:
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCjFaPUcJU1vwk193mnW_w1w" youtube gaming)
+        ;; GothemChess:
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCQHX6ViZmPsWiYSFAyS0a3Q" youtube chess)
+        ;; System Crafters:
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCAiiOTio8Yu69c3XnR7nQBQ" youtube guix emacs)
+        ;; NDC Conferences:
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCTdw38Cw6jcm0atBPA39a0Q" youtube conference programming)
+        ;; Partizán:
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCEFpEvuosfPGlV1VyUF6QOA" youtube hungary)
+        ;; DnB Allstars:
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCYQHXu4Ea4NTvBggGHT7cOQ" youtube music dnb)
+        ;; UKF Drum & Bass:
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCpYkkFDnvHka9CBuwxPpqXw" youtube music dnb)
+        )))
 
   ;; https://lospec.com/ygloof
   ;; https://x.com/cyangmou

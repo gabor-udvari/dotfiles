@@ -28,7 +28,7 @@
   # Your preferred terminal emulator
   set $term foot
   # Your preferred application launcher
-  set $menu wofi -S run
+  set $menu wofi
 
   ### Output configuration
   #
@@ -239,10 +239,14 @@
       }
   }
 
+  # Windows rules
+  for_window [app_id="mpv"] inhibit_idle fullscreen
+  for_window [title="(?:Open|Save) (?:File|Folder|As)"] floating enable, resize set width 1030 height 710
+
   include @sysconfdir@/sway/config.d/*
 
   # Setting the correct environment variables for DBUS
-  exec dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
+  # exec dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
 #+end_src
 
 ** Guix configuration
@@ -252,7 +256,6 @@
 #+begin_src scheme :noweb-ref guix-home
   (use-modules (gnu packages terminals)
                (gnu packages wm)
-               (gnu packages xdisorg)
                (gnu packages image))
 
   (define %home-packages
@@ -262,7 +265,6 @@
                   swaylock
                   swayidle
                   foot
-                  wofi
                   grim
                   slurp)))
 #+end_src
@@ -281,6 +283,46 @@ Guix service for linking the git config file:
                                (".config/sway/config"
                                 ,(local-file "home/.config/sway/config" "swayconfig")))))))
 #+END_SRC
+
+
+* Wofi
+
+#+begin_src text :exports none :mkdirp yes :tangle home/.config/wofi/config
+  show=drun,run
+  width=50%
+  height=40%
+  exec_search=true
+  key_expand=Tab
+  no_actions=true
+  run-always_parse_args=true
+#+end_src
+
+** Guix configuration
+
+*** Packages
+
+#+begin_src scheme :noweb-ref guix-home
+  (use-modules (gnu packages xdisorg))
+
+  (define %home-packages
+    (append %home-packages
+            (list wofi)))
+#+end_src
+
+*** Config linking service
+
+Guix service for linking the git config file:
+
+#+begin_src scheme :noweb-ref guix-home
+  (define %home-services
+    (append %home-services
+            (list
+             (simple-service 'woficonfig-symlinking-service
+                             home-files-service-type
+                             `(
+                               (".config/wofi/config"
+                                ,(local-file "home/.config/wofi/config" "woficonfig")))))))
+#+end_src
 
 * Pipewire
 

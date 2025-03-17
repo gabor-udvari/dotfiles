@@ -563,6 +563,28 @@ A small bash script for fetching and extracting MSYS2 packages.
   fi
 #+END_SRC
 
+** Get Youtube RSS feed URL
+
+A small script to get the Youtube RSS feed URL for a channel. I use this for elfeed-youtube.
+
+#+begin_src bash :mkdirp yes :tangle home/.local/bin/youtube-rss-get.sh :tangle-mode o755
+  #!/usr/bin/env bash
+
+  if [ -z "$1" ]; then
+      echo 'ERROR: please give a Youtube channel URL'
+      exit 1
+  fi
+
+  channel_id="$(curl -s "$1" | sed -n 's#^.*\(UC[a-zA-Z0-9]\{22\}\)".*$#\1#p')"
+
+  if [ -n "$channel_id" ]; then
+      echo 'https://www.youtube.com/feeds/videos.xml?channel_id='"$channel_id"
+  else
+      echo 'ERROR: the channel id could not be found'
+      exit 1
+  fi
+#+end_src
+
 * Guix services
 
 Guix service for linking the bash config files:
@@ -615,3 +637,16 @@ Guix service for linking all the files inside ~.config/bash~:
                                (".gnomerc"
                                 ,(local-file "home/.profile" "gnomerc")))))))
 #+END_SRC
+
+Guix service for linking all the various helper scripts inside ~.local/bin~:
+
+#+begin_src scheme :noweb-ref guix-home
+  (define %home-services
+    (append %home-services
+            (list
+             (simple-service 'shell-scripts-symlinking-service
+                             home-files-service-type
+                             `(
+                               (".local/bin/youtube-rss-get"
+                                ,(local-file "home/.local/bin/youtube-rss-get.sh" #:recursive? #t)))))))
+#+end_src

@@ -257,6 +257,7 @@ The following category configs are customized how I am grouping my transfers. Yo
   ÁZSIA HÁZ
   shein\.com
   Azsia Aruhaz
+  SHEIN
     account2 Kiadások:Ruha
 
   if
@@ -329,6 +330,8 @@ The following category configs are customized how I am grouping my transfers. Yo
   ELMENYPLAZA\.HU
   REGIO JÁTÉK SF
   Trendyol
+  Alza\.cz
+  WWW\.MAXIE\.HU
     account2 Kiadások:Ajándék
 
   if

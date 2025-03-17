@@ -17,6 +17,16 @@ I use the ~dig~ command frequently to troubleshoot DNS issues. Guix has it in th
                '("bind:utils"))))
 #+end_src
 
+* Curl
+
+#+begin_src scheme :noweb-ref guix-home
+  (use-modules (gnu packages curl))
+
+  (define %home-packages
+    (append %home-packages
+            (list curl)))
+#+end_src
+
 * Fonts
 
 I use Cantarell and Fire Code fonts in Emacs.
@@ -77,6 +87,16 @@ I use Cantarell and Fire Code fonts in Emacs.
     (append %home-packages
             (list pdfgrep
                   qpdf)))
+#+end_src
+
+* YT-DLP
+
+#+begin_src scheme :noweb-ref guix-home
+  (use-modules (gnu packages video))
+
+  (define %home-packages
+    (append %home-packages
+            (list yt-dlp)))
 #+end_src
 
 * AGE
