@@ -240,7 +240,7 @@
   }
 
   # Windows rules
-  for_window [app_id="mpv"] inhibit_idle fullscreen
+  for_window [class="mpv"] inhibit_idle fullscreen
   for_window [title="(?:Open|Save) (?:File|Folder|As)"] floating enable, resize set width 1030 height 710
 
   include @sysconfdir@/sway/config.d/*

@@ -1,0 +1,131 @@
+#+title: Encryption
+#+author: Gábor Udvari
+
+* AGE
+
+** General info
+
+Official homepage:
+
+- https://github.com/FiloSottile/age
+
+Arguments against using GPG:
+
+- https://blog.cryptographyengineering.com/2014/08/13/whats-matter-with-pgp/
+- https://www.latacora.com/blog/2019/07/16/the-pgp-problem/
+- https://soatok.blog/2024/11/15/what-to-use-instead-of-pgp/
+
+** Usage
+
+Generating an age identity file with a password, and outputting into a text file written in the PEM format:
+
+#+begin_src shell
+  age-keygen | age -p -a > key.age
+#+end_src
+
+The above identity file can be used as is, age will discover that it is password protected, and it will decrypt it before use.
+
+Getting the file recipient part of a password protected age identity file:
+
+#+begin_src shell
+  age -d key.age | age-keygen -y
+#+end_src
+
+The above will be the recipient, or the the public part.
+
+** Guix Home config
+
+#+begin_src scheme :noweb-ref guix-home
+  (use-modules (gnu packages golang-crypto))
+
+  (define %home-packages
+    (append %home-packages
+            (list age
+                  age-keygen)))
+#+end_src
+
+* Passage
+
+** Usage
+
+To configure passage with a password protected identity file follow these steps:
+1. Generate a password protected identity file in a PEM format:
+   #+begin_src shell
+     age-keygen | age -p -a > key.age
+   #+end_src
+2. Append that file to the passage identities:
+   #+begin_src shell
+     cat key.age >> ~/.passage/identities
+   #+end_src
+3. Append the recipient part of that file to the passage recipients:
+   #+begin_src shell
+     age -d key.age >> ~/.passage/store/.age-recipients
+   #+end_src
+4. Now the setup is ready, you can remove or backup the original ~key.age~ file.
+
+** Guix Home config
+
+#+begin_src scheme :noweb-ref guix-home
+  (use-modules (gnu packages password-utils)
+               (gnu packages emacs-xyz))
+
+  (define %home-packages
+    (append %home-packages
+            (list pass-age
+                  emacs-passage)))
+#+end_src
+
+* GPG
+
+** Guides on using GPG
+
+- https://wiki.debian.org/Subkeys?action=show&redirect=subkeys
+- https://security.stackexchange.com/questions/31594/what-is-a-good-general-purpose-gnupg-key-setup/31598#31598
+- https://gpg.wtf/
+
+** Configuration
+
+#+BEGIN_SRC text :noweb yes :exports none :mkdirp yes :tangle home/.gnupg/gpg.conf
+  <<gpg-config>>
+#+END_SRC
+
+#+BEGIN_SRC text :noweb-ref gpg-config
+  keyid-format LONG
+  with-fingerprint
+  with-keygrip
+#+END_SRC
+
+** Guix home services
+
+We need to start the GPG Agent service and also set the pinentry program to ~/bin/pinentry~.
+
+We also need to link the ~gpg.conf~ file to its final folder.
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (use-modules (gnu home services gnupg))
+
+  (define %home-services
+    (append %home-services
+            (list
+             (service home-gpg-agent-service-type
+                      (home-gpg-agent-configuration
+                       (pinentry-program
+                        (file-append pinentry "/bin/pinentry"))
+                       (ssh-support? #f)))
+
+             (simple-service 'gpg-symlinking-service
+                             home-files-service-type
+                             `((".gnupg/gpg.conf"
+                                ,(local-file "home/.gnupg/gpg.conf" "gpg-conf")))))))
+#+END_SRC
+
+** Guix packages
+
+#+BEGIN_SRC scheme :noweb-ref guix-home
+  (use-modules (gnu packages gnupg))
+
+  (define %home-packages
+    (append %home-packages
+            (list gnupg
+                  pinentry)))
+#+END_SRC

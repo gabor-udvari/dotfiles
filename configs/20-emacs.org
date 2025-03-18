@@ -554,11 +554,17 @@ Add the Guix packages to the home config:
 
 *** Configuration
 
-#+BEGIN_SRC elisp :noweb-ref emacs
+#+begin_src elisp :noweb-ref emacs
   (use-package dired
     :config
-    (setq dired-kill-when-opening-new-dired-buffer 1))
-#+END_SRC
+    (setq dired-kill-when-opening-new-dired-buffer 1)
+    (when (eq system-type 'windows-nt)
+      ;; ls-lisp.el only kicks in on Windows. Everywhere else where
+      ;; coreutils is available the TIME_STYLE environment variable
+      ;; can be used. That one is taken care by exec-path-from-shell.
+      (setq ls-lisp-format-time-list '("%F %H:%M" "%F %H:%M")
+            ls-lisp-use-localized-time-format t)))
+#+end_src
 
 ** Which key
 
@@ -615,7 +621,7 @@ Add the Guix packages to the home config:
 
 *** Configuration
 
-#+BEGIN_SRC elisp :noweb-ref emacs
+#+begin_src elisp :noweb-ref emacs
   (use-package exec-path-from-shell
     :init
     ;; TODO: there is something breaking Emacs if an interactive shell is used, only do a login shell
@@ -623,11 +629,10 @@ Add the Guix packages to the home config:
     ;; There is an issue setting variables on Windows, set the shell variables depending on the OS
     (if (eq system-type 'windows-nt)
         (setq exec-path-from-shell-variables nil)
-      (setq exec-path-from-shell-variables '("PATH" "SSH_AUTH_SOCK" "SSH_AGENT_PID")))
+      (setq exec-path-from-shell-variables '("PATH" "SSH_AUTH_SOCK" "SSH_AGENT_PID" "TIME_STYLE")))
     :config
-    (exec-path-from-shell-initialize)
-    )
-#+END_SRC
+    (exec-path-from-shell-initialize))
+#+end_src
 
 ** Vertico
 

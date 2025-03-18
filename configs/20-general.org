@@ -54,18 +54,6 @@ I use Cantarell and Fire Code fonts in Emacs.
                   gnu-make)))
 #+end_src
 
-* Git
-
-#+begin_src scheme :noweb-ref guix-home
-  (use-modules (gnu packages version-control)
-               (gnu packages haskell-apps))
-
-  (define %home-packages
-    (append %home-packages
-            (list git
-                  git-annex)))
-#+end_src
-
 * Linters
 
 #+begin_src scheme :noweb-ref guix-home
@@ -97,45 +85,4 @@ I use Cantarell and Fire Code fonts in Emacs.
   (define %home-packages
     (append %home-packages
             (list yt-dlp)))
-#+end_src
-
-* AGE
-
-** General info
-
-Official homepage:
-
-- https://github.com/FiloSottile/age
-
-Arguments against using GPG:
-
-- https://blog.cryptographyengineering.com/2014/08/13/whats-matter-with-pgp/
-- https://www.latacora.com/blog/2019/07/16/the-pgp-problem/
-- https://soatok.blog/2024/11/15/what-to-use-instead-of-pgp/
-
-** Usage
-
-Generating an age keyfile with password:
-
-#+begin_src shell
-  age-keygen | age -p > key.age
-#+end_src
-
-Getting the file recipient part of a password protected age identity file:
-
-#+begin_src shell
-  age -d key.age | age-keygen -y -o ~/.passage/identities
-#+end_src
-
-** Guix Home config
-
-#+begin_src scheme :noweb-ref guix-home
-  (use-modules (gnu packages golang-crypto)
-               (gnu packages password-utils))
-
-  (define %home-packages
-    (append %home-packages
-            (list age
-                  age-keygen
-                  pass-age)))
 #+end_src
