@@ -74,6 +74,73 @@ Download and install the Cygwin, Gettext, Make packages with these commands:
   curl -L -O -w '%{filename_effective}' "$MIRROR"/guile3.0/libguile3.0_1/libguile3.0_1-3.0.9-3.tar.xz | xargs tar -C ~/.local -xvJf
 #+END_SRC
 
+**** Known issues with Windows
+
+***** Password prompts on MSYS2
+
+If the password prompts are not showing up inside your Git Bash (MSYS2), eg. for the ~pass~ or ~passage~ programs, then you have two options:
+
+1. The modern solution is to use the new [[https://github.com/microsoft/terminal][Microsoft Terminal]] which supports the new ConPTY pseudo console. Also make sure to have a new enough Git for Windows, and maybe try setting the ~MSYS=enable_pcon~ environment variable:
+   https://github.com/mintty/wsltty/issues/271#issuecomment-1429789254
+   This should be [[https://www.msys2.org/news/#2022-09-24-conpty-support-enabled-by-default][the default since September 2022]], but I also needed to set it manually.
+2. The legacy solution is to use winpty:
+   - [[https://superuser.com/a/1322277]].
+   - https://gitforwindows.org/faq.html#some-native-console-programs-dont-work-when-run-from-git-bash-how-to-fix-it
+
+   It is possible to force pipe redirection with the ~-Xallow-non-tty~ option, but in that case the text asking for the password will also be redirected to the pipe. So something like this:
+
+   #+begin_src shell
+     winpty -Xallow-non-tty age -p -a age-test >age-test.age
+   #+end_src
+
+   Will result in a file like this:
+
+   #+begin_example
+   Enter passphrase (leave empty to autogenerate a secure one):
+   ←[F←[KConfirm passphrase:
+   ←[F←[K-----BEGIN AGE ENCRYPTED FILE-----
+   ...
+   -----END AGE ENCRYPTED FILE-----
+   #+end_example
+
+***** Bash is running inside the default WSL distro instead of MSYS2 or Cygwin
+
+If you install WSL, then Windows will put a ~bash.exe~ file inside the ~C:\Windows\System32~ folder. This folder is included in the system wide PATH environment variable, therefore it has the highest priority. So if you have a shell script with this shebang:
+
+#+begin_src shell
+  #!/usr/bin/env bash
+#+end_src
+
+Then the bash inside your default WSL distro will continue to execute the shell script, not the bash you installed with either MSYS2 (Git for Windows) or Cygwin.
+
+Currently there is no option to remove the bash from System32:
+
+https://github.com/microsoft/WSL/discussions/9681
+
+MSYS2 and Cygwin are overriding these solutions, so make sure to launch the problematic programs from those shells. If you cannot do that, then make sure to launch the correct bash before the actual script, eg.:
+
+this will not work:
+
+#+begin_src shell
+  $ which passage
+  /c/Users/User/.local/bin/passage
+  $ winpty passage --version
+  winpty: error: cannot start 'passage': Not found in PATH
+#+end_src
+
+but this will:
+
+#+begin_src shell
+  $ which passage
+  /c/Users/User/.local/bin/passage
+  $ winpty bash passage --version
+  ============================================
+  =   passage: age-backed password manager   =
+  =                                          =
+  =                  v1.7.4                  =
+  ...
+#+end_src
+
 *** Linux
 
 If you already have ~guix~ installed on your system, then you can launch a shell with all of the required libraries with the following command:

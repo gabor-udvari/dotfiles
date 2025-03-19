@@ -563,6 +563,11 @@ A small bash script for fetching and extracting MSYS2 packages.
   fi
 #+END_SRC
 
+*
+Additional tools and scripts
+
+These are some additional useful tools, but not required for setting up bash itself.
+
 ** Get Youtube RSS feed URL
 
 A small script to get the Youtube RSS feed URL for a channel. I use this for elfeed-youtube.
@@ -583,6 +588,19 @@ A small script to get the Youtube RSS feed URL for a channel. I use this for elf
       echo 'ERROR: the channel id could not be found'
       exit 1
   fi
+#+end_src
+
+** Get all Kubernetes resources
+
+#+begin_src shell :mkdirp yes :tangle home/.local/bin/k8s-get-all-resources.sh :tangle-mode 0755
+  #!/usr/bin/env bash
+  set -euxo pipefail
+
+  APIS=$(kubectl get --raw /apis | jq -r '[.groups.[].name] | join(" ")')
+
+  # do core resources first, which are at a separate api location
+  api="core"
+  kubectl get --raw /api/v1 | jq -r --arg api "${api}" '["API", "Resource", "Verbs"], (.resources.[] | [$api, .name, (.verbs | join(","))]) | @tsv' | column -t
 #+end_src
 
 * Guix services
