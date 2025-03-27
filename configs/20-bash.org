@@ -592,7 +592,7 @@ A small script to get the Youtube RSS feed URL for a channel. I use this for elf
 
 ** Get all Kubernetes resources
 
-#+begin_src shell :mkdirp yes :tangle home/.local/bin/k8s-get-all-resources.sh :tangle-mode 0755
+#+begin_src shell :mkdirp yes :tangle home/.local/bin/k8s-get-all-resources.sh :tangle-mode o755
   #!/usr/bin/env bash
   set -euxo pipefail
 

@@ -120,6 +120,15 @@ Change some of the defaults to make a more minimal interface.
         (setq default-directory (expand-file-name (concat (getenv "HOMEPATH") "/")))
         (setq server-auth-dir (expand-file-name (concat (getenv "HOMEPATH") "/.config/emacs/server/")))))
 
+  ;; Put C:\Windows\System32 at the back of the PATH list on Windows,
+  ;; see this WSL issue for context:
+  ;; https://github.com/microsoft/WSL/discussions/9681
+  (if (eq system-type 'windows-nt)
+      (setenv "PATH"
+              (string-join (let ((part "C:\\Windows\\system32"))
+                             (append (remove part (split-string (getenv "PATH") ";" t)) `(,part))
+                             ) ";")))
+
   ;; Load all lisp files from the init.d folder
   (if (eq system-type 'windows-nt)
       (mapc 'load (file-expand-wildcards (expand-file-name (concat (getenv "HOMEPATH") "/.config/emacs/init.d/*.el"))))
@@ -628,7 +637,7 @@ Add the Guix packages to the home config:
     (setq exec-path-from-shell-arguments (list "-l"))
     ;; There is an issue setting variables on Windows, set the shell variables depending on the OS
     (if (eq system-type 'windows-nt)
-        (setq exec-path-from-shell-variables nil)
+        (setq exec-path-from-shell-variables ())
       (setq exec-path-from-shell-variables '("PATH" "SSH_AUTH_SOCK" "SSH_AGENT_PID" "TIME_STYLE")))
     :config
     (exec-path-from-shell-initialize))
