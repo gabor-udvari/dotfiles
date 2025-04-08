@@ -197,6 +197,7 @@ The following category configs are customized how I am grouping my transfers. Yo
   KIWI SZOLARIUM
   Hortobágyi Sarolta
   OTPMOBL\*EP egyenleg
+  JUSZT OPTIKA FVÁR
     account2 Kiadások:Egészség
 
   if
@@ -287,6 +288,7 @@ The following category configs are customized how I am grouping my transfers. Yo
   NYX\*InnovatorKft
   OTPMOBL\*fannizero
   Danuvius Vending Kft
+  DIÁKTANYA PIZZÉRIA
     account2 Kiadások:Étel
 
   if
@@ -357,6 +359,7 @@ The following category configs are customized how I am grouping my transfers. Yo
   AUTÓALKATRÉSZ
   MIKROSPORT KFT
   WWW\.GUMIFLEX\.HU
+  OTPMOBL\*nav
     account2 Kiadások:Közlekedés:Autó
 
   if
@@ -367,6 +370,7 @@ The following category configs are customized how I am grouping my transfers. Yo
 
   if
   GROUPAMA BIZTOSITÓ ZRT\. KÖTELEZŐ GÉPJÁRMŰ BIZT\.
+  OTPMOBL\*GROUPAMA\.HU
    account2 Kiadások:Közlekedés:Autó:Biztosítás
 
   if
@@ -382,6 +386,7 @@ The following category configs are customized how I am grouping my transfers. Yo
   FACEBK
   FOTOPLUS\.hu
   OTPMOBL\*szamlazz
+  Magyar Kereskedelmi és Iparkamar
     account2 Kiadások:Fotózás
 
   if

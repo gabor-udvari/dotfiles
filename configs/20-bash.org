@@ -682,6 +682,8 @@ Guix service for linking all the various helper scripts inside ~.local/bin~:
              (simple-service 'shell-scripts-symlinking-service
                              home-files-service-type
                              `(
-                               (".local/bin/youtube-rss-get"
-                                ,(local-file "home/.local/bin/youtube-rss-get.sh" #:recursive? #t)))))))
+                               (".local/bin/youtube-rss-get.sh"
+                                ,(local-file "home/.local/bin/youtube-rss-get.sh" #:recursive? #t))
+                               (".local/bin/k8s-get-all-resources.sh"
+                                ,(local-file "home/.local/bin/k8s-get-all-resources.sh" #:recursive? #t)))))))
 #+end_src

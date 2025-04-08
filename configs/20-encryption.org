@@ -15,6 +15,12 @@ Arguments against using GPG:
 - https://www.latacora.com/blog/2019/07/16/the-pgp-problem/
 - https://soatok.blog/2024/11/15/what-to-use-instead-of-pgp/
 
+Arguments against using Age:
+
+- The Go implementation does not have pinentry support yet, a password plugin is planned since 2022:
+  https://github.com/FiloSottile/age/discussions/256#discussioncomment-2638232
+  The Rust implementation rage does have pinentry support, but that is not yet packaged in Guix.
+
 ** Usage
 
 Generating an age identity file with a password, and outputting into a text file written in the PEM format:
@@ -66,13 +72,11 @@ To configure passage with a password protected identity file follow these steps:
 ** Guix Home config
 
 #+begin_src scheme :noweb-ref guix-home
-  (use-modules (gnu packages password-utils)
-               (gnu packages emacs-xyz))
+  (use-modules (gnu packages password-utils))
 
   (define %home-packages
     (append %home-packages
-            (list pass-age
-                  emacs-passage)))
+            (list pass-age)))
 #+end_src
 
 * GPG
@@ -82,6 +86,10 @@ To configure passage with a password protected identity file follow these steps:
 - https://wiki.debian.org/Subkeys?action=show&redirect=subkeys
 - https://security.stackexchange.com/questions/31594/what-is-a-good-general-purpose-gnupg-key-setup/31598#31598
 - https://gpg.wtf/
+
+** Articles about GPG
+
+- https://www.propublica.org/article/the-worlds-email-encryption-software-relies-on-one-guy-who-is-going-broke
 
 ** Configuration
 

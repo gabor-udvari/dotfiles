@@ -1,5 +1,6 @@
 #+title: Sway configuration
 #+author: Gábor Udvari
+#+language: en
 
 * Sway
 
@@ -411,4 +412,20 @@ Guix service for linking the git config file:
             (list xdg-desktop-portal
                   xdg-desktop-portal-wlr
                   xdg-desktop-portal-gtk)))
+#+end_src
+
+* Mako
+
+Mako is a lightweight notification daemon.
+
+** Guix configuration
+
+*** Packages
+
+#+begin_src scheme :noweb-ref guix-home
+  (use-modules (gnu packages freedesktop))
+
+  (define %home-packages
+    (append %home-packages
+            (list mako)))
 #+end_src
