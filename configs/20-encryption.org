@@ -83,9 +83,10 @@ To configure passage with a password protected identity file follow these steps:
 
 ** Guides on using GPG
 
-- https://wiki.debian.org/Subkeys?action=show&redirect=subkeys
+- https://wiki.debian.org/Subkeys
 - https://security.stackexchange.com/questions/31594/what-is-a-good-general-purpose-gnupg-key-setup/31598#31598
 - https://gpg.wtf/
+- https://www.iduoad.com/posts/gpg-for-everything/
 
 ** Articles about GPG
 
@@ -97,11 +98,23 @@ To configure passage with a password protected identity file follow these steps:
   <<gpg-config>>
 #+END_SRC
 
-#+BEGIN_SRC text :noweb-ref gpg-config
-  keyid-format LONG
+#+begin_src text :noweb-ref gpg-config
+  # Get rid of the copyright notice
+  no-greeting
+  # Do not print a version number or a comment
+  no-emit-version
+  no-comments
+
+  # Use UTF-8
+  charset utf-8
+
+  # Display long key IDs
+  keyid-format 0xlong
+
+  # List all keys (or the specified ones) along with their fingerprints
   with-fingerprint
   with-keygrip
-#+END_SRC
+#+end_src
 
 ** Guix home services
 

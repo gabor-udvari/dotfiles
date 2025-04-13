@@ -1455,7 +1455,9 @@ Add the Guix packages to the home config:
         ;; Benn Jordan
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UC213K1tH6XJwHj6ZiVtLDrw" youtube music)
         ;; Blender
-        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCz75RVbH8q2jdBJ4SnwuZZQ" youtube blender)
+        ;; This is the Blender youtube channel, but Blender has their own Peertube instance:
+        ;; ("https://www.youtube.com/feeds/videos.xml?channel_id=UCz75RVbH8q2jdBJ4SnwuZZQ" youtube blender)
+        ("https://video.blender.org/feeds/videos.xml?sort=-publishedAt&isLocal=true" video blender)
         ;; Bolyai János Matematikai Társulat = no RSS
         ;; Brandon Y Lee = no RSS
         ;; Brodie Robertson:
@@ -1479,7 +1481,7 @@ Add the Guix packages to the home config:
         ;; Daniel Stenberg:
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCD5eL38hFtSLiVFP9cCUJEA" youtube development opensource)
         ;; David Revoy:
-        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCKKj0FJtVE8sGn4afabKvTA" youtube opensource art)
+        ("https://peertube.touhoppai.moe/feeds/videos.xml?sort=-publishedAt&isLocal=true" video opensource art)
         ;; DEFCON Conference:
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UC6Om9kAkl32dWlDSNlDS9Iw" youtube security conference)
         ;; DnB Portal:
@@ -1522,6 +1524,8 @@ Add the Guix packages to the home config:
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UClA2kqtZcT7EhIJHnC8TMDA" youtube gaming)
         ;; HBomberGuy:
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UClt01z1wHHT7c5lKcU8pxRQ" youtube documentary)
+        ;; Inkscape
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCKKj0FJtVE8sGn4afabKvTA" youtube opensource art)
         ;; Jack Rhysider:
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCMIqrmh2lMdzhlCPK5ahsAg" youtube security documentary)
         ;; Jeff Geerling = no RSS
