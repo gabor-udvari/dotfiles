@@ -94,9 +94,11 @@ To configure passage with a password protected identity file follow these steps:
 
 ** Configuration
 
-#+BEGIN_SRC text :noweb yes :exports none :mkdirp yes :tangle home/.gnupg/gpg.conf
+Put the GPG config file into an XDG compliant folder. For this to work, the ~GNUPGHOME~ environment variable is configured in the ~.profile~ file.
+
+#+begin_src text :noweb yes :exports none :mkdirp yes :tangle home/.local/share/gnupg/gpg.conf
   <<gpg-config>>
-#+END_SRC
+#+end_src
 
 #+begin_src text :noweb-ref gpg-config
   # Get rid of the copyright notice
@@ -136,8 +138,8 @@ We also need to link the ~gpg.conf~ file to its final folder.
 
              (simple-service 'gpg-symlinking-service
                              home-files-service-type
-                             `((".gnupg/gpg.conf"
-                                ,(local-file "home/.gnupg/gpg.conf" "gpg-conf")))))))
+                             `((".local/share/gnupg/gpg.conf"
+                                ,(local-file "home/.local/share/gnupg/gpg.conf" "gpg-conf")))))))
 #+END_SRC
 
 ** Guix packages

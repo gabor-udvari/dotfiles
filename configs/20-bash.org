@@ -30,11 +30,17 @@ Have a single ~.profile~ file for Bash and everything else. Bash will not read t
   <<profile>>
 #+END_SRC
 
-#+BEGIN_SRC bash :noweb-ref profile
+#+begin_src bash :noweb-ref profile
   # Configure XDG_DATA_HOME if not set
   export XDG_DATA_HOME="${XDG_DATA_HOME:="$HOME/.local/share"}"
   # Configure XDG_CACHE_HOME if not set
   export XDG_CACHE_HOME="${XDG_CACHE_HOME:="$HOME/.cache"}"
+  # Configure XDG_CONFIG_HOME if not set
+  export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:="$HOME/.config"}"
+  # Configure XDG_STATE_HOME if not set
+  export XDG_STATE_HOME="${XDG_STATE_HOME:="$HOME/.local/state"}"
+  # Configure XDG_RUNTIME_DIR if not set
+  export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:="/run/user/$UID"}"
   # Configure the default XDG_DATA_DIRS if not set
   export XDG_DATA_DIRS="${XDG_DATA_DIRS:="/usr/local/share:/usr/share"}"
   # Add the .local to the XDG_DATA_DIRS
@@ -47,7 +53,13 @@ Have a single ~.profile~ file for Bash and everything else. Bash will not read t
   export PATH="$HOME/bin:$HOME/.local/bin:$HOME/.composer/vendor/bin:$HOME/gems/bin:$HOME/lutris/bin:${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 
   # EDITOR settings
-  export EDITOR='vim'
+  export EDITOR='emacs'
+
+  # Put the inputrc config file to an XDG compliant dir
+  export INPUTRC="$XDG_CONFIG_HOME"/readline/inputrc
+
+  # Put the gnupg folder to an XDG compliant dir
+  export GNUPGHOME="$XDG_DATA_HOME"/gnupg
 
   # GUIX
   # https://guix.gnu.org/manual/en/html_node/Getting-Started.html
@@ -80,12 +92,18 @@ Have a single ~.profile~ file for Bash and everything else. Bash will not read t
 
   # if running bash
   if [ -n "$BASH_VERSION" ]; then
+    # Put the bash history into an XDG compatible dir
+    if [ ! -d "$XDG_STATE_HOME"/bash ]; then
+      mkdir -p "$XDG_STATE_HOME"/bash
+    fi
+    export HISTFILE="${XDG_STATE_HOME}"/bash/history
+
     # include .bashrc if it exists
     if [ -f "$HOME/.bashrc" ]; then
       . "$HOME/.bashrc"
     fi
   fi
-#+END_SRC
+#+end_src
 
 ** Bashrc
 
@@ -335,14 +353,12 @@ Have a single ~.profile~ file for Bash and everything else. Bash will not read t
 
 ** Inputrc
 
-#+BEGIN_SRC text :noweb yes :exports none :mkdirp yes :tangle home/.inputrc
-  <<inputrc>>
-#+END_SRC
+Put the inputrc file to an XDG compliant directory. For this to work the ~INPUTRC~ environment variable is defined in the ~.profile~ file.
 
-#+BEGIN_SRC bash :noweb-ref inputrc
+#+begin_src bash :noweb yes :exports none :mkdirp yes :tangle home/.config/readline/inputrc
   # do not bell on tab-completion
   set bell-style none
-#+END_SRC
+#+end_src
 
 ** Bash aliases
 
@@ -667,8 +683,8 @@ Guix service for linking all the files inside ~.config/bash~:
                                 ,(local-file "home/.config/bash/bashrc.d/sync-history.sh" "sync-history"))
                                (".config/bash/bashrc.d/bash_aliases.sh"
                                 ,(local-file "home/.config/bash/bashrc.d/bash_aliases.sh" "bash_aliases"))
-                               (".inputrc"
-                                ,(local-file "home/.inputrc" "inputrc"))
+                               (".config/readline/inputrc"
+                                ,(local-file "home/.config/readline/inputrc" "inputrc"))
                                (".gnomerc"
                                 ,(local-file "home/.profile" "gnomerc")))))))
 #+END_SRC
