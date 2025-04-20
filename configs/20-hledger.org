@@ -198,6 +198,7 @@ The following category configs are customized how I am grouping my transfers. Yo
   Hortobágyi Sarolta
   OTPMOBL\*EP egyenleg
   JUSZT OPTIKA FVÁR
+  PURE GOLD PROTEIN
     account2 Kiadások:Egészség
 
   if
@@ -259,6 +260,7 @@ The following category configs are customized how I am grouping my transfers. Yo
   shein\.com
   Azsia Aruhaz
   SHEIN
+  Vinted\, UAB
     account2 Kiadások:Ruha
 
   if

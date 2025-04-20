@@ -55,8 +55,9 @@ update-channels:
 		echo -e "${GREEN_TERMINAL_OUTPUT}--> Updating channels.scm...${CLEAR}"
 		mkdir -p build
 		sed -e '/commit/,+1d' channels.scm >build/channels-update.scm
-		guix time-machine -C build/channels-update.scm -- describe --format=channels >channels.scm
-		guix pull -C channels.scm
+		channels="$$(guix time-machine -C build/channels-update.scm -- describe --format=channels)" \
+		&& echo "$$channels" >channels.scm \
+		&& guix pull -C channels.scm
 	}
 
 clean:
