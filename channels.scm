@@ -1,9 +1,10 @@
 (list (channel
         (name 'guix)
-        (url "https://git.savannah.gnu.org/git/guix.git")
+        ;; (url "https://git.savannah.gnu.org/git/guix.git")
+        (url "https://codeberg.org/guix/guix-mirror.git")
         (branch "master")
         (commit
-          "4488cca17c9c02add8366dce9e8dd2f528c15a58")
+          "97ea59b846c5267098a019f36c84dcaa55fb123e")
         (introduction
           (make-channel-introduction
             "df14cacca9b95d69fdd3b6191e42df36af266bcd"
@@ -22,6 +23,7 @@
               "50F3 3E2E 5B0C 3D90 0424  ABE8 9BDC F497 A4BB CC7F"))))
       (channel
         (name 'guix-past)
+        ;; (url "https://gitlab.inria.fr/guix-hpc/guix-past")
         (url "https://codeberg.org/guix-science/guix-past")
         (branch "master")
         (commit
@@ -36,7 +38,7 @@
         (url "https://gitlab.com/nonguix/nonguix")
         (branch "master")
         (commit
-          "e899121adbaa13cfcaeae7a5c24921bffa645771")
+          "f05b33d75491a6418e7f0b3575207c5c2b2ef8f1")
         (introduction
           (make-channel-introduction
             "897c1a470da759236cc11798f4e0a5f7d4d59fbc"

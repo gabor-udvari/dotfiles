@@ -298,6 +298,56 @@ Add the Guix package to the home config:
     )
 #+END_SRC
 
+** Windows
+
+Make different windows appear in specific location inside the frame. Taken from the [[https://github.com/LionyxML/emacs-solo/blob/main/init.el][emacs-solo config]].
+
+*** Config
+
+#+begin_src elisp :noweb-ref emacs
+  (use-package window
+    :ensure nil
+    :custom
+    (display-buffer-alist
+     '(
+       ("\\*container\\*"
+        (display-buffer-in-side-window)
+        (window-width . 120)
+        (side . left)
+        (slot . -1))
+       ("\\*\\(Backtrace\\|Warnings\\|Compile-Log\\|Messages\\|Bookmark List\\|Occur\\|eldoc\\)\\*"
+        (display-buffer-in-side-window)
+        (window-height . 0.25)
+        (side . bottom)
+        (slot . 0))
+       ("\\*\\(Async Shell Command\\|Shell Command\\|compilation\\)\\*"
+        (display-buffer-in-side-window)
+        (window-height . 0.25)
+        (side . bottom)
+        (slot . 0))
+       ("\\*\\([Hh]elp\\)\\*"
+        (display-buffer-in-side-window)
+        (window-width . 75)
+        (side . right)
+        (slot . 0))
+       ("\\*\\(Ibuffer\\)\\*"
+        (display-buffer-in-side-window)
+        (window-width . 100)
+        (side . right)
+        (slot . 1))
+       ("\\*\\(Flymake diagnostics\\|xref\\|Completions\\)"
+        (display-buffer-in-side-window)
+        (window-height . 0.25)
+        (side . bottom)
+        (slot . 1))
+       ("\\*\\(grep\\|find\\)\\*"
+        (display-buffer-in-side-window)
+        (window-height . 0.25)
+        (side . bottom)
+        (slot . 2))
+       )))
+#+end_src
+
 ** Fonts
 
 *** Config

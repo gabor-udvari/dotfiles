@@ -82,7 +82,7 @@
       bindsym $mod+Shift+q kill
 
       # Start your launcher
-      bindsym $mod+d exec $menu
+      bindsym $mod+r exec $menu
 
       # Drag floating windows by holding down $mod and left mouse button.
       # Resize them with right mouse button + $mod.
@@ -157,7 +157,7 @@
       bindsym $mod+v splitv
 
       # Switch the current container between different layout styles
-      bindsym $mod+s layout stacking
+      bindsym $mod+t layout stacking
       bindsym $mod+w layout tabbed
       bindsym $mod+e layout toggle split
 
@@ -207,7 +207,7 @@
       bindsym Return mode "default"
       bindsym Escape mode "default"
   }
-  bindsym $mod+r mode "resize"
+  bindsym $mod+s mode "resize"
   #
   # Utilities:
   #
@@ -241,7 +241,7 @@
   }
 
   # Windows rules
-  for_window [class="mpv"] inhibit_idle fullscreen
+  for_window [class="mpv"] inhibit_idle fullscreen visible open
   for_window [title="(?:Open|Save) (?:File|Folder|As)"] floating enable, resize set width 1030 height 710
 
   include @sysconfdir@/sway/config.d/*
@@ -289,7 +289,7 @@ Guix service for linking the git config file:
 * Wofi
 
 #+begin_src text :exports none :mkdirp yes :tangle home/.config/wofi/config
-  show=drun,run
+  show=run
   width=50%
   height=40%
   exec_search=true
@@ -387,7 +387,7 @@ https://codeberg.org/dnkl/foot/src/branch/master/foot.ini
 
 Guix service for linking the git config file:
 
-#+BEGIN_SRC scheme :noweb-ref guix-home
+#+begin_src scheme :noweb-ref guix-home
   (define %home-services
     (append %home-services
             (list
@@ -396,7 +396,7 @@ Guix service for linking the git config file:
                              `(
                                (".config/foot/foot.ini"
                                 ,(local-file "home/.config/foot/foot.ini" "footconfig")))))))
-#+END_SRC
+#+end_src
 
 * XDG Portals
 

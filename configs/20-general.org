@@ -39,7 +39,8 @@ I use Cantarell and Fire Code fonts in Emacs.
     (append %home-packages
             (list fontconfig
                   font-fira-code
-                  font-abattis-cantarell)))
+                  font-abattis-cantarell
+                  font-liberation)))
 #+end_src
 
 * GNU tools
