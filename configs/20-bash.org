@@ -86,7 +86,10 @@ Have a single ~.profile~ file for Bash and everything else. Bash will not read t
   fi
 
   # PATH settings
-  export PATH="$HOME/.local/bin:$HOME/.composer/vendor/bin:$HOME/gems/bin:$HOME/lutris/bin:${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+  export PATH="$HOME/.local/bin:$HOME/.composer/vendor/bin:$HOME/gems/bin:${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+
+  # Point the password-store to the XDG_DATA_HOME:
+  export PASSWORD_STORE_DIR="$XDG_DATA_HOME"/pass
 
   export LANG='hu_HU.utf8'
 

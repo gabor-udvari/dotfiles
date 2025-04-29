@@ -81,16 +81,46 @@ To configure passage with a password protected identity file follow these steps:
 
 * GPG
 
-** Guides on using GPG
+** General info
+
+*** Guides on using GPG
 
 - https://wiki.debian.org/Subkeys
 - https://security.stackexchange.com/questions/31594/what-is-a-good-general-purpose-gnupg-key-setup/31598#31598
 - https://gpg.wtf/
 - https://www.iduoad.com/posts/gpg-for-everything/
 
-** Articles about GPG
+*** Articles about GPG
 
 - https://www.propublica.org/article/the-worlds-email-encryption-software-relies-on-one-guy-who-is-going-broke
+
+** Usage
+
+*** To generate a new key
+
+#+begin_src bash
+  gpg --full-generate-key
+#+end_src
+
+*** To list out all the keys
+
+Note, you can add ~--with-keygrip~ to list out the keygrips as well, but my GPG configuration already has that.
+
+#+begin_src bash
+  gpg --list-keys
+#+end_src
+
+*** To export the private key for backup
+
+#+begin_src bash
+  gpg --export-secret-key --armor --export-options export-backup >gpg_private.asc
+#+end_src
+
+*** To encrypt a file
+
+#+begin_src bash
+  gpg --encrypt --output ~/.authinfo.gpg --recipient <USER> ~/.authinfo
+#+end_src
 
 ** Configuration
 
@@ -152,3 +182,19 @@ We also need to link the ~gpg.conf~ file to its final folder.
             (list gnupg
                   pinentry)))
 #+END_SRC
+
+* SOPS
+
+SOPS is a tool to encrypt contents of a file, eg. values in a JSON or YAML file.
+
+https://getsops.io/
+
+** Usage
+
+*** Using password encrpyted age file for description
+
+You can use the ~SOPS_AGE_KEY~ environment variable to decrypt an age key before decryption, eg.:
+
+#+begin_src bash
+  SOPS_AGE_KEY="$(age -d ~/.local/share/age/key.age)" sops -d secret.yaml
+#+end_src

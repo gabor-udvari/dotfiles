@@ -192,6 +192,10 @@ Change some of the defaults to make a more minimal interface.
 
   ;; Configure SHR images to be smaller (eg. in Elfeed)
   (setq shr-max-image-proportion 0.6)
+
+  ;; Auth sources
+  (setq auth-sources '((:source "~/.authinfo.gpg")))
+  (setq auth-source-pass-filename "~/.local/share/pass")
 #+end_src
 
 ** Simpler UI
