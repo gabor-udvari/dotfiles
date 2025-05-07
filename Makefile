@@ -47,7 +47,7 @@ install: --config-home --install-home
 --install-terminfo:
 	@{ \
 		echo -e "${GREEN_TERMINAL_OUTPUT}--> Copying emacs-eat terminfo files${CLEAR}"
-		cp -pr "$$(emacs --batch --eval "(require 'eat)" --eval "(princ eat-term-terminfo-directory)")" "${HOME}"/.terminfo
+		cp -pr "$$(emacs --batch --eval "(require 'eat)" --eval "(princ eat-term-terminfo-directory)")" "${XDG_DATA_HOME}"/terminfo
 	}
 
 update-channels:

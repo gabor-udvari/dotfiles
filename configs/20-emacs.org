@@ -1004,7 +1004,8 @@ Add the Guix packages to the home config:
     (org-babel-do-load-languages
      'org-babel-load-languages
      '((shell . t)
-       (sql . t))))
+       (sql . t)
+       (scheme . t)))
 
   (use-package org-agenda
     :init
@@ -1514,8 +1515,7 @@ Add the Guix packages to the home config:
         ("https://video.blender.org/feeds/videos.xml?sort=-publishedAt&isLocal=true" video blender)
         ;; Bolyai János Matematikai Társulat = no RSS
         ;; Brandon Y Lee = no RSS
-        ;; Brodie Robertson:
-        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCylGUf9BvQooEFjgdNudoQg" youtube linux)
+        ;; Brodie Robertson = no RSS
         ;; Bryan Johnson = no RSS
         ;; Bödőcs Tibor = no RSS
         ;; Captain Disillusion = no RSS
@@ -1702,6 +1702,9 @@ Add the Guix packages to the home config:
         ;; TODO find an RSS feed for these
         ;; https://lospec.com/ygloof
         ;; https://x.com/cyangmou
+
+        ;; Guix issues
+        ("https://issues.guix.gnu.org/issue/78066?format=atom" guix issues)
         ))
     
     :config
@@ -1772,26 +1775,24 @@ If guix is not installed, then install within Emacs using quelpa:
 
 Add the Guix packages to the home config:
 
-#+BEGIN_SRC scheme :noweb-ref guix-home
-  (use-modules (gnu packages video))
+#+begin_src scheme :noweb-ref guix-home
+  (use-modules (gnu packages emacs-xyz))
 
   (define %home-packages
     (append %home-packages
-            (list emacs-emms
-                  mpv)))
-#+END_SRC
+            (list emacs-emms)))
+#+end_src
 
 *** Configuration
 
-#+BEGIN_SRC elisp :noweb-ref emacs
+#+begin_src elisp :noweb-ref emacs
   (use-package emms-setup
     :init
     (setq emms-player-list '(emms-player-mpv)
           emms-info-functions '(emms-info-native))
     :config
-    (emms-all)
-    )
-#+END_SRC
+    (emms-all))
+#+end_src
 
 ** Bluetooth
 

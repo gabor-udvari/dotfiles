@@ -1,6 +1,21 @@
 #+title: Encryption
 #+author: Gábor Udvari
 
+* Encryption mishaps
+:PROPERTIES:
+:VISIBILITY: fold
+:END:
+
+Encryption is difficult, here are some real world mishaps to get you feel better about your struggles:
+
+- The infamous Debian OpenSSL bug from 2008. While packaging OpenSSL Debian package maintainers introduced a patch that made the random key generator predictable. It was not fixed for 2 years:
+
+  https://lists.debian.org/debian-security-announce/2008/msg00152.html
+
+- Kali Linux lost their repository signing key in 2025, and had to ask the community to manually download a new one:
+
+  https://www.kali.org/blog/new-kali-archive-signing-key/
+
 * AGE
 
 ** General info

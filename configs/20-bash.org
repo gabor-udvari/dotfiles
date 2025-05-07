@@ -26,11 +26,15 @@ Add the bash package to the Guix home config:
 
 Have a single ~.profile~ file for Bash and everything else. Bash will not read the ~.profile~ file if there is ~.bash_login~ or ~.bash_profile~.
 
-#+BEGIN_SRC text :noweb yes :exports none :mkdirp yes :tangle home/.profile
+#+begin_src text :noweb yes :exports none :mkdirp yes :tangle home/.profile
   <<profile>>
-#+END_SRC
+#+end_src
 
-#+begin_src bash :noweb-ref profile
+** XDG environment variables
+
+The XDG environment variables are taken care of by the Guix setup-environment script. So we only need to generate these lines when there is no Guix installed:
+
+#+begin_src bash :mkdirp yes :tangle (if (executable-find "guix") "no" "home/.profile")
   # Configure XDG_DATA_HOME if not set
   export XDG_DATA_HOME="${XDG_DATA_HOME:="$HOME/.local/share"}"
   # Configure XDG_CACHE_HOME if not set
@@ -42,21 +46,29 @@ Have a single ~.profile~ file for Bash and everything else. Bash will not read t
   # Configure XDG_RUNTIME_DIR if not set
   export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:="/run/user/$UID"}"
   # Configure the default XDG_DATA_DIRS if not set
-  export XDG_DATA_DIRS="${XDG_DATA_DIRS:="/usr/local/share:/usr/share"}"
-  # Add the .local to the XDG_DATA_DIRS
-  export XDG_DATA_DIRS="$XDG_DATA_DIRS:$HOME/.local/share"
+  export XDG_DATA_DIRS="${XDG_DATA_DIRS:="$HOME/.local/share:/usr/local/share:/usr/share"}"
+#+end_src
 
+** Custom environment variables
+
+All the environment variables need to go into the ~.profile~ so that Bash can declare them. If Guix is installed, then these also need to be declared in a home service of the ~home-environment-variables-service-type~ so that all the Shepherd home services see the same values.
+
+#+name: environment-variables
+#+begin_src bash :eval never
   # Set timeformat to ISO 8601
   export TIME_STYLE="long-iso"
 
   # EDITOR settings
   export EDITOR='emacs'
 
-  # Put the inputrc config file to an XDG compliant dir
-  export INPUTRC="$XDG_CONFIG_HOME"/readline/inputrc
-
-  # Put the gnupg folder to an XDG compliant dir
+  # Some XDG cleanup (supported by xdg-ninja):
+  export ANDROID_USER_HOME="$XDG_DATA_HOME"/android
   export GNUPGHOME="$XDG_DATA_HOME"/gnupg
+  export INPUTRC="$XDG_CONFIG_HOME"/readline/inputrc
+  export MINETEST_USER_PATH="$XDG_DATA_HOME"/minetest
+  export PASSWORD_STORE_DIR="$XDG_DATA_HOME"/pass
+  export TERMINFO="$XDG_DATA_HOME"/terminfo
+  export TERMINFO_DIRS="$XDG_DATA_HOME"/terminfo:/usr/share/terminfo
 
   # GUIX
   # https://guix.gnu.org/manual/en/html_node/Getting-Started.html
@@ -88,11 +100,26 @@ Have a single ~.profile~ file for Bash and everything else. Bash will not read t
   # PATH settings
   export PATH="$HOME/.local/bin:$HOME/.composer/vendor/bin:$HOME/gems/bin:${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 
-  # Point the password-store to the XDG_DATA_HOME:
-  export PASSWORD_STORE_DIR="$XDG_DATA_HOME"/pass
-
   export LANG='hu_HU.utf8'
+#+end_src
 
+Put the above named block into .profile:
+
+#+begin_src bash :noweb yes :noweb-ref profile
+  <<environment-variables>>
+#+end_src
+
+Put the above named block into a ~guix-environment-variables~ file. Later a Guix home service will reference that one.
+
+#+begin_src bash :noweb yes :tangle (if (executable-find "guix") "guix-environment-variables" "no")
+  <<environment-variables>>
+#+end_src
+
+** Sourcing the bashrc
+
+At the end of the ~.profile~ file we need to source the usual ~.bashrc~ file as well.
+
+#+begin_src bash :noweb-ref profile
   # if running bash
   if [ -n "$BASH_VERSION" ]; then
     # Put the bash history into an XDG compatible dir
@@ -667,6 +694,35 @@ Guix service for extending the standard Guix profile file with my own ~.profile~
                              home-shell-profile-service-type
                              `(,(local-file "home/.profile" "profile"))))))
 #+END_SRC
+
+Guix service for configuring some environment variables:
+
+#+begin_src scheme :noweb yes :noweb-ref guix-home
+  (define %home-services
+    (append %home-services
+            (list
+             (simple-service 'some-useful-env-vars-service
+  		                       home-environment-variables-service-type
+  		                       `(("GNUPGHOME" . "$XDG_DATA_HOME/gnupg"))))))
+#+end_src
+
+#+name: test
+#+begin_src scheme :tangle no
+    (use-modules (ice-9 textual-ports)
+                   (ice-9 rdelim))
+
+    (let ((port (open-input-file "build/guix-environment-variables")))
+      (while (not (eof-object? (get-line port)))
+          (get-line port))
+      ;; (newline)
+      ;; (close-port port)
+      )
+
+    ;; (call-with-input-file "build/guix-environment-variables" get-all-strings)
+#+end_src
+
+#+RESULTS: test
+: #f
 
 Guix service for linking all the files inside ~.config/bash~:
 

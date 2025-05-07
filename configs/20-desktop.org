@@ -241,7 +241,7 @@
   }
 
   # Windows rules
-  for_window [class="mpv"] inhibit_idle fullscreen visible open
+  for_window [class="mpv"] inhibit_idle fullscreen
   for_window [title="(?:Open|Save) (?:File|Folder|As)"] floating enable, resize set width 1030 height 710
 
   include @sysconfdir@/sway/config.d/*
@@ -326,6 +326,20 @@ Guix service for linking the git config file:
 #+end_src
 
 * Pipewire
+
+** Usage
+
+*** Decrease volume with wireplumber
+
+#+begin_src bash
+  wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 5%-
+#+end_src
+
+*** Increase volume with wireplumber
+
+#+begin_src bash
+  wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 5%+
+#+end_src
 
 ** Guix configuration
 

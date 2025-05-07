@@ -87,13 +87,3 @@ I use Cantarell and Fire Code fonts in Emacs.
             (list pdfgrep
                   qpdf)))
 #+end_src
-
-* YT-DLP
-
-#+begin_src scheme :noweb-ref guix-home
-  (use-modules (gnu packages video))
-
-  (define %home-packages
-    (append %home-packages
-            (list yt-dlp)))
-#+end_src

@@ -1,0 +1,77 @@
+#+title: Multimedia
+#+author: Gábor Udvari
+
+* MPV
+
+** Configuration
+
+Use the fast profile:
+
+#+begin_src text :noweb yes :exports none :mkdirp yes :tangle home/.config/mpv/mpv.conf
+  profile=fast
+#+end_src
+
+** Guix configuration
+
+*** Packages
+
+#+begin_src scheme :noweb-ref guix-home
+  (use-modules (gnu packages video))
+
+  (define %home-packages
+    (append %home-packages
+            (list mpv)))
+#+end_src
+
+*** Config linking service
+
+Guix service for linking the git config file:
+
+#+begin_src scheme :noweb-ref guix-home
+  (define %home-services
+    (append %home-services
+            (list
+             (simple-service 'mpv-config-symlinking-service
+                             home-files-service-type
+                             `(
+                               (".config/mpv/mpv.conf"
+                                ,(local-file "home/.config/mpv/mpv.conf" "mpvconfig")))))))
+#+end_src
+
+* YT-DLP
+
+** Configuration
+
+Prefer 720 videos:
+
+#+begin_src text :noweb yes :exports none :mkdirp yes :tangle home/.config/yt-dlp/config
+  # Prefer 720p mp4
+  -f 'bestvideo[height<=720][ext=mp4]+bestaudio[ext=m4a]/bestvideo[height<=1080][ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best'
+#+end_src
+
+** Guix configuration
+
+*** Packages
+
+#+begin_src scheme :noweb-ref guix-home
+  (use-modules (gnu packages video))
+
+  (define %home-packages
+    (append %home-packages
+            (list yt-dlp)))
+#+end_src
+
+*** Config linking service
+
+Guix service for linking the git config file:
+
+#+begin_src scheme :noweb-ref guix-home
+  (define %home-services
+    (append %home-services
+            (list
+             (simple-service 'ytdlp-config-symlinking-service
+                             home-files-service-type
+                             `(
+                               (".config/yt-dlp/config"
+                                ,(local-file "home/.config/yt-dlp/config" "ytdlpconfig")))))))
+#+end_src
