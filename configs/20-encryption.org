@@ -190,7 +190,7 @@ We also need to link the ~gpg.conf~ file to its final folder.
              (service home-gpg-agent-service-type
                       (home-gpg-agent-configuration
                        (pinentry-program
-                        (file-append pinentry "/bin/pinentry"))
+                        (file-append pinentry-tty "/bin/pinentry"))
                        (ssh-support? #f)))
 
              (simple-service 'gpg-symlinking-service
@@ -209,6 +209,18 @@ We also need to link the ~gpg.conf~ file to its final folder.
             (list gnupg
                   pinentry)))
 #+END_SRC
+
+* Pinentry
+
+** Guix packages
+
+#+begin_src scheme :noweb-ref guix-home
+  (use-modules (gnu packages gnupg))
+
+  (define %home-packages
+    (append %home-packages
+            (list pinentry-tty)))
+#+end_src
 
 * SOPS
 

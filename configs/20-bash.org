@@ -284,6 +284,9 @@ The XDG environment variables are taken care of by the Guix setup-environment sc
   # match all files and zero or more directories and subdirectories.
   #shopt -s globstar
 
+  # Always set the GPG TTY to the current shell
+  export GPG_TTY=$(tty)
+
   # setup customized prompt command
   # shellcheck disable=2154
   export PROMPT_COMMAND='PS1X=$(p="${PWD#${HOME}}"; [ "${PWD}" != "${p}" ] && printf "~";IFS=/; for q in ${p:1}; do printf "%s" "/${q:0:1}"; done; printf "%s" "${q:1}")'

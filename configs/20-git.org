@@ -41,6 +41,42 @@ Place the config in the ~XDG_CONFIG_HOME~ folder.
     name = Gábor Udvari
 #+end_src
 
+** Git credential helper
+
+The official Git repository has a credential helper called netrc:
+
+https://github.com/git/git/blob/master/contrib/credential/netrc/git-credential-netrc.perl
+
+The Git for Windows installation comes with a broken Perl installation, and you cannot install the required Perl module Git on it. So on Windows we need to stick with the manager credential helper, but everywhere else netrc.perl should work.
+
+On Linux you can issue the following commands to get the ~git-credential-netrc.perl~ helper working:
+
+#+begin_src bash
+  curl --output-directory ~/.local/bin -O https://raw.githubusercontent.com/git/git/refs/heads/master/contrib/credential/netrc/git-credential-netrc.perl
+  chmod u+x ~/.local/bin/git-credential-netrc.perl
+  cpan Git local::lib
+#+end_src
+
+To troubleshoot any issues you can add the extra ~-d~ flag for debug and the ~-v~ flag for verbose, eg.:
+
+#+begin_src bash
+  git config credential.helper "netrc.perl -d -v"
+#+end_src
+
+*** Configuration on Windows
+
+#+begin_src text :tangle (if (eq system-type 'windows-nt) "home/.config/git/config" "no")
+  [credential]
+    helper = manager
+#+end_src
+
+*** Configuration on any other OS
+
+#+begin_src text :tangle (if (eq system-type 'windows-nt) "no" "home/.config/git/config")
+  [credential]
+    helper = netrc.perl
+#+end_src
+
 * Guix
 
 ** Packages
