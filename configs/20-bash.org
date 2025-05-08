@@ -26,15 +26,12 @@ Add the bash package to the Guix home config:
 
 Have a single ~.profile~ file for Bash and everything else. Bash will not read the ~.profile~ file if there is ~.bash_login~ or ~.bash_profile~.
 
-#+begin_src text :noweb yes :exports none :mkdirp yes :tangle home/.profile
-  <<profile>>
-#+end_src
+*** XDG environment variables
 
-** XDG environment variables
+Define the default [[https://specifications.freedesktop.org/basedir-spec/latest/#variables][XDG environment variables]]. Some solutions do these by themselves, so put this into its own named source block so we can handle this separately later.
 
-The XDG environment variables are taken care of by the Guix setup-environment script. So we only need to generate these lines when there is no Guix installed:
-
-#+begin_src bash :mkdirp yes :tangle (if (executable-find "guix") "no" "home/.profile")
+#+name: xdg-environment-variables
+#+begin_src bash
   # Configure XDG_DATA_HOME if not set
   export XDG_DATA_HOME="${XDG_DATA_HOME:="$HOME/.local/share"}"
   # Configure XDG_CACHE_HOME if not set
@@ -49,12 +46,12 @@ The XDG environment variables are taken care of by the Guix setup-environment sc
   export XDG_DATA_DIRS="${XDG_DATA_DIRS:="$HOME/.local/share:/usr/local/share:/usr/share"}"
 #+end_src
 
-** Custom environment variables
+*** Custom environment variables
 
 All the environment variables need to go into the ~.profile~ so that Bash can declare them. If Guix is installed, then these also need to be declared in a home service of the ~home-environment-variables-service-type~ so that all the Shepherd home services see the same values.
 
 #+name: environment-variables
-#+begin_src bash :eval never
+#+begin_src bash
   # Set timeformat to ISO 8601
   export TIME_STYLE="long-iso"
 
@@ -103,22 +100,17 @@ All the environment variables need to go into the ~.profile~ so that Bash can de
   export LANG='hu_HU.utf8'
 #+end_src
 
-Put the above named block into .profile:
-
-#+begin_src bash :noweb yes :noweb-ref profile
-  <<environment-variables>>
-#+end_src
-
 Put the above named block into a ~guix-environment-variables~ file. Later a Guix home service will reference that one.
 
 #+begin_src bash :noweb yes :tangle (if (executable-find "guix") "guix-environment-variables" "no")
   <<environment-variables>>
 #+end_src
 
-** Sourcing the bashrc
+*** Sourcing bashrc
 
 At the end of the ~.profile~ file we need to source the usual ~.bashrc~ file as well.
 
+#+name: bashrc-sourcing
 #+begin_src bash :noweb-ref profile
   # if running bash
   if [ -n "$BASH_VERSION" ]; then
@@ -133,6 +125,28 @@ At the end of the ~.profile~ file we need to source the usual ~.bashrc~ file as 
       . "$HOME/.bashrc"
     fi
   fi
+#+end_src
+
+*** Putting it all together
+
+The XDG environment variables are taken care of by the Guix setup-environment script. So we need to separate the ~.profile~ file generation based on the availability of Guix.
+
+**** In case Guix is not installed
+
+#+begin_src :mkdirp yes :noweb yes :tangle (if (executable-find "guix") "no" "home/.profile")
+  <<xdg-environment-variables>>
+
+  <<environment-variables>>
+
+  <<bashrc-sourcing>>
+#+end_src
+
+**** In case Guix is installed
+
+#+begin_src :mkdirp yes :noweb yes :tangle (if (executable-find "guix") "home/.profile" "no")
+  <<environment-variables>>
+
+  <<bashrc-sourcing>>
 #+end_src
 
 ** Bashrc

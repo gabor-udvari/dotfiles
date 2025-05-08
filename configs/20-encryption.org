@@ -131,6 +131,18 @@ Note, you can add ~--with-keygrip~ to list out the keygrips as well, but my GPG 
   gpg --export-secret-key --armor --export-options export-backup >gpg_private.asc
 #+end_src
 
+*** To import the private key from the backup
+
+#+begin_src bash
+  gpg --import gpg_private.asc
+#+end_src
+
+After the import you need to trust the imported key:
+
+#+begin_src bash
+  gpg --edit-key <<KEY_ID>> trust quit
+#+end_src
+
 *** To encrypt a file
 
 #+begin_src bash
