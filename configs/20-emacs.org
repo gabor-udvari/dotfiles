@@ -1005,7 +1005,7 @@ Add the Guix packages to the home config:
      'org-babel-load-languages
      '((shell . t)
        (sql . t)
-       (scheme . t)))
+       (scheme . t))))
 
   (use-package org-agenda
     :init
