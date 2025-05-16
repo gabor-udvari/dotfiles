@@ -1,0 +1,55 @@
+#+title: Dictionaries
+#+author: Gábor Udvari
+
+* GNU Dico
+
+GNU Dico is a server which implements the DICT protocol. It can be used as a self-hosted dictionary server.
+
+** Installation
+
+*** Guix packages
+
+#+begin_src scheme :noweb-ref guix-home
+  (use-modules (gnu packages dico))
+
+  (define %home-packages
+    (append %home-packages
+            (list dico)))
+#+end_src
+
+*** Guix Home Service
+
+#+begin_src scheme :noweb-ref guix-home
+  (use-modules (gnu home services dict)
+               (gnu services dict))
+
+  (define %home-services
+    (append %home-services
+            (list
+             (service home-dicod-service-type
+                      (for-home
+                       (dicod-configuration
+                        (interfaces '("localhost"))
+                        (databases (cons*
+                                    %dicod-database:gcide
+                                    (map
+                                     dicod-freedict-database
+                                     '("hun-eng" "eng-hun" "eng-deu" "deu-eng"))))))))))
+#+end_src
+
+* Freedict dictionaries
+
+FreeDict is a project to provide free dictionaries to study, change and modify.
+
+** Installation
+
+*** Guix packages
+
+#+begin_src scheme :noweb-ref guix-home
+  (use-modules (gnu packages dictionaries))
+
+  (define %home-packages
+    (append %home-packages
+            (list freedict-dictionaries
+                  freedict-tools)))
+#+end_src
