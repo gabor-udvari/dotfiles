@@ -9,15 +9,11 @@ AutoHotkey is for Windows, we cannot automate Windows installations yet.
 
 ** Config
 
-Tangle all the configs to the autohotkey.ahk file.
-
-#+begin_src text :noweb yes :exports none :mkdirp yes :tangle home/.config/autohotkey/autohotkey.ahk
-  <<autohotkey-config>>
-#+end_src
+We only need the autohotkey configuration on Windows.
 
 Send the content of the clipboard as keys when Shift+Win+V is pressed:
 
-#+begin_src text :noweb-ref autohotkey-config
+#+begin_src text :mkdirp yes :tangle (if (eq system-type 'windows-nt) "home/.config/autohotkey/autohotkey.ahk" "no")
   *#v::
   {
     SendRaw %clipboard%
@@ -26,11 +22,9 @@ Send the content of the clipboard as keys when Shift+Win+V is pressed:
 
 * Windows automatic startup
 
-#+begin_src text :noweb yes :exports none :mkdirp yes :tangle home/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/autohotkey.bat
-  <<autohotkey-windows>>
-#+end_src
+Create a startup script when on Windows:
 
-#+begin_src bat :noweb-ref autohotkey-windows
+#+begin_src bat :mkdirp yes :tangle (if (eq system-type 'windows-nt) "home/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/autohotkey.bat" "no")
   @ECHO OFF
   SETX HOME %USERPROFILE%
   WHERE /Q autohotkey.exe

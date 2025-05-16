@@ -2048,11 +2048,9 @@ Add the Guix packages to the home config:
 
 * Windows automatic starting
 
-#+BEGIN_SRC text :noweb yes :exports none :mkdirp yes :tangle home/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/emacs-daemon.bat
-  <<emacs-daemon-windows>>
-#+END_SRC
+When on Windows, create an automatic startup script for running the emacs daemon:
 
-#+BEGIN_SRC bat :noweb-ref emacs-daemon-windows
+#+begin_src bat :mkdirp yes :tangle (if (eq system-type 'windows-nt) "home/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/emacs-daemon.bat" "no")
   @ECHO OFF
   DEL /Q %USERPROFILE%\.config\emacs\server\*
   SETX HOME %USERPROFILE%
@@ -2060,10 +2058,10 @@ Add the Guix packages to the home config:
   if ERRORLEVEL 0 (
     START /B "" runemacs.exe --daemon --init-directory %USERPROFILE%"/.config/emacs"
   )
-#+END_SRC
+#+end_src
 
 *Note:* the init.el above moves the server auth directory to the ~%USERPROFILE%/.config/emacs~ folder, similar to the XDG standard. You will need to launch the emacsclient with that in mind, eg.:
 
-#+BEGIN_EXAMPLE
+#+begin_example
 emacsclientw.exe --server-file %USERPROFILE%/.config/emacs/server/server -r
-#+END_EXAMPLE
+#+end_example

@@ -37,11 +37,9 @@ We will symlink the above files with guix.
 
 * Pageant support for SSH
 
-#+BEGIN_SRC text :noweb yes :exports none :mkdirp yes :tangle home/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/ssh-pageant.bat
-  <<ssh-pageant>>
-#+END_SRC
+When on Windows, create an automatic startup script for ~pageant~ and ~wsl-ssh-pageant~:
 
-#+BEGIN_SRC bat :noweb-ref ssh-pageant
+#+begin_src bat :mkdirp yes :tangle (if (eq system-type 'windows-nt) "home/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/ssh-pageant.bat" "no")
   @ECHO OFF
   WHERE /Q pageant.exe
   if ERRORLEVEL 0 (
@@ -52,7 +50,7 @@ We will symlink the above files with guix.
   if ERRORLEVEL 0 (
     START /B "" wsl-ssh-pageant-amd64-gui.exe --systray --winssh ssh-pageant
   )
-#+END_SRC
+#+end_src
 
 * Guix packages
 
