@@ -1,0 +1,144 @@
+#+title: E-mail
+#+author: Gábor Udvari
+
+* isync
+
+https://isync.sourceforge.io/
+
+** Configuration
+
+#+begin_src text :noweb yes :exports none :mkdirp yes :tangle home/.config/isyncrc :padline yes
+  <<isyncrc>>
+#+end_src
+
+General configurations:
+
+#+begin_src text :noweb-ref isyncrc
+  CopyArrivalDate yes  # Don't mess up message timestamps when moving them between folders.
+  Sync Pull            # Download changes only, don't sync local changes up to the server.
+  Create Near          # Automatically create new folders in the local copy.
+  Remove Near          # Automatically remove deleted folders from the local copy.
+  Expunge Near         # Expunge deleted messages from the local copy.
+  
+#+end_src
+
+Gmail configuration:
+
+#+begin_src text :noweb-ref isyncrc
+  IMAPAccount gmail
+  Host imap.gmail.com
+  User gabor.udvari@gmail.com
+  PassCmd "pass Personal/Email/gabor.udvari@gmail.com"
+  TLSType IMAPS
+  Pipelinedepth 1
+  Timeout 60
+
+  IMAPStore gmail-remote
+  Account gmail
+
+  MaildirStore gmail-local
+  Path ~/Mail/gabor.udvari@gmail.com/
+  Inbox ~/Mail/gabor.udvari@gmail.com/Inbox
+  SubFolders Verbatim
+
+  Channel gmail
+  Far :gmail-remote:
+  Near :gmail-local:
+  Patterns *
+  SyncState *
+  
+#+end_src
+
+Personal Hungarian email configuration:
+
+#+begin_src text :noweb-ref isyncrc
+  IMAPAccount personal-hungarian
+  Host mail.udvarigabor.hu
+  User level@udvarigabor.hu
+  PassCmd "pass Personal/Email/level@udvarigabor.hu"
+  TLSType IMAPS
+  Pipelinedepth 1
+  Timeout 60
+
+  IMAPStore personal-hungarian-remote
+  Account personal-hungarian
+
+  MaildirStore personal-hungarian-local
+  Path ~/Mail/level@udvarigabor.hu/
+  Inbox ~/Mail/level@udvarigabor.hu/Inbox
+  SubFolders Verbatim
+
+  Channel personal-hungarian
+  Far :personal-hungarian-remote:
+  Near :personal-hungarian-local:
+  Patterns *
+  SyncState *
+  
+#+end_src
+
+Personal English email configuration:
+
+#+begin_src text :noweb-ref isyncrc
+  IMAPAccount personal-english
+  Host mail.gaborudvari.com
+  User mail@gaborudvari.com
+  PassCmd "pass Personal/Email/mail@gaborudvari.com"
+  TLSType IMAPS
+  Pipelinedepth 1
+  Timeout 60
+
+  IMAPStore personal-english-remote
+  Account personal-english
+
+  MaildirStore personal-english-local
+  Path ~/Mail/mail@gaborudvari.com/
+  Inbox ~/Mail/mail@gaborudvari.com/Inbox
+  SubFolders Verbatim
+
+  Channel personal-english
+  Far :personal-english-remote:
+  Near :personal-english-local:
+  Patterns *
+  SyncState *
+#+end_src
+
+** Installation
+
+*** Guix Packages
+
+#+begin_src scheme :noweb-ref guix-home
+  (use-modules (gnu packages mail))
+
+  (define %home-packages
+    (append %home-packages
+            (list isync)))
+#+end_src
+
+*** Guix Services
+
+Symlink the config into place:
+
+#+begin_src scheme :noweb-ref guix-home
+  (define %home-services
+    (append %home-services
+            (list
+             (simple-service 'isync-symlinking-service
+                             home-files-service-type
+                             `(
+                               (".config/isyncrc"
+                                ,(local-file "home/.config/isyncrc" "isyncrc")))))))
+#+end_src
+
+* MU
+
+** Installation
+
+*** Guix Packages
+
+#+begin_src scheme :noweb-ref guix-home
+  (use-modules (gnu packages mail))
+
+  (define %home-packages
+    (append %home-packages
+            (list mu)))
+#+end_src

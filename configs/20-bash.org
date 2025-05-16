@@ -60,7 +60,8 @@ All the environment variables need to go into the ~.profile~ so that Bash can de
 
   # Some XDG cleanup (supported by xdg-ninja):
   export ANDROID_USER_HOME="$XDG_DATA_HOME"/android
-  export GNUPGHOME="$XDG_DATA_HOME"/gnupg
+  # export GNUPGHOME="$XDG_DATA_HOME"/gnupg
+  export GNUPGHOME="$HOME"/.gnupg
   export INPUTRC="$XDG_CONFIG_HOME"/readline/inputrc
   export MINETEST_USER_PATH="$XDG_DATA_HOME"/minetest
   export PASSWORD_STORE_DIR="$XDG_DATA_HOME"/pass
@@ -720,7 +721,9 @@ Guix service for configuring some environment variables:
             (list
              (simple-service 'some-useful-env-vars-service
   		                       home-environment-variables-service-type
-  		                       `(("GNUPGHOME" . "$XDG_DATA_HOME/gnupg"))))))
+  		                       `(("GNUPGHOME" . "$HOME/.gnupg")
+                               ;; ("GNUPGHOME" . "$XDG_DATA_HOME/gnupg")
+                               ("PASSWORD_STORE_DIR" . "$XDG_DATA_HOME/pass"))))))
 #+end_src
 
 #+name: test

@@ -850,14 +850,13 @@ If guix is not installed, then install within Emacs using quelpa:
 
 Add the Guix packages to the home config:
 
-#+BEGIN_SRC scheme :noweb-ref guix-home
-  (use-modules (gnu packages password-utils))
+#+begin_src scheme :noweb-ref guix-home
+  (use-modules (gnu packages emacs-xyz))
 
   (define %home-packages
     (append %home-packages
-            (list emacs-pass
-                  password-store)))
-#+END_SRC
+            (list emacs-pass)))
+#+end_src
 
 *** Configuration
 
@@ -919,6 +918,85 @@ Add the Guix packages to the home config:
 
 #+begin_src elisp :noweb-ref emacs
   (use-package passage)
+#+end_src
+
+** MU4E
+
+*** Installation
+
+#+begin_src scheme :noweb-ref guix-home
+  (use-modules (gnu packages mail))
+
+  (define %home-packages
+    (append %home-packages
+            (list mu)))
+#+end_src
+
+*** Configuration
+
+#+begin_src elisp :noweb-ref emacs
+  (use-package mu4e
+    :config
+    (setq mu4e-maildir "~/Mail")  ; Path to your Maildir
+    (setq mu4e-get-mail-command "mbsync --all")
+    (setq mu4e-update-interval 300)  ; Update interval in seconds
+    (setq mu4e-contexts
+          `( ,(make-mu4e-context
+               :name "Gmail"
+               :enter-func (lambda () (mu4e-message "Entering Gmail context"))
+               :leave-func (lambda () (mu4e-message "Leaving Gmail context"))
+               :match-func (lambda (msg)
+                             (when msg
+                               (mu4e-message-contact-field-matches msg
+                                                                   :to "gabor.udvari@gmail.com")))
+               :vars '( ( user-mail-address	    . "gabor.udvari@gmail.com" )
+                        ( user-full-name	    . "Udvari Gábor" )
+                        ( message-signature .
+                          (concat
+                           "Üdvözlettel,\n"
+                           "Udvari Gábor\n"))))
+
+             ,(make-mu4e-context
+               :name "Personal Hungarian"
+               :enter-func (lambda () (mu4e-message "Entering Personal Hungarian context"))
+               :leave-func (lambda () (mu4e-message "Leaving Personal Hungarian context"))
+               :match-func (lambda (msg)
+                             (when msg
+                               (mu4e-message-contact-field-matches msg
+                                                                   :to "level@udvarigabor.hu")))
+               :vars '( ( user-mail-address	       . "level@udvarigabor.hu" )
+                        ( user-full-name	       . "Udvari Gábor" )
+                        ( message-signature         .
+                          (concat
+                           "Üdvözlettel,\n"
+                           "Udvari Gábor\n"))))
+
+             ,(make-mu4e-context
+               :name "Personal English"
+               :enter-func (lambda () (mu4e-message "Entering Personal English context"))
+               :leave-func (lambda () (mu4e-message "Leaving Personal English context"))
+               :match-func (lambda (msg)
+                             (when msg
+                               (mu4e-message-contact-field-matches msg
+                                                                   :to "mail@gaborudvari.com")))
+               :vars '( ( user-mail-address	       . "mail@gaborudvari.com" )
+                        ( user-full-name	       . "Gabor Udvari" )
+                        ( message-signature         .
+                          (concat
+                           "Best regards,\n"
+                           "Gabor Udvari\n"))))))
+
+    ;; set `mu4e-context-policy` and `mu4e-compose-policy` to tweak when mu4e should
+    ;; guess or ask the correct context, e.g.
+
+    ;; start with the first (default) context;
+    ;; default is to ask-if-none (ask when there's no context yet, and none match)
+    ;; (setq mu4e-context-policy 'pick-first)
+
+    ;; compose with the current context is no context matches;
+    ;; default is to ask
+    ;; (setq mu4e-compose-context-policy nil)
+    )
 #+end_src
 
 ** Org mode

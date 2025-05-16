@@ -140,7 +140,7 @@ Note, you can add ~--with-keygrip~ to list out the keygrips as well, but my GPG 
 After the import you need to trust the imported key:
 
 #+begin_src bash
-  gpg --edit-key <<KEY_ID>> trust quit
+  gpg --edit-key <KEY_ID> trust quit
 #+end_src
 
 *** To encrypt a file
@@ -153,7 +153,7 @@ After the import you need to trust the imported key:
 
 Put the GPG config file into an XDG compliant folder. For this to work, the ~GNUPGHOME~ environment variable is configured in the ~.profile~ file.
 
-#+begin_src text :noweb yes :exports none :mkdirp yes :tangle home/.local/share/gnupg/gpg.conf
+#+begin_src text :noweb yes :exports none :mkdirp yes :tangle home/.gnupg/gpg.conf
   <<gpg-config>>
 #+end_src
 
@@ -181,7 +181,7 @@ We need to start the GPG Agent service and also set the pinentry program to ~/bi
 
 We also need to link the ~gpg.conf~ file to its final folder.
 
-#+BEGIN_SRC scheme :noweb-ref guix-home
+#+begin_src scheme :noweb-ref guix-home
   (use-modules (gnu home services gnupg))
 
   (define %home-services
@@ -195,20 +195,34 @@ We also need to link the ~gpg.conf~ file to its final folder.
 
              (simple-service 'gpg-symlinking-service
                              home-files-service-type
-                             `((".local/share/gnupg/gpg.conf"
-                                ,(local-file "home/.local/share/gnupg/gpg.conf" "gpg-conf")))))))
-#+END_SRC
+                             `((".gnupg/gpg.conf"
+                                ,(local-file "home/.gnupg/gpg.conf" "gpg-conf")))))))
+#+end_src
 
 ** Guix packages
 
-#+BEGIN_SRC scheme :noweb-ref guix-home
+#+begin_src scheme :noweb-ref guix-home
   (use-modules (gnu packages gnupg))
 
   (define %home-packages
     (append %home-packages
-            (list gnupg
-                  pinentry)))
-#+END_SRC
+            (list gnupg)))
+#+end_src
+
+
+* Password store
+
+The password-store path is ~$HOME/.password-store~ by default. To change this we set the ~PASSWORD_STORE_DIR~ environment variable in the Bash configuration.
+
+** Guix packages
+
+#+begin_src scheme :noweb-ref guix-home
+  (use-modules (gnu packages password-utils))
+
+  (define %home-packages
+    (append %home-packages
+            (list password-store)))
+#+end_src
 
 * Pinentry
 

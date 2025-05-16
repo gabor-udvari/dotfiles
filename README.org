@@ -205,8 +205,14 @@ The default folder for Emacs configuration in Windows is the ~AppData/Roaming~ f
 - https://github.com/hiecaq/guix-config#references-and-recommendations
 - https://github.com/caisah/emacs.dz
 
-* TODO Concat the org files inside Emacs
+* Future plans
+
+** TODO Concat the org files inside Emacs
 
 Currently the final org file is created with ~cat~, the order of the sections is kept due to the numbered filenames. There must be something better, eg. Algernon is using ~org-roam-list-files~:
 
 https://git.madhouse-project.org/algernon/infrastructure.org/src/branch/main/tools/entangle.el
+
+** TODO Make the gpg-agent.conf place customizable
+
+The place of the ~gpg-agent.conf~ file is hard wired in the Guix home service to be inside ~$HOME/.gnupg~. It is possible to move this folder to an XDG compatible one, but the home service needs to be improved.
