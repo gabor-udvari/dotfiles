@@ -7,9 +7,13 @@ https://isync.sourceforge.io/
 
 ** Configuration
 
+Place all the configurations into ~~/.config/isyncrc~.
+
 #+begin_src text :noweb yes :exports none :mkdirp yes :tangle home/.config/isyncrc :padline yes
   <<isyncrc>>
 #+end_src
+
+*NOTE*: the ~PassCmd~ needs to be a ~gpg~ command, so that Emacs can recognize it and retrieve the password on its own. Using the ~pass~ command will only work on the command line, but not from Emacs triggered by mu4e.
 
 General configurations:
 
@@ -28,7 +32,7 @@ Gmail configuration:
   IMAPAccount gmail
   Host imap.gmail.com
   User gabor.udvari@gmail.com
-  PassCmd "pass Personal/Email/gabor.udvari@gmail.com"
+  PassCmd "gpg --quiet --for-your-eyes-only --no-tty --decrypt \"$PASSWORD_STORE_DIR\"/Personal/Email/imap.gmail.com/gabor.udvari@gmail.com.gpg"
   TLSType IMAPS
   Pipelinedepth 1
   Timeout 60
@@ -46,7 +50,7 @@ Gmail configuration:
   Near :gmail-local:
   Patterns *
   SyncState *
-  
+
 #+end_src
 
 Personal Hungarian email configuration:
@@ -55,7 +59,7 @@ Personal Hungarian email configuration:
   IMAPAccount personal-hungarian
   Host mail.udvarigabor.hu
   User level@udvarigabor.hu
-  PassCmd "pass Personal/Email/level@udvarigabor.hu"
+  PassCmd "gpg --quiet --for-your-eyes-only --no-tty --decrypt \"$PASSWORD_STORE_DIR\"/Personal/Email/mail.udvarigabor.hu/level@udvarigabor.hu.gpg"
   TLSType IMAPS
   Pipelinedepth 1
   Timeout 60
@@ -73,7 +77,7 @@ Personal Hungarian email configuration:
   Near :personal-hungarian-local:
   Patterns *
   SyncState *
-  
+
 #+end_src
 
 Personal English email configuration:
@@ -83,6 +87,7 @@ Personal English email configuration:
   Host mail.gaborudvari.com
   User mail@gaborudvari.com
   PassCmd "pass Personal/Email/mail@gaborudvari.com"
+  PassCmd "gpg --quiet --for-your-eyes-only --no-tty --decrypt \"$PASSWORD_STORE_DIR\"/Personal/Email/mail.gaborudvari.com/mail@gaborudvari.com.gpg"
   TLSType IMAPS
   Pipelinedepth 1
   Timeout 60

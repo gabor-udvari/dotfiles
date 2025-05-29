@@ -199,6 +199,7 @@ The following category configs are customized how I am grouping my transfers. Yo
   OTPMOBL\*EP egyenleg
   JUSZT OPTIKA FVÁR
   PURE GOLD PROTEIN
+  MULLER
     account2 Kiadások:Egészség
 
   if
@@ -241,6 +242,7 @@ The following category configs are customized how I am grouping my transfers. Yo
   SZEKESFEHERVAR ZO
   ECOFAMILY
   Temu\.com
+  MERX
     account2 Kiadások:Bevásárlás
 
   if
@@ -251,6 +253,7 @@ The following category configs are customized how I am grouping my transfers. Yo
   FEHÉRVÁR ÁRUHÁZ
   Fehervar Aruhaz
   H\&M
+  C\&A SZÉKESF
   www\.bonprix\.hu
   NEW YORKER
   TAKKO
@@ -261,6 +264,8 @@ The following category configs are customized how I am grouping my transfers. Yo
   Azsia Aruhaz
   SHEIN
   Vinted\, UAB
+  HELOPAY\*DP
+  DEICHMANN
     account2 Kiadások:Ruha
 
   if
@@ -291,6 +296,7 @@ The following category configs are customized how I am grouping my transfers. Yo
   OTPMOBL\*fannizero
   Danuvius Vending Kft
   DIÁKTANYA PIZZÉRIA
+  Szerencsesuti Vendegla
     account2 Kiadások:Étel
 
   if
@@ -336,6 +342,7 @@ The following category configs are customized how I am grouping my transfers. Yo
   Trendyol
   Alza\.cz
   WWW\.MAXIE\.HU
+  FELDOBOX
     account2 Kiadások:Ajándék
 
   if
@@ -373,6 +380,7 @@ The following category configs are customized how I am grouping my transfers. Yo
   if
   GROUPAMA BIZTOSITÓ ZRT\. KÖTELEZŐ GÉPJÁRMŰ BIZT\.
   OTPMOBL\*GROUPAMA\.HU
+  GROUPAMA BIZTOSITÓ
    account2 Kiadások:Közlekedés:Autó:Biztosítás
 
   if
@@ -504,6 +512,7 @@ The following category configs are customized how I am grouping my transfers. Yo
   LINUXFOUNDATION
   MATE KC  ÚJ KOLLÉGIU
   DIAKTANYA
+  Hang-lépcső
     account2 Kiadások:Oktatás
 
   if
