@@ -27,6 +27,16 @@ I use the ~dig~ command frequently to troubleshoot DNS issues. Guix has it in th
             (list curl)))
 #+end_src
 
+* Rsync
+
+#+begin_src scheme :noweb-ref guix-home
+  (use-modules (gnu packages rsync))
+
+  (define %home-packages
+    (append %home-packages
+            (list rsync)))
+#+end_src
+
 * Fonts
 
 I use Cantarell and Fire Code fonts in Emacs.

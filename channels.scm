@@ -4,7 +4,7 @@
         (url "https://codeberg.org/guix/guix-mirror.git")
         (branch "master")
         (commit
-          "9bc97424d347901e6b70b5477a1066359f3d6f2c")
+          "027a47787f8dcf6651a1c20c5b475376defe6d6b")
         (introduction
           (make-channel-introduction
             "df14cacca9b95d69fdd3b6191e42df36af266bcd"
@@ -15,7 +15,7 @@
         (url "https://gitlab.com/guix-gaming-channels/games.git")
         (branch "master")
         (commit
-          "f17f73f97b673383fbca2ace691b5ab52f374e6b")
+          "d5951ea89b13e07b5c44f4827b2330d2ea9065d4")
         (introduction
           (make-channel-introduction
             "c23d64f1b8cc086659f8781b27ab6c7314c5cca5"
@@ -38,7 +38,7 @@
         (url "https://gitlab.com/nonguix/nonguix")
         (branch "master")
         (commit
-          "7152e92a13edf3e9a356e7b9b759b163aed3044c")
+          "02270b585e7d641afabd86ee6eaf7a6aad2f5df7")
         (introduction
           (make-channel-introduction
             "897c1a470da759236cc11798f4e0a5f7d4d59fbc"
