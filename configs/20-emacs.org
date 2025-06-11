@@ -239,74 +239,6 @@ As seen on https://www.youtube.com/watch?v=74zOY-vgkyw, and from the nano-defaul
     (setq window-min-height 1)
 #+end_src
 
-** Package handling
-
-Enable packages and use-package in all cases regardless of version (I use at least Emacs 29 everywhere) or OS.
-
-#+BEGIN_SRC elisp :noweb-ref emacs
-  (require 'package)
-  (eval-when-compile
-    (require 'use-package))
-#+END_SRC
-
-Packages should not be ensured when Guix is available, but useful otherwise.
-
-#+begin_src elisp :noweb-ref emacs
-  (unless (or (executable-find "guix") (package-installed-p 'quelpa))
-    (package-vc-install "https://github.com/quelpa/quelpa")
-
-    ;; This is the officialy recommended way to bootstrap quelpa, but the
-    ;; raw.githubusercontent.com domain might be prohibited
-    ; (with-temp-buffer
-    ;   (url-insert-file-contents "https://raw.githubusercontent.com/quelpa/quelpa/master/quelpa.el")
-    ;   (eval-buffer)
-    ;  (quelpa-self-upgrade)))
-    )
-#+end_src
-
-** No littering
-
-*** Installation
-
-If Guix is not installed, then install within Emacs with Quelpa:
-
-#+BEGIN_SRC elisp :noweb-ref emacs
-  (unless (executable-find "guix")
-    (quelpa
-     '(compat
-       :fetcher github
-       :repo "emacs-compat/compat"))
-    (quelpa
-     '(no-littering
-       :fetcher github
-       :repo "emacscollective/no-littering")))
-#+END_SRC
-
-Add the Guix package to the home config:
-
-#+BEGIN_SRC scheme :noweb-ref guix-home
-  (define %home-packages
-    (append %home-packages
-            (list emacs-no-littering)))
-#+END_SRC
-
-*** Config
-
-#+BEGIN_SRC elisp :noweb-ref emacs
-  ;; Configure no-littering
-  (use-package no-littering
-    :init
-    ;; Move auto-save files to var
-    (setq auto-save-file-name-transforms
-          `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
-    ;; Store custom-file in etc
-    (setq custom-file (no-littering-expand-etc-file-name "custom.el"))
-    (load custom-file 'noerror 'nomessage)
-    ;; Enable no-littering to configure auto-save, backup, etc.
-    (no-littering-theme-backups)
-    )
-#+END_SRC
-
 ** Windows
 
 Make different windows appear in specific location inside the frame. Taken from the [[https://github.com/LionyxML/emacs-solo/blob/main/init.el][emacs-solo config]].
@@ -363,7 +295,7 @@ Make different windows appear in specific location inside the frame. Taken from 
 
 Do not use any packages for this, just the built-in ~set-face-attribute~.
 
-#+BEGIN_SRC elisp :noweb-ref emacs
+#+begin_src elisp :noweb-ref emacs
   (defun apply-fonts (variable-font fixed-font)
     (progn (let ((font fixed-font))
                (if (member font (font-family-list))
@@ -373,20 +305,20 @@ Do not use any packages for this, just the built-in ~set-face-attribute~.
                (if (member font (font-family-list))
                    (progn (set-face-attribute 'mode-line nil :font font :height 120)
                           (set-face-attribute 'variable-pitch nil :font font :height 120))))))
-#+END_SRC
+#+end_src
 
 We set separate fonts on Windows and where Guix is available, because Guix can install our custom fonts, but [[https://github.com/microsoft/terminal/issues/3257][Windows currently has issues]] with user installed fonts. Use Calibri and Cascadia Mono on Windows and use Cantarell and Fira Code where Guix is available:
 
-#+BEGIN_SRC elisp :noweb-ref emacs
+#+begin_src elisp :noweb-ref emacs
   (defun my-fonts ()
     (cond ((eq system-type 'windows-nt) (apply-fonts "Calibri" "Cascadia Mono"))
           ((executable-find "guix") (apply-fonts "Cantarell" "Fira Code"))))
-#+END_SRC
+#+end_src
 
-#+BEGIN_SRC elisp :noweb-ref emacs
+#+begin_src elisp :noweb-ref emacs
   (my-fonts)
   (add-hook 'server-after-make-frame-hook #'my-fonts)
-#+END_SRC
+#+end_src
 
 ** Modus themes
 
@@ -396,7 +328,7 @@ The themes modus-operandi and modus-vivendi are part of Emacs since version 28. 
 
 *** Config
 
-#+BEGIN_SRC elisp :noweb-ref emacs
+#+begin_src elisp :noweb-ref emacs
   ;; Make customisations that affect Emacs faces BEFORE loading a theme
   ;; (any change needs a theme re-load to take effect).
   (use-package emacs
@@ -440,9 +372,78 @@ The themes modus-operandi and modus-vivendi are part of Emacs since version 28. 
 
     :config
     ;; We use the built-in theme
-    (load-theme 'modus-operandi)
+    (load-theme 'modus-operandi))
+#+end_src
+
+** Package handling
+
+Enable packages and use-package in all cases regardless of version (I use at least Emacs 29 everywhere) or OS.
+
+#+begin_src elisp :noweb-ref emacs
+  (require 'package)
+  (eval-when-compile
+    (require 'use-package))
+#+end_src
+
+Packages should not be ensured when Guix is available, but useful otherwise.
+
+#+begin_src elisp :noweb-ref emacs
+  (unless (or (executable-find "guix") (package-installed-p 'quelpa))
+    (package-vc-install "https://github.com/quelpa/quelpa")
+
+    ;; This is the officialy recommended way to bootstrap quelpa, but the
+    ;; raw.githubusercontent.com domain might be prohibited
+    ; (with-temp-buffer
+    ;   (url-insert-file-contents "https://raw.githubusercontent.com/quelpa/quelpa/master/quelpa.el")
+    ;   (eval-buffer)
+    ;  (quelpa-self-upgrade)))
     )
-#+END_SRC
+
+  (setq quelpa-checkout-melpa-p ())
+  (setq quelpa-update-melpa-p ())
+#+end_src
+
+** No littering
+
+*** Installation
+
+If Guix is not installed, then install within Emacs with Quelpa:
+
+#+begin_src elisp :noweb-ref emacs
+  (unless (executable-find "guix")
+    (quelpa
+     '(compat
+       :fetcher github
+       :repo "emacs-compat/compat"))
+    (quelpa
+     '(no-littering
+       :fetcher github
+       :repo "emacscollective/no-littering")))
+#+end_src
+
+Add the Guix package to the home config:
+
+#+begin_src scheme :noweb-ref guix-home
+  (define %home-packages
+    (append %home-packages
+            (list emacs-no-littering)))
+#+end_src
+
+*** Config
+
+#+begin_src elisp :noweb-ref emacs
+  ;; Configure no-littering
+  (use-package no-littering
+    :init
+    ;; Move auto-save files to var
+    (setq auto-save-file-name-transforms
+          `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
+    ;; Store custom-file in etc
+    (setq custom-file (no-littering-expand-etc-file-name "custom.el"))
+    (load custom-file 'noerror 'nomessage)
+    ;; Enable no-littering to configure auto-save, backup, etc.
+    (no-littering-theme-backups))
+#+end_src
 
 ** Spacious padding
 
@@ -529,11 +530,11 @@ Add the Guix packages to the home config:
 
 *** Configuration
 
-#+BEGIN_SRC elisp :noweb-ref emacs
+#+begin_src elisp :noweb-ref emacs
   ;; Same as example-2.el from svg-tag-mode
   (defconst date-re "[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}")
   (defconst time-re "[0-9]\\{2\\}:[0-9]\\{2\\}")
-  (defconst day-re "[A-Za-z]\\{3\\}")
+  (defconst day-re "[A-Za-z]\\{1,3\\}")  ;;; Allow less than 1 character for HUN localization
   (defconst day-time-re (format "\\(%s\\)? ?\\(%s\\)?" day-re time-re))
 
   (defun svg-progress-percent (value)
@@ -620,7 +621,7 @@ Add the Guix packages to the home config:
     :hook (;(prog-mode . svg-tag-mode)
            (org-mode . svg-tag-mode))
     )
-#+END_SRC
+#+end_src
 
 ** Dired
 
@@ -843,15 +844,32 @@ https://cgit.freedesktop.org/libreoffice/dictionaries/tree
 
 *** Installation
 
-If guix is not installed, then install within Emacs using quelpa:
+If guix is not installed, then install within Emacs using quelpa, with all the dependencies:
 
-#+BEGIN_SRC elisp :noweb-ref emacs
+#+begin_src elisp :noweb-ref emacs
   (unless (executable-find "guix")
-    (quelpa
-     '(pass
-       :fetcher github
-       :repo "NicolasPetton/pass")))
-#+END_SRC
+    (progn
+      (quelpa
+       '(compat
+         :fetcher github
+         :repo "emacs-compat/compat"))
+      (quelpa
+       '(with-editor
+          :fetcher github
+          :repo "magit/with-editor"))
+      (quelpa
+       '(password-store
+         :fetcher github
+         :repo "emacsmirror/password-store"))
+      (quelpa
+       '(password-store-otp
+         :fetcher github
+         :repo "volrath/password-store-otp.el"))
+      (quelpa
+       '(pass
+         :fetcher github
+         :repo "NicolasPetton/pass"))))
+#+end_src
 
 Add the Guix packages to the home config:
 
@@ -890,23 +908,44 @@ If guix is used, then ~emacs-passage~ will already install it, because it is a d
 *** Configuration
 
 #+begin_src elisp :noweb-ref emacs
-(use-package age
-  :config
-  (age-file-enable))
+  (use-package age
+    :config
+    (age-file-enable))
 #+end_src
 
 ** Passage
 
 *** Installation
 
-If guix is not installed, then install within Emacs using quelpa:
+If guix is not installed, then install within Emacs using quelpa and all the dependencies:
 
 #+begin_src elisp :noweb-ref emacs
   (unless (executable-find "guix")
-    (quelpa
-     '(passage
-       :fetcher github
-       :repo "anticomputer/passage.el")))
+    (progn
+      (quelpa
+       '(compat
+         :fetcher github
+         :repo "emacs-compat/compat"))
+      (quelpa
+       '(with-editor
+          :fetcher github
+          :repo "magit/with-editor"))
+      (quelpa
+       '(s
+         :fetcher github
+         :repo "magnars/s.el"))
+      (quelpa
+       '(dash
+         :fetcher github
+         :repo "magnars/dash.el"))
+      (quelpa
+       '(f
+         :fetcher github
+         :repo "rejeep/f.el"))
+       (quelpa
+        '(passage
+          :fetcher github
+          :repo "anticomputer/passage.el"))))
 #+end_src
 
 Add the Guix packages to the home config:
@@ -929,6 +968,10 @@ Add the Guix packages to the home config:
 
 *** Installation
 
+TODO Need to figure out a way to install mu4e with quelpa.
+
+Add the package to the guix-home config:
+
 #+begin_src scheme :noweb-ref guix-home
   (use-modules (gnu packages mail))
 
@@ -941,6 +984,7 @@ Add the Guix packages to the home config:
 
 #+begin_src elisp :noweb-ref emacs
   (use-package mu4e
+    :if (executable-find "guix")
     :config
     (setq mu4e-maildir "~/Mail")  ; Path to your Maildir
     (setq mu4e-get-mail-command "mbsync --all")
@@ -1474,16 +1518,20 @@ Add the Guix packages to the home config:
 
 *** Installation
 
-If guix is not installed, then install within Emacs using quelpa:
+If guix is not installed, then install within Emacs and all the dependencies using quelpa:
 
-#+BEGIN_SRC elisp :noweb-ref emacs
+#+begin_src elisp :noweb-ref emacs
   (unless (executable-find "guix")
-    (quelpa
-     '(pdf-tools
-       :fetcher github
-       :repo "vedang/pdf-tools"))
-    )
-#+END_SRC
+    (progn
+      (quelpa
+       '(tablist
+         :fetcher github
+         :repo "politza/tablist"))
+      (quelpa
+       '(pdf-tools
+         :fetcher github
+         :repo "vedang/pdf-tools"))))
+#+end_src
 
 Add the Guix packages to the home config:
 
@@ -1795,34 +1843,27 @@ Add the Guix packages to the home config:
     (elfeed-set-max-connections 4))
 #+end_src
 
-** Persist
-
-This is a depencency for Mastodon, the manual install is only required if there is no guix.
-
-*** Installation
-
-If guix is not installed, then install within Emacs using quelpa:
-
-#+begin_src elisp :noweb-ref emacs
-  (unless (executable-find "guix")
-    (quelpa
-     '(persist
-       :fetcher github
-       :repo "emacsmirror/persist")))
-#+end_src
-
 ** Mastodon.el
 
 *** Installation
 
-If guix is not installed, then install within Emacs using quelpa:
+If guix is not installed, then install it and all dependencies within Emacs using quelpa:
 
 #+begin_src elisp :noweb-ref emacs
   (unless (executable-find "guix")
-    (quelpa
-     '(mastodon
-       :fetcher git
-       :url "https://codeberg.org/martianh/mastodon.el")))
+    (progn
+      (quelpa
+       '(persist
+         :fetcher github
+         :repo "emacsmirror/persist"))
+      (quelpa
+       '(tp
+         :fetcher github
+         :repo "alphapapa/tp.el"))
+      (quelpa
+       '(mastodon
+         :fetcher git
+         :url "https://codeberg.org/martianh/mastodon.el"))))
 #+end_src
 
 Add the Guix packages to the home config:
@@ -1837,6 +1878,7 @@ Add the Guix packages to the home config:
 
 #+begin_src elisp :noweb-ref emacs
   (use-package mastodon
+    :defer t
     :init
     (setq mastodon-instance-url "https://fosstodon.org"
           mastodon-active-user "gaborudvari"))
@@ -1886,10 +1928,15 @@ If guix is not installed, then install within Emacs using quelpa:
 
 #+begin_src elisp :noweb-ref emacs
   (unless (executable-find "guix")
-    (quelpa
-     '(bluetooth
-       :fetcher github
-       :repo "emacsmirror/bluetooth")))
+    (progn
+      (quelpa
+       '(transient
+         :fetcher github
+         :repo "magit/transient"))
+      (quelpa
+       '(bluetooth
+         :fetcher github
+         :repo "emacsmirror/bluetooth"))))
 #+end_src
 
 Add the Guix packages to the home config:
@@ -1936,14 +1983,18 @@ Add the Guix packages to the home config:
 
 If guix is not installed, then install within Emacs using quelpa:
 
-#+BEGIN_SRC elisp :noweb-ref emacs
+#+begin_src elisp :noweb-ref emacs
   (unless (executable-find "guix")
-    (quelpa
-     '(envrc
-       :fetcher github
-       :repo "purcell/envrc"))
-    )
-#+END_SRC
+    (progn
+      (quelpa
+       '(inheritenv
+         :fetcher github
+         :repo "purcell/inheritenv"))
+      (quelpa
+       '(envrc
+         :fetcher github
+         :repo "purcell/envrc"))))
+#+end_src
 
 Add the Guix packages to the home config:
 
@@ -1955,12 +2006,11 @@ Add the Guix packages to the home config:
 
 *** Configuration
 
-#+BEGIN_SRC elisp :noweb-ref emacs
+#+begin_src elisp :noweb-ref emacs
   (use-package envrc
     :init
-    (envrc-global-mode)
-    )
-#+END_SRC
+    (envrc-global-mode))
+#+end_src
 
 ** Magit
 
@@ -1968,14 +2018,22 @@ Add the Guix packages to the home config:
 
 If guix is not installed, then install within Emacs using quelpa:
 
-#+BEGIN_SRC elisp :noweb-ref emacs
+#+begin_src elisp :noweb-ref emacs
   (unless (executable-find "guix")
-    (quelpa
-     '(magit
-       :fetcher github
-       :repo "magit/magit"))
-    )
-#+END_SRC
+    (progn
+      (quelpa
+       '(llama
+         :fetcher github
+         :repo "tarsius/llama"))
+      (quelpa
+       '(magit-section
+         :fetcher github
+         :repo "magit/magit"))
+      (quelpa
+       '(magit
+         :fetcher github
+         :repo "magit/magit"))))
+#+end_src
 
 Add the Guix packages to the home config:
 
@@ -1987,9 +2045,10 @@ Add the Guix packages to the home config:
 
 *** Configuration
 
-#+BEGIN_SRC elisp :noweb-ref emacs
-  (use-package magit)
-#+END_SRC
+#+begin_src elisp :noweb-ref emacs
+  (use-package magit
+    :defer t)
+#+end_src
 
 ** Eat
 
@@ -2052,10 +2111,11 @@ Add the Guix packages to the home config:
 *** Configuration
 
 #+begin_src elisp :noweb-ref emacs
-    (use-package chess
-      :init
-      (setq chess-images-separate-frame nil
-            chess-images-default-size 40))
+  (use-package chess
+    :defer t
+    :init
+    (setq chess-images-separate-frame nil
+          chess-images-default-size 40))
 #+end_src
 
 * Guix config
