@@ -317,7 +317,8 @@ We set separate fonts on Windows and where Guix is available, because Guix can i
 
 #+begin_src elisp :noweb-ref emacs
   (my-fonts)
-  (add-hook 'server-after-make-frame-hook #'my-fonts)
+  (if (daemonp)
+      (add-hook 'server-after-make-frame-hook #'my-fonts))
 #+end_src
 
 ** Modus themes
@@ -411,14 +412,15 @@ If Guix is not installed, then install within Emacs with Quelpa:
 
 #+begin_src elisp :noweb-ref emacs
   (unless (executable-find "guix")
-    (quelpa
-     '(compat
-       :fetcher github
-       :repo "emacs-compat/compat"))
-    (quelpa
-     '(no-littering
-       :fetcher github
-       :repo "emacscollective/no-littering")))
+    (progn
+      (quelpa
+       '(compat
+         :fetcher github
+         :repo "emacs-compat/compat"))
+      (quelpa
+       '(no-littering
+         :fetcher github
+         :repo "emacscollective/no-littering"))))
 #+end_src
 
 Add the Guix package to the home config:
@@ -432,7 +434,6 @@ Add the Guix package to the home config:
 *** Config
 
 #+begin_src elisp :noweb-ref emacs
-  ;; Configure no-littering
   (use-package no-littering
     :init
     ;; Move auto-save files to var

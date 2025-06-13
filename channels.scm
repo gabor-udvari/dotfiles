@@ -1,7 +1,7 @@
 (list (channel
         (name 'guix)
         ;; (url "https://git.savannah.gnu.org/git/guix.git")
-        (url "https://codeberg.org/guix/guix-mirror.git")
+        (url "https://codeberg.org/guix/guix.git")
         (branch "master")
         (commit
           "027a47787f8dcf6651a1c20c5b475376defe6d6b")
@@ -43,4 +43,14 @@
           (make-channel-introduction
             "897c1a470da759236cc11798f4e0a5f7d4d59fbc"
             (openpgp-fingerprint
-              "2A39 3FFF 68F4 EF7A 3D29  12AF 6F51 20A0 22FB B2D5")))))
+              "2A39 3FFF 68F4 EF7A 3D29  12AF 6F51 20A0 22FB B2D5"))))
+      (channel
+       ;;; TODO: once https://issues.guix.gnu.org/76081 is merged, we can remove this
+       (name 'gocix)
+        (url "https://github.com/fishinthecalculator/gocix")
+        (branch "main")
+        (introduction
+         (make-channel-introduction
+          "cdb78996334c4f63304ecce224e95bb96bfd4c7d"
+          (openpgp-fingerprint
+           "8D10 60B9 6BB8 292E 829B  7249 AED4 1CC1 93B7 01E2")))))

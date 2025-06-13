@@ -3,13 +3,16 @@
 
 * Guix packages
 
-#+BEGIN_SRC scheme :noweb-ref guix-home
-  (use-modules (gnu packages containers))
+#+begin_src scheme :noweb-ref guix-home
+  (use-modules (gnu packages containers)
+               (gnu packages rust-apps))
 
   (define %home-packages
     (append %home-packages
-            (list podman)))
-#+END_SRC
+            (list netavark
+                  podman
+                  podman-compose)))
+#+end_src
 
 * Guix home service
 
