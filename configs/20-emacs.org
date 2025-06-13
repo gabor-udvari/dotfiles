@@ -118,7 +118,8 @@ Change some of the defaults to make a more minimal interface.
         ;; you need to set that one outside of Emacs
         (cd (expand-file-name (concat (getenv "HOMEPATH") "/")))
         (setq default-directory (expand-file-name (concat (getenv "HOMEPATH") "/")))
-        (setq server-auth-dir (expand-file-name (concat (getenv "HOMEPATH") "/.config/emacs/server/")))))
+        ;; The no-littering package will set the same
+        (setq server-auth-dir (expand-file-name (concat (getenv "HOMEPATH") "/.config/emacs/var/server/auth")))))
 
   ;; Put C:\Windows\System32 at the back of the PATH list on Windows,
   ;; see this WSL issue for context:
@@ -1839,7 +1840,7 @@ Add the Guix packages to the home config:
         ;; Guix issues
         ("https://issues.guix.gnu.org/issue/78066?format=atom" guix issues)
         ))
-    
+
     :config
     (elfeed-set-max-connections 4))
 #+end_src

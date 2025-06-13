@@ -199,6 +199,12 @@ The default folder for Emacs configuration in Windows is the ~AppData/Roaming~ f
   runemacs --init-directory %USERPROFILE%/.config/emacs
 #+END_SRC
 
+Additionally the ~server-auth-dir~ will be set to the same value as the no-littering package would put it. So if you need to create a shortcut for emacsclient, you need to do it like this:
+
+#+begin_src shell
+  emacsclientw.exe --server-file %USERPROFILE%/.config/emacs/var/server/auth/server -r
+#+end_src
+
 * Other literate configs for inspiration
 
 - https://github.com/dustinlyons/guix-config/tree/main
