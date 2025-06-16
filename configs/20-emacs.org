@@ -224,20 +224,20 @@ As seen on https://www.youtube.com/watch?v=74zOY-vgkyw, and from the nano-defaul
     (my-simple-ui))
 
   (setq indicate-empty-lines nil) ;; No empty line indicators
-    (setq font-lock-maximum-decoration nil) ;; Moderate font lock
-    (setq font-lock-maximum-size nil) ;; No limit on font lock
+  (setq font-lock-maximum-decoration nil) ;; Moderate font lock
+  (setq font-lock-maximum-size nil) ;; No limit on font lock
 
-    (setq fill-column 80) ;; Fill column at 80
-    (global-visual-line-mode 1) ;; Do line wrapping everywhere
+  (setq fill-column 80) ;; Fill column at 80
+  (global-visual-line-mode 1) ;; Do line wrapping everywhere
 
-    (setq visible-bell t) ;; Enable visible bell
+  (setq visible-bell t) ;; Enable visible bell
 
-    ;; Size of temporary buffers
-    (temp-buffer-resize-mode)
-    (setq temp-buffer-max-height 8)
+  ;; Size of temporary buffers
+  (temp-buffer-resize-mode)
+  (setq temp-buffer-max-height 8)
 
-    ;; Minimum window height
-    (setq window-min-height 1)
+  ;; Minimum window height
+  (setq window-min-height 1)
 #+end_src
 
 ** Windows
@@ -507,28 +507,28 @@ Add the Guix packages to the home config:
 
 If guix is not installed, then install within Emacs using quelpa:
 
-#+BEGIN_SRC elisp :noweb-ref emacs
+#+begin_src elisp :noweb-ref emacs
   (unless (executable-find "guix")
-    (quelpa
-     '(svg-lib
-       :fetcher github
-       :stable nil
-       :repo "rougier/svg-lib"))
-    (quelpa
-     '(svg-tag-mode
-       :fetcher github
-       :stable nil
-       :repo "rougier/svg-tag-mode"))
-    )
-#+END_SRC
+    (progn
+      (quelpa
+       '(svg-lib
+         :fetcher github
+         :stable nil
+         :repo "rougier/svg-lib"))
+      (quelpa
+       '(svg-tag-mode
+         :fetcher github
+         :stable nil
+         :repo "rougier/svg-tag-mode"))))
+#+end_src
 
 Add the Guix packages to the home config:
 
-#+BEGIN_SRC scheme :noweb-ref guix-home
+#+begin_src scheme :noweb-ref guix-home
   (define %home-packages
     (append %home-packages
             (list emacs-svg-lib emacs-svg-tag-mode)))
-#+END_SRC
+#+end_src
 
 *** Configuration
 
@@ -1061,21 +1061,22 @@ If guix is not installed, then install within Emacs using quelpa:
 
 #+begin_src elisp :noweb-ref emacs
   (unless (executable-find "guix")
-    (quelpa
-     '(org-contrib
-       :fetcher github
-       :repo "emacsmirror/org-contrib"
-       :stable nil
-       :files (:defaults
-               "lisp")))
-    (quelpa
-     '(org-modern
-       :fetcher github
-       :repo "minad/org-modern"))
-    (quelpa
-     '(org-margin
-       :fetcher github
-       :repo "rougier/org-margin")))
+    (progn
+      (quelpa
+       '(org-contrib
+         :fetcher github
+         :repo "emacsmirror/org-contrib"
+         :stable nil
+         :files (:defaults
+                 "lisp")))
+      (quelpa
+       '(org-modern
+         :fetcher github
+         :repo "minad/org-modern"))
+      (quelpa
+       '(org-margin
+         :fetcher github
+         :repo "rougier/org-margin"))))
 #+end_src
 
 Add the Guix packages to the home config:
@@ -1091,7 +1092,7 @@ Add the Guix packages to the home config:
 
 *** Configuration
 
-#+BEGIN_SRC elisp :noweb-ref emacs
+#+begin_src elisp :noweb-ref emacs
   (defun myhooks/org-mode-setup ()
     ;; Disable org-indent-mode because it causes empty background
     ;; for source blocks when the lines are too long
@@ -1143,7 +1144,7 @@ Add the Guix packages to the home config:
         (defvar my-notes-folder (concat (getenv "HOMEPATH") "/Notes/"))
       (defvar my-notes-folder (concat (getenv "HOME") "/Notes/")))
     (when (file-exists-p my-notes-folder)
-      (setq org-agenda-files (directory-files-recursively my-notes-folder "." t))))
+      (setq org-agenda-files (directory-files-recursively my-notes-folder ".org$" t))))
 
   (use-package org-tempo)
   (use-package org-contrib)
@@ -1175,7 +1176,7 @@ Add the Guix packages to the home config:
   (use-package org-margin
     :after org
     :hook (org-mode . org-margin-mode))
-#+END_SRC
+#+end_src
 
 ** Htmlize
 
@@ -1364,18 +1365,19 @@ If guix is not installed, then install within Emacs using quelpa:
 
 #+begin_src elisp :noweb-ref emacs
   (unless (or (eq system-type 'windows-nt) (executable-find "guix"))
-    (quelpa
-     '(geiser
-       :fetcher github
-       :repo "emacsmirror/geiser"
-       :files (:defaults
-               "elisp")))
-    (quelpa
-     '(geiser-guile
-       :fetcher github
-       :repo "emacsmirror/geiser-guile"
-       :files (:defaults
-               "src"))))
+    (progn
+      (quelpa
+       '(geiser
+         :fetcher github
+         :repo "emacsmirror/geiser"
+         :files (:defaults
+                 "elisp")))
+      (quelpa
+       '(geiser-guile
+         :fetcher github
+         :repo "emacsmirror/geiser-guile"
+         :files (:defaults
+                 "src")))))
 #+end_src
 
 Add the Guix package to the home config:
