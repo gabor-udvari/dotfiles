@@ -401,8 +401,9 @@ Packages should not be ensured when Guix is available, but useful otherwise.
     ;  (quelpa-self-upgrade)))
     )
 
-  (setq quelpa-checkout-melpa-p ())
-  (setq quelpa-update-melpa-p ())
+  (setq quelpa-checkout-melpa-p ()
+        quelpa-update-melpa-p ()
+        quelpa-stable-p t)
 #+end_src
 
 ** No littering
@@ -860,9 +861,22 @@ If guix is not installed, then install within Emacs using quelpa, with all the d
           :fetcher github
           :repo "magit/with-editor"))
       (quelpa
+       '(s
+         :fetcher github
+         :repo "magnars/s.el"))
+      (quelpa
+       '(dash
+         :fetcher github
+         :repo "magnars/dash.el"))
+      (quelpa
+       '(f
+         :fetcher github
+         :repo "rejeep/f.el"))
+      (quelpa
        '(password-store
          :fetcher github
-         :repo "emacsmirror/password-store"))
+         :repo "emacsmirror/password-store"
+         :stable nil))
       (quelpa
        '(password-store-otp
          :fetcher github
@@ -947,7 +961,8 @@ If guix is not installed, then install within Emacs using quelpa and all the dep
        (quelpa
         '(passage
           :fetcher github
-          :repo "anticomputer/passage.el"))))
+          :repo "anticomputer/passage.el"
+          :stable nil))))
 #+end_src
 
 Add the Guix packages to the home config:
@@ -1076,7 +1091,8 @@ If guix is not installed, then install within Emacs using quelpa:
       (quelpa
        '(org-margin
          :fetcher github
-         :repo "rougier/org-margin"))))
+         :repo "rougier/org-margin"
+         :stable nil))))
 #+end_src
 
 Add the Guix packages to the home config:
@@ -1184,13 +1200,14 @@ Add the Guix packages to the home config:
 
 If guix is not installed, then install within Emacs using quelpa:
 
-#+BEGIN_SRC elisp :noweb-ref emacs
+#+begin_src elisp :noweb-ref emacs
   (unless (executable-find "guix")
     (quelpa
      '(htmlize
        :fetcher github
-       :repo "hniksic/emacs-htmlize")))
-#+END_SRC
+       :repo "hniksic/emacs-htmlize"
+       :stable nil)))
+#+end_src
 
 Add the Guix package to the home config:
 
@@ -1859,11 +1876,13 @@ If guix is not installed, then install it and all dependencies within Emacs usin
       (quelpa
        '(persist
          :fetcher github
-         :repo "emacsmirror/persist"))
+         :repo "emacsmirror/persist"
+         :stable nil))
       (quelpa
        '(tp
          :fetcher github
-         :repo "alphapapa/tp.el"))
+         :repo "alphapapa/tp.el"
+         :stable nil))
       (quelpa
        '(mastodon
          :fetcher git
@@ -1940,7 +1959,8 @@ If guix is not installed, then install within Emacs using quelpa:
       (quelpa
        '(bluetooth
          :fetcher github
-         :repo "emacsmirror/bluetooth"))))
+         :repo "emacsmirror/bluetooth"
+         :stable nil))))
 #+end_src
 
 Add the Guix packages to the home config:
@@ -2098,7 +2118,8 @@ If guix is not installed, then install within Emacs using quelpa:
     (quelpa
      '(chess
        :fetcher github
-       :repo "jwiegley/emacs-chess")))
+       :repo "jwiegley/emacs-chess"
+       :stable nil)))
 #+end_src
 
 Add the Guix packages to the home config:
@@ -2200,7 +2221,7 @@ When on Windows, create an automatic startup script for running the emacs daemon
 
 #+begin_src bat :mkdirp yes :tangle (if (eq system-type 'windows-nt) "home/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/emacs-daemon.bat" "no")
   @ECHO OFF
-  DEL /Q %USERPROFILE%\.config\emacs\server\*
+  DEL /Q %USERPROFILE%\.config\emacs\var\server\auth\*
   SETX HOME %USERPROFILE%
   WHERE /Q runemacs.exe
   if ERRORLEVEL 0 (
