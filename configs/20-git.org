@@ -81,7 +81,7 @@ To troubleshoot any issues you can add the extra ~-d~ flag for debug and the ~-v
 
 ** Packages
 
-#+BEGIN_SRC scheme :noweb-ref guix-home
+#+begin_src scheme :noweb-ref guix-home
   (use-modules (gnu packages version-control)
                (gnu packages haskell-apps))
 
@@ -89,7 +89,7 @@ To troubleshoot any issues you can add the extra ~-d~ flag for debug and the ~-v
     (append %home-packages
             (list git
                   git-annex)))
-#+END_SRC
+#+end_src
 
 ** Config linking service
 

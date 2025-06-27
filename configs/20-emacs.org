@@ -1411,8 +1411,10 @@ Add the Guix package to the home config:
 #+begin_src elisp :noweb-ref emacs
   (use-package geiser-guile
     :unless (eq system-type 'windows-nt)
-    :load-path (lambda () (file-name-concat (package-desc-dir (package-get-descriptor 'geiser))
-                                            "elisp")))
+    :demand t
+    :load-path (lambda () (file-name-concat
+                           (package-desc-dir (package-get-descriptor 'geiser))
+                           "elisp")))
 #+end_src
 
 ** Markdown mode
@@ -1660,8 +1662,7 @@ Add the Guix packages to the home config:
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCbCq5Y0WPGimG2jNXhoQxGw" youtube science)
         ;; Azahriah
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCNCDa02bSyeD690YT4l1jPw" youtube music hungary)
-        ;; Benn Jordan
-        ("https://www.youtube.com/feeds/videos.xml?channel_id=UC213K1tH6XJwHj6ZiVtLDrw" youtube music)
+        ;; Benn Jordan = no RSS
         ;; Blender
         ;; This is the Blender youtube channel, but Blender has their own Peertube instance:
         ;; ("https://www.youtube.com/feeds/videos.xml?channel_id=UCz75RVbH8q2jdBJ4SnwuZZQ" youtube blender)

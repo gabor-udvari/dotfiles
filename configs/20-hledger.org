@@ -203,6 +203,10 @@ The following category configs are customized how I am grouping my transfers. Yo
     account2 Kiadások:Egészség
 
   if
+  Colonnade Insurance
+    account2 Kiadások:Egészség:Biztosítás
+
+  if
   NEMZETI DOHÁNYBOLT
   Nemzeti Dohanybolt
     account2 Kiadások:Cigi
@@ -266,6 +270,8 @@ The following category configs are customized how I am grouping my transfers. Yo
   Vinted\, UAB
   HELOPAY\*DP
   DEICHMANN
+  Gitta Trade Kft\.
+  Majorne Szabo Maria
     account2 Kiadások:Ruha
 
   if
@@ -297,10 +303,12 @@ The following category configs are customized how I am grouping my transfers. Yo
   Danuvius Vending Kft
   DIÁKTANYA PIZZÉRIA
   Szerencsesuti Vendegla
+  INNOVATOR KFT
     account2 Kiadások:Étel
 
   if
   Székesfehérvári Napsugár Óvoda
+  Napsugár Óvoda
     account2 Kiadások:Étel:Óvoda
 
   if
@@ -369,6 +377,7 @@ The following category configs are customized how I am grouping my transfers. Yo
   MIKROSPORT KFT
   WWW\.GUMIFLEX\.HU
   OTPMOBL\*nav
+  NYX\*FARITECHKft
     account2 Kiadások:Közlekedés:Autó
 
   if
@@ -531,6 +540,9 @@ The following category configs are customized how I am grouping my transfers. Yo
   KEK\.SH PRO
   OTPMOBL\*BOOKLINE\.HU
   GOOGLE \*Google Play
+  CINEMA CITY ALBA
+  Publish and More Kft\.
+  OTPMOBL\*cooltix
     account2 Kiadások:Szórakozás
 #+end_src
 
