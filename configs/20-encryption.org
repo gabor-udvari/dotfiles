@@ -190,8 +190,9 @@ We also need to link the ~gpg.conf~ file to its final folder.
              (service home-gpg-agent-service-type
                       (home-gpg-agent-configuration
                        (pinentry-program
-                        (file-append pinentry-tty "/bin/pinentry"))
-                       (ssh-support? #f)))
+                        (file-append pinentry-tty "/bin/pinentry-tty"))
+                       (ssh-support? #f)
+                       (extra-content "allow-loopback-pinentry")))
 
              (simple-service 'gpg-symlinking-service
                              home-files-service-type
@@ -235,6 +236,10 @@ The password-store path is ~$HOME/.password-store~ by default. To change this we
     (append %home-packages
             (list pinentry-tty)))
 #+end_src
+
+*NOTE:* the ~pinentry-emacs~ method is deprecated based on the Emacs documentation:
+
+https://www.gnu.org/software/emacs/manual/html_node/epa/GnuPG-Pinentry.html
 
 * SOPS
 

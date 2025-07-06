@@ -200,8 +200,8 @@ Change some of the defaults to make a more minimal interface.
   (auth-source-pass-enable)
   (setq auth-source-pass-filename "~/.local/share/pass")
 
-  ;; Disable gpg agent so that Emacs handles the pinentry by itself
-  (setenv "GPG_AGENT_INFO" nil)
+  ;; https://www.gnu.org/software/emacs/manual/html_node/epa/GnuPG-Pinentry.html
+  (setq epg-pinentry-mode 'loopback)
 #+end_src
 
 ** Simpler UI
@@ -843,6 +843,39 @@ https://cgit.freedesktop.org/libreoffice/dictionaries/tree
     )
 #+END_SRC
 
+** Pinentry
+
+*** Installation
+
+If guix is not installed, then install within Emacs using quelpa, with all the dependencies:
+
+#+begin_src elisp :noweb-ref emacs
+  (unless (executable-find "guix")
+    (progn
+      (quelpa
+       '(pinentry
+         :fetcher github
+         :repo "emacs-straight/pinentry"))))
+#+end_src
+
+Add the Guix packages to the home config:
+
+#+begin_src scheme :noweb-ref guix-home
+  (use-modules (gnu packages emacs-xyz))
+
+  (define %home-packages
+    (append %home-packages
+            (list emacs-pinentry)))
+#+end_src
+
+*** Configuration
+
+#+begin_src elisp :noweb-ref emacs
+  (use-package pinentry
+    :config
+    (pinentry-start))
+#+end_src
+
 ** Pass
 
 *** Installation
@@ -1000,70 +1033,74 @@ Add the package to the guix-home config:
 *** Configuration
 
 #+begin_src elisp :noweb-ref emacs
+  (defun myhooks/mu4e-update ()
+    ;; Unlock the pass database, so that mbsync does not need to anymore,
+    ;; because gpg-agent will cache it.
+    (pass-copy "Personal/Email/mail.gabodudvari.com/mail@gaborudvari.com"))
+
   (use-package mu4e
-    :if (executable-find "guix")
-    :config
-    (setq mu4e-maildir "~/Mail")  ; Path to your Maildir
-    (setq mu4e-get-mail-command "mbsync --all")
-    (setq mu4e-confirm-quit nil)  ; Do not ask when quitting
-    (setq mu4e-update-interval 300)  ; Update interval in seconds
-    (setq mu4e-contexts
-          `( ,(make-mu4e-context
-               :name "gGmail"
-               :enter-func (lambda () (mu4e-message "Entering Gmail context"))
-               :leave-func (lambda () (mu4e-message "Leaving Gmail context"))
-               :match-func (lambda (msg)
-                             (when msg
-                               (mu4e-message-contact-field-matches msg
-                                                                   :to "gabor.udvari@gmail.com")))
-               :vars '( ( user-mail-address	    . "gabor.udvari@gmail.com" )
-                        ( user-full-name	    . "Udvari Gábor" )
-                        ( message-signature .
-                          (concat
-                           "Üdvözlettel,\n"
-                           "Udvari Gábor\n"))))
+      :if (executable-find "guix")
+      :config
+      (setq mu4e-maildir "~/Mail")  ; Path to your Maildir
+      (setq mu4e-get-mail-command "mbsync --all")
+      (setq mu4e-confirm-quit nil)  ; Do not ask when quitting
+      (setq mu4e-update-interval 300)  ; Update interval in seconds
+      (setq mu4e-contexts
+            `( ,(make-mu4e-context
+                 :name "gGmail"
+                 :enter-func (lambda () (mu4e-message "Entering Gmail context"))
+                 :leave-func (lambda () (mu4e-message "Leaving Gmail context"))
+                 :match-func (lambda (msg)
+                               (when msg
+                                 (mu4e-message-contact-field-matches msg
+                                                                     :to "gabor.udvari@gmail.com")))
+                 :vars '( ( user-mail-address	    . "gabor.udvari@gmail.com" )
+                          ( user-full-name	    . "Udvari Gábor" )
+                          ( message-signature .
+                            (concat
+                             "Üdvözlettel,\n"
+                             "Udvari Gábor\n"))))
 
-             ,(make-mu4e-context
-               :name "hPersonal Hungarian"
-               :enter-func (lambda () (mu4e-message "Entering Personal Hungarian context"))
-               :leave-func (lambda () (mu4e-message "Leaving Personal Hungarian context"))
-               :match-func (lambda (msg)
-                             (when msg
-                               (mu4e-message-contact-field-matches msg
-                                                                   :to "level@udvarigabor.hu")))
-               :vars '( ( user-mail-address	       . "level@udvarigabor.hu" )
-                        ( user-full-name	       . "Udvari Gábor" )
-                        ( message-signature         .
-                          (concat
-                           "Üdvözlettel,\n"
-                           "Udvari Gábor\n"))))
+               ,(make-mu4e-context
+                 :name "hPersonal Hungarian"
+                 :enter-func (lambda () (mu4e-message "Entering Personal Hungarian context"))
+                 :leave-func (lambda () (mu4e-message "Leaving Personal Hungarian context"))
+                 :match-func (lambda (msg)
+                               (when msg
+                                 (mu4e-message-contact-field-matches msg
+                                                                     :to "level@udvarigabor.hu")))
+                 :vars '( ( user-mail-address	       . "level@udvarigabor.hu" )
+                          ( user-full-name	       . "Udvari Gábor" )
+                          ( message-signature         .
+                            (concat
+                             "Üdvözlettel,\n"
+                             "Udvari Gábor\n"))))
 
-             ,(make-mu4e-context
-               :name "ePersonal English"
-               :enter-func (lambda () (mu4e-message "Entering Personal English context"))
-               :leave-func (lambda () (mu4e-message "Leaving Personal English context"))
-               :match-func (lambda (msg)
-                             (when msg
-                               (mu4e-message-contact-field-matches msg
-                                                                   :to "mail@gaborudvari.com")))
-               :vars '( ( user-mail-address	       . "mail@gaborudvari.com" )
-                        ( user-full-name	       . "Gabor Udvari" )
-                        ( message-signature         .
-                          (concat
-                           "Best regards,\n"
-                           "Gabor Udvari\n"))))))
+               ,(make-mu4e-context
+                 :name "ePersonal English"
+                 :enter-func (lambda () (mu4e-message "Entering Personal English context"))
+                 :leave-func (lambda () (mu4e-message "Leaving Personal English context"))
+                 :match-func (lambda (msg)
+                               (when msg
+                                 (mu4e-message-contact-field-matches msg
+                                                                     :to "mail@gaborudvari.com")))
+                 :vars '( ( user-mail-address	       . "mail@gaborudvari.com" )
+                          ( user-full-name	       . "Gabor Udvari" )
+                          ( message-signature         .
+                            (concat
+                             "Best regards,\n"
+                             "Gabor Udvari\n"))))))
 
-    ;; set `mu4e-context-policy` and `mu4e-compose-policy` to tweak when mu4e should
-    ;; guess or ask the correct context, e.g.
+      ;; Start with the first (default) context;
+      ;; default is to ask-if-none (ask when there's no context yet, and none match).
+      (setq mu4e-context-policy 'pick-first)
 
-    ;; start with the first (default) context;
-    ;; default is to ask-if-none (ask when there's no context yet, and none match)
-    ;; (setq mu4e-context-policy 'pick-first)
+      ;; Compose with the current context if no context matches;
+      ;; default is to ask.
+      (setq mu4e-compose-context-policy nil)
 
-    ;; compose with the current context is no context matches;
-    ;; default is to ask
-    ;; (setq mu4e-compose-context-policy nil)
-    )
+      :hook (mu4e-update-pre-hook . myhook/mu4e-update)
+      )
 #+end_src
 
 ** Org mode
@@ -1674,8 +1711,7 @@ Add the Guix packages to the home config:
         ;; Bödőcs Tibor = no RSS
         ;; Captain Disillusion = no RSS
         ;; Chase and Status = no RSS
-        ;; Chinese Man:
-        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCNzDFkfbKMWbG2v5F8LoE0Q" youtube music electronic)
+        ;; Chinese Man = no RSS)
         ;; Cinemassacre:
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UC0M0rxSz3IF0CsSour1iWmw" youtube gaming)
         ;; Coffeezilla = no RSS

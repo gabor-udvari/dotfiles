@@ -32,7 +32,7 @@ Gmail configuration:
   IMAPAccount gmail
   Host imap.gmail.com
   User gabor.udvari@gmail.com
-  PassCmd "gpg --quiet --for-your-eyes-only --no-tty --decrypt \"$PASSWORD_STORE_DIR\"/Personal/Email/imap.gmail.com/gabor.udvari@gmail.com.gpg"
+  PassCmd "pass Personal/Email/imap.gmail.com/gabor.udvari@gmail.com"
   TLSType IMAPS
   Pipelinedepth 1
   Timeout 60
@@ -59,7 +59,7 @@ Personal Hungarian email configuration:
   IMAPAccount personal-hungarian
   Host mail.udvarigabor.hu
   User level@udvarigabor.hu
-  PassCmd "gpg --quiet --for-your-eyes-only --no-tty --decrypt \"$PASSWORD_STORE_DIR\"/Personal/Email/mail.udvarigabor.hu/level@udvarigabor.hu.gpg"
+  PassCmd "pass Personal/Email/mail.udvarigabor.hu/level@udvarigabor.hu"
   TLSType IMAPS
   Pipelinedepth 1
   Timeout 60
@@ -86,8 +86,7 @@ Personal English email configuration:
   IMAPAccount personal-english
   Host mail.gaborudvari.com
   User mail@gaborudvari.com
-  PassCmd "pass Personal/Email/mail@gaborudvari.com"
-  PassCmd "gpg --quiet --for-your-eyes-only --no-tty --decrypt \"$PASSWORD_STORE_DIR\"/Personal/Email/mail.gaborudvari.com/mail@gaborudvari.com.gpg"
+  PassCmd "pass Personal/Email/mail.gaborudvari.com/mail@gaborudvari.com"
   TLSType IMAPS
   Pipelinedepth 1
   Timeout 60
