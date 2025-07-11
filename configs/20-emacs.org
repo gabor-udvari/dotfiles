@@ -385,6 +385,10 @@ Enable packages and use-package in all cases regardless of version (I use at lea
   (require 'package)
   (eval-when-compile
     (require 'use-package))
+
+  (setq package-install-upgrade-built-in t)
+  (setq package-archives ())
+  (package-initialize)
 #+end_src
 
 Packages should not be ensured when Guix is available, but useful otherwise.
@@ -855,7 +859,8 @@ If guix is not installed, then install within Emacs using quelpa, with all the d
       (quelpa
        '(pinentry
          :fetcher github
-         :repo "emacs-straight/pinentry"))))
+         :repo "emacs-straight/pinentry"
+         :stable nil))))
 #+end_src
 
 Add the Guix packages to the home config:
@@ -872,6 +877,7 @@ Add the Guix packages to the home config:
 
 #+begin_src elisp :noweb-ref emacs
   (use-package pinentry
+    :unless (eq system-type 'windows-nt)
     :config
     (pinentry-start))
 #+end_src
@@ -1266,13 +1272,18 @@ Add the Guix package to the home config:
 
 If guix is not installed, then install within Emacs using quelpa:
 
-#+BEGIN_SRC elisp :noweb-ref emacs
+#+begin_src elisp :noweb-ref emacs
   (unless (executable-find "guix")
-    (quelpa
-     '(plantuml-mode
-       :fetcher github
-       :repo "skuro/plantuml-mode")))
-#+END_SRC
+    (progn
+      (quelpa
+       '(deflate
+         :fetcher github
+         :repo "skuro/deflate"))
+      (quelpa
+       '(plantuml-mode
+         :fetcher github
+         :repo "skuro/plantuml-mode"))))
+#+end_src
 
 Add the Guix package to the home config:
 
@@ -1446,12 +1457,11 @@ Add the Guix package to the home config:
 *** Configuration
 
 #+begin_src elisp :noweb-ref emacs
-  (use-package geiser-guile
-    :unless (eq system-type 'windows-nt)
-    :demand t
-    :load-path (lambda () (file-name-concat
-                           (package-desc-dir (package-get-descriptor 'geiser))
-                           "elisp")))
+  (unless (eq system-type 'windows-nt)
+    (use-package geiser-guile
+      :load-path (lambda () (file-name-concat
+                             (package-desc-dir (package-get-descriptor 'geiser))
+                             "elisp"))))
 #+end_src
 
 ** Markdown mode
@@ -2082,10 +2092,17 @@ If guix is not installed, then install within Emacs using quelpa:
 #+begin_src elisp :noweb-ref emacs
   (unless (executable-find "guix")
     (progn
-      (quelpa
-       '(llama
-         :fetcher github
-         :repo "tarsius/llama"))
+      (unless (package-installed-p 'transient (list 0 9 3))
+        (package-vc-install
+         '(transient
+           :url "https://github.com/magit/transient"
+           :branch "v0.9.3"
+           :lisp-dir "lisp")))
+      (unless (package-installed-p 'llama (list 1 0 0))
+        (package-vc-install
+         '(llama
+           :url "https://github.com/tarsius/llama"
+           :branch "v1.0.0")))
       (quelpa
        '(magit-section
          :fetcher github
@@ -2093,7 +2110,13 @@ If guix is not installed, then install within Emacs using quelpa:
       (quelpa
        '(magit
          :fetcher github
-         :repo "magit/magit"))))
+         :repo "magit/magit"))
+
+      (unless (package-installed-p 'magit (list 4 3 8))
+        (package-vc-install
+         '(magit
+           :url "https://github.com/magit/magit"
+           :branch "v4.3.8")))))
 #+end_src
 
 Add the Guix packages to the home config:
@@ -2107,8 +2130,7 @@ Add the Guix packages to the home config:
 *** Configuration
 
 #+begin_src elisp :noweb-ref emacs
-  (use-package magit
-    :defer t)
+  (use-package magit)
 #+end_src
 
 ** Eat
