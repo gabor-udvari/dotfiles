@@ -4,7 +4,7 @@
         (url "https://codeberg.org/guix/guix.git")
         (branch "master")
         (commit
-          "82553b3cca47f5289a345f7f6776c2294f2f0ba7")
+          "6cf00e6cdec63d141cfc716446b8c0eac464ab36")
         (introduction
           (make-channel-introduction
             "df14cacca9b95d69fdd3b6191e42df36af266bcd"
@@ -38,7 +38,7 @@
         (url "https://gitlab.com/nonguix/nonguix")
         (branch "master")
         (commit
-          "39424fb09813cebac8d323da75abf80f01e2641f")
+          "b8c13cd2c8e3fec32facdf64c57e74e1461398a7")
         (introduction
           (make-channel-introduction
             "897c1a470da759236cc11798f4e0a5f7d4d59fbc"
