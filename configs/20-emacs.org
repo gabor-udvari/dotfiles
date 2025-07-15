@@ -1,6 +1,22 @@
 #+title: Emacs
 #+author: Gábor Udvari
 
+* Elisp headers
+
+Follow the header conventions:
+
+https://www.gnu.org/software/emacs/manual/html_node/elisp/Library-Headers.html
+
+#+name: elisp-header
+#+begin_src elisp
+  ;;; Author: Gabor Udvari
+
+  ;;; Commentary:
+  ;;; Personal init files for Gabor Udvari.
+
+  ;;; Code:
+#+end_src
+
 * Emacs config
 
 The early-init.el file contains early configurations which do not need any extra packages.
@@ -28,7 +44,11 @@ The different emacs packages will be installed through Guix home, therefore we w
 
 ** early-init.el
 
-#+BEGIN_SRC elisp :noweb-ref emacs-early
+#+begin_src elisp :noweb yes :noweb-ref emacs-early
+  ;;; early-init.el --- Personal init files for Gabor Udvari -*- lexical-binding: t; -*-
+
+  <<elisp-header>>
+
   (setq inhibit-startup-screen t ;; Disable startup screen
         inhibit-startup-message t ;; Disable startup message
         inhibit-startup-echo-area-message t ;; Disable startup message
@@ -87,13 +107,17 @@ The different emacs packages will be installed through Guix home, therefore we w
   (add-hook 'after-make-frame-functions #'my-re-enable-frame-theme)
 
   (add-hook 'after-init-hook (lambda () (set-frame-name "home")))
-#+END_SRC
+#+end_src
 
 ** Defaults
 
 Change some of the defaults to make a more minimal interface.
 
-#+begin_src elisp :noweb-ref emacs
+#+begin_src elisp :noweb yes :noweb-ref emacs
+  ;;; init.el --- Personal init files for Gabor Udvari -*- lexical-binding: t; -*-
+
+  <<elisp-header>>
+
   ;; Setup customization file
   (setq custom-file (make-temp-file "emacs-custom-"))
   ;; Never load it
@@ -1457,11 +1481,12 @@ Add the Guix package to the home config:
 *** Configuration
 
 #+begin_src elisp :noweb-ref emacs
-  (unless (eq system-type 'windows-nt)
-    (use-package geiser-guile
-      :load-path (lambda () (file-name-concat
+  (use-package geiser-guile
+    :when (package-installed-p 'geiser)
+    :init
+    (add-to-list 'load-path (file-name-concat
                              (package-desc-dir (package-get-descriptor 'geiser))
-                             "elisp"))))
+                             "elisp")))
 #+end_src
 
 ** Markdown mode
