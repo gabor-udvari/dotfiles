@@ -21,7 +21,7 @@ Place the config in the ~XDG_CONFIG_HOME~ folder.
     ff = only
 
   [url "https://github.com/"]
-	  insteadOf = git://github.com/
+    insteadOf = git://github.com/
 
   ; Include for all repositories inside the Personal folder.
   [includeIf "gitdir:~/Repositories/Personal/"]
@@ -88,6 +88,7 @@ To troubleshoot any issues you can add the extra ~-d~ flag for debug and the ~-v
   (define %home-packages
     (append %home-packages
             (list git
+                  `(,git "credential-netrc")
                   git-annex)))
 #+end_src
 
