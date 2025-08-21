@@ -1928,8 +1928,6 @@ Add the Guix packages to the home config:
         ;; https://lospec.com/ygloof
         ;; https://x.com/cyangmou
 
-        ;; Guix issues
-        ("https://issues.guix.gnu.org/issue/78066?format=atom" guix issues)
         ))
 
     :config

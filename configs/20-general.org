@@ -66,7 +66,7 @@ I use Cantarell and Fire Code fonts in Emacs.
 * NSS Certs
 
 #+begin_src scheme :noweb-ref guix-home
-  (use-modules (gnu packages certs))
+  (use-modules (gnu packages nss))
 
   (define %home-packages
     (append %home-packages
