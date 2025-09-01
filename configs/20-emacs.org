@@ -1720,7 +1720,8 @@ Add the Guix packages to the home config:
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UC33_tIj4m1_XaqfFcomShvw" youtube music metal)
         ;; The Dead South
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCWqvhmZyB66eKv01SiH_Kjg" youtube music country)
-        ;; 444 = no RSS
+        ;; 444
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCGoLa-QhHmTxLEdjv_8dxrg" youtube hungary news)
         ;; Abyssoft
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UC6I9iYfcBQTCsiGpR3kV1Uw" youtube gaming)
         ;; Adam Neely

@@ -4,7 +4,7 @@
         (url "https://codeberg.org/guix/guix.git")
         (branch "master")
         (commit
-          "824989b0d47b5cd12dfc6f3d6ffc836319ccf287")
+          "7031794abef44c4e2f8dbd43dbad5e929ea6d3c6")
         (introduction
           (make-channel-introduction
             "df14cacca9b95d69fdd3b6191e42df36af266bcd"
@@ -38,33 +38,9 @@
         (url "https://gitlab.com/nonguix/nonguix")
         (branch "master")
         (commit
-          "e14d2feb7a61166a1843e6fdafa455525b5142ef")
+          "60ffd0353e70d5e371c4bfe2201c9d08c1c05e18")
         (introduction
           (make-channel-introduction
             "897c1a470da759236cc11798f4e0a5f7d4d59fbc"
             (openpgp-fingerprint
-              "2A39 3FFF 68F4 EF7A 3D29  12AF 6F51 20A0 22FB B2D5"))))
-      (channel
-        ;; TODO: once https://issues.guix.gnu.org/76081 is merged, we can remove this
-        (name 'gocix)
-        (url "https://github.com/fishinthecalculator/gocix")
-        (branch "main")
-        (commit
-          "91396b916ae1ce2cb7406c01918091265b625c5d")
-        (introduction
-          (make-channel-introduction
-            "cdb78996334c4f63304ecce224e95bb96bfd4c7d"
-            (openpgp-fingerprint
-              "8D10 60B9 6BB8 292E 829B  7249 AED4 1CC1 93B7 01E2"))))
-      (channel
-        ;; This is a dependency for the gocix channel
-        (name 'sops-guix)
-        (url "https://github.com/fishinthecalculator/sops-guix")
-        (branch "main")
-        (commit
-          "120f621973b410f8fbf0e3739baa9451da0f4167")
-        (introduction
-          (make-channel-introduction
-            "0bbaf1fdd25266c7df790f65640aaa01e6d2dbc9"
-            (openpgp-fingerprint
-              "8D10 60B9 6BB8 292E 829B  7249 AED4 1CC1 93B7 01E2")))))
+              "2A39 3FFF 68F4 EF7A 3D29  12AF 6F51 20A0 22FB B2D5")))))
