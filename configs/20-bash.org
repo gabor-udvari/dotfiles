@@ -644,8 +644,7 @@ A small bash script for fetching and extracting MSYS2 packages.
   fi
 #+END_SRC
 
-*
-Additional tools and scripts
+* Additional tools and scripts
 
 These are some additional useful tools, but not required for setting up bash itself.
 
@@ -661,7 +660,10 @@ A small script to get the Youtube RSS feed URL for a channel. I use this for elf
       exit 1
   fi
 
-  channel_id="$(curl -s "$1" | sed -n 's#^.*\(UC[a-zA-Z0-9]\{22\}\)".*$#\1#p')"
+  # Somehow I cannot match the youtube channel ids with an underscore like this:
+  # channel_id="$(curl -s "$1" | sed -n 's#^.*\(UC[-_a-zA-Z0-9]\{22\}\)".*$#\1#p')"
+  # This works if there is an about page:
+  channel_id="$(curl -s "$1" | sed -n 's#^.*\(UC.\{22\}\)/about.*$#\1#p')"
 
   if [ -n "$channel_id" ]; then
       echo 'https://www.youtube.com/feeds/videos.xml?channel_id='"$channel_id"

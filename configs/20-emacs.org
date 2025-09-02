@@ -1699,12 +1699,14 @@ Add the Guix packages to the home config:
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCpYkkFDnvHka9CBuwxPpqXw" youtube music dnb)
         ;; Noclip
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UC0fDG3byEcMtbOqPMymDNbw" youtube gamedev)
-        ;; Chris Kohler News - no RSS
+        ;; Chris Kohler News
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UC9xafGPnAr0hxZ_bYMp1JsQ" youtube comedy economics)
         ;; Venjent
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCrY8Y0rs3BlE3T57TOMM1aw" youtube music dnb)
         ;; Fire Department Chronicles
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCZbWCodPFwH2QQn772QnUxQ" youtube comedy)
-        ;; El Estepario Siberiano = no RSS
+        ;; El Estepario Siberiano
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCskD50ri3723Tk1SkS-qAIA" youtube music drums)
         ;; Legal Eagle
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCLOwKVD0bYHxaDZxXkK4piw" youtube law)
         ;; La Mazmorra Abandon
@@ -1713,9 +1715,12 @@ Add the Guix packages to the home config:
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCZGkMJEmCR1IqUduqt1uFUw" youtube cars jdm)
         ;; Tokyo Ska Paradise Orchestra
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UC5RmUAcm_w5K9cxtQSj7W7g" youtube music ska)
-        ;; Telex = no RSS
-        ;; Games Done Quick = no RSS
-        ;; James Hoffmann = no RSS
+        ;; Telex
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCM-1sd-cXSuCsfWp8QMY_OQ" youtube hungary)
+        ;; Games Done Quick
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCI3DTtB-a3fJPjKtQ5kYHfA" youtube gaming speedrunning)
+        ;; James Hoffmann
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCMb0O2CdPBNi-QqPk5T3gsQ" youtube coffee)
         ;; Babymetal
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UC33_tIj4m1_XaqfFcomShvw" youtube music metal)
         ;; The Dead South
@@ -1730,32 +1735,42 @@ Add the Guix packages to the home config:
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCE1jXbVAGJQEORz9nZqb5bQ" youtube gaming)
         ;; Andrew Huberman
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UC2D2CMWXMOVWx7giW1n3LIg" youtube podcast science)
-        ;; Andrew Tropin = no RSS
+        ;; Andrew Tropin
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCuj_loxODrOPxSsXDfJmpng" youtube opensource scheme)
         ;; Atomic Frontier
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCbCq5Y0WPGimG2jNXhoQxGw" youtube science)
         ;; Azahriah
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCNCDa02bSyeD690YT4l1jPw" youtube music hungary)
-        ;; Benn Jordan = no RSS
+        ;; Benn Jordan
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCshObcm-nLhbu8MY50EZ5Ng" youtube music)
         ;; Blender
         ;; This is the Blender youtube channel, but Blender has their own Peertube instance:
         ;; ("https://www.youtube.com/feeds/videos.xml?channel_id=UCz75RVbH8q2jdBJ4SnwuZZQ" youtube blender)
         ("https://video.blender.org/feeds/videos.xml?sort=-publishedAt&isLocal=true" video blender)
-        ;; Bolyai János Matematikai Társulat = no RSS
-        ;; Brandon Y Lee = no RSS
-        ;; Brodie Robertson = no RSS
-        ;; Bryan Johnson = no RSS
-        ;; Bödőcs Tibor = no RSS
-        ;; Captain Disillusion = no RSS
-        ;; Chase and Status = no RSS
-        ;; Chinese Man = no RSS)
+        ;; Brandon Y Lee
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UC-WpvHaSBQEAztK6n_CupOg" youtube video photography)
+        ;; Brodie Robertson
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCld68syR8Wi-GY_n4CaoJGA" youtube video linux opensource)
+        ;; Bryan Johnson
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCnRVL1-HJnXWB_Xi2dAoTcg" youtube video health longevity)
+        ;; Bödőcs Tibor
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UClUSqujSdARUgqlgX-FfAZA" youtube video comedy hungary)
+        ;; Captain Disillusion
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCEOXxzW2vU0P-0THehuIIeg" youtube video comedy photography)
+        ;; Chase and Status
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCGBpxWJr9FNOcFYA5GkKrMg" youtube video music dnb)
+        ;; Chinese Man
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCa2OR2nl26Ht0Gg_IkCd7DQ" youtube video music)
         ;; Cinemassacre:
-        ("https://www.youtube.com/feeds/videos.xml?channel_id=UC0M0rxSz3IF0CsSour1iWmw" youtube gaming)
-        ;; Coffeezilla = no RSS
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UC0M0rxSz3IF0CsSour1iWmw" youtube video gaming)
+        ;; Coffeezilla
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCFQMnBA3CS502aghlcr0_aw" youtube video scams)
         ;; Computerphile
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCCAgrIbwcJ67zIow1pNF30A" youtube science)
         ;; ContraPoints
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCNvsIonJdJ5E4EXMa65VYpA" youtube culture)
-        ;; Crime Pays But Botany Doesn't = no RSS
+        ;; Crime Pays But Botany Doesn't
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UC3CBOpT2-NRvoc2ecFMDCsA" youtube video botany)
         ;; Dalfutár:
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCf8i6LzNPLLcRm75H62CkHQ" youtube music hungary)
         ;; Daniel Stenberg:
@@ -1774,23 +1789,30 @@ Add the Guix packages to the home config:
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCjJjavV8vOmu49a3vxPaWtQ" youtube computing)
         ;; Eddie Hall:
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCLnGaOUBRXLfXhRzZcAQPlA" youtube sports strongman)
-        ;; Electric Callboy = no RSS
-        ;; ElectroBOOM = no RSS
-        ;; ESA Speedrunning = no RSS
+        ;; Electric Callboy
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCAR30oDTNbJE-Zd2NDg1mTQ" youtube video music metal)
+        ;; ElectroBOOM
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCJ0-OtVpF0wOKEqT2Z1HEtA" youtube video electronics)
+        ;; ESA Speedrunning
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UC3Oe-jfrIqEGygxYBYyN6jQ" youtube video gaming speedrunning)
         ;; Explaining Computers:
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCbiGcwDWZjz05njNPrJU7jA" youtube electronics)
-        ;; Folding Ideas = no RSS
-        ;; Frog Leap Studios = no RSS
-        ;; Game Maker's Toolkit = no RSS
+        ;; Folding Ideas
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCyNtlmLB73-7gtlBz00XOQQ" youtube video essays)
+        ;; Frog Leap Studios
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UC98tcedR6gULv8_b70WJKyw" youtube video music metal)
+        ;; Game Maker's Toolkit
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCqJ-Xo29CKyLTjn6z2XwYAw" youtube video gaming)
         ;; Games Nexus:
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UChIs72whgZI9w6d6FhwGGHA" youtube gaming)
-        ;; Games Done Quick = no RSS
         ;; Gavin Freeborn:
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCJetJ7nDNLlEzDLXv7KIo0w" youtube lisp opensource)
-        ;; GDConf = no RSS
+        ;; GDConf
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UC0JB7TSe49lg56u6qH8y_MQ" youtube video gaming conference)
         ;; GDQuest:
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCxboW7x0jZqFdvMdCFKTMsQ" youtube gamedev opensource)
-        ;; Glucose Revolution = no RSS
+        ;; Glucose Revolution
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCsQdi6X-12eUKBBBze46STA" youtube video eating health)
         ;; GMHikaru:
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCweCc7bSMX5J4jEH7HFImng" youtube chess)
         ;; Godot Engine:
@@ -1799,7 +1821,8 @@ Add the Guix packages to the home config:
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCeo9VHZ09CQ6rI9v4Gl5JuQ" youtube music drums)
         ;; Gróf Balázs:
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCOnhgPNvWPmUmNdtPkamLIQ" youtube hungary comedy)
-        ;; Guix Social = no RSS
+        ;; Guix Social
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UChW6oX-CYk5jWYZKZaMpVKg" youtube video opensource scheme guix guile)
         ;; GVMERS:
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UClA2kqtZcT7EhIJHnC8TMDA" youtube gaming)
         ;; HBomberGuy:
@@ -1808,35 +1831,48 @@ Add the Guix packages to the home config:
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCKKj0FJtVE8sGn4afabKvTA" youtube opensource art)
         ;; Jack Rhysider:
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCMIqrmh2lMdzhlCPK5ahsAg" youtube security documentary)
-        ;; Jeff Geerling = no RSS
-        ;; Jimmy Broadbent = no RSS
+        ;; Jeff Geerling
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCR-DXc1voovS8nhAvccRZhg" youtube video opensource electronics)
+        ;; Jimmy Broadbent
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCq-ylUNa9RoTK5jr6TBOYag" youtube video simracing)
         ;; Karl Jobst:
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UC3ltptWa0xfrDweghW94Acg" youtube speedrun)
-        ;; Katinka Halápi = no RSS
+        ;; Katinka Halápi
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCy0y9YEfErsC-IaLnZvUV-A" youtube video music drums)
         ;; Kovács András Péter:
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCENUgjfqTMUmssyGCNObyEg" youtube hungary comedy)
-        ;; Krazam = no RSS
+        ;; Krazam
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCgBVkKoOAr3ajSdFFLp13_A" youtube video comedy programming)
         ;; Kurzgesagt:
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCsXVk37bltHxD1rDPwtNM8Q" youtube science)
-        ;; Kétfarkú Kutya Párt = no RSS
+        ;; Kétfarkú Kutya Párt
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCBFovo0_BUOuI1mgWSvEfqA" youtube video politics)
         ;; Last Week Tonight:
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UC3XTzVzaHQEd30rQbuvCtTQ" youtube comedy documentary)
         ;; Leo P:
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCZR9XIrRXdEKtOL9WpynfZA" youtube music)
-        ;; Liam Carps = no RSS
+        ;; Liam Carps
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCIOfoptCwOUiE-hnjrhl21Q" youtube video comedy germany)
         ;; Libre Graphics Meeting:
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UChBljJmEQtvegXwB1vDY7gQ" youtube graphics opensource)
         ;; Lock Picking Lawyer:
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCm9K6rby98W8JigLoZOh6FQ" youtube lockpicking)
-        ;; Louis Rossmann = no RSS
-        ;; Low Level = no RSS
-        ;; Low Spec Gamer = no RSS
-        ;; Magyarország Kedvenc Műsora = no RSS
-        ;; Mark Rober = no RSS
+        ;; Louis Rossmann
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCl2mFZoRqjw_ELax4Yisf6w" youtube video electronics)
+        ;; Low Level
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UC6biysICWOJ-C3P4Tyeggzg" youtube video security coding)
+        ;; Low Spec Gamer
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCQkd05iAYed2-LOmhjzDG6g" youtube video gaming documentary)
+        ;; Magyarország Kedvenc Műsora
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UC8BRuUwMn6_ObKHR0XwqgcA" youtube video comedy hungary)
+        ;; Mark Rober
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCY1kMZp36IQSyNx_9h4mpCg" youtube video engineering)
         ;; MattKC:
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UChrYe70o7NmDioL02PRVWVg" youtube gamedev documentary)
-        ;; Nathan Baggs = no RSS
-        ;; Nerdforge = no RSS
+        ;; Nathan Baggs
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCQvW_89l7f-hCMP1pzGm4xw" youtube video coding)
+        ;; Nerdforge
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCggHsHce2n3vvbJf_8YKrMA" youtube video engineering crafting)
         ;; Network Chuck:
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UC9x0AN7BWHpCDHSm9NiJFJQ" youtube opensource)
         ;; Nextcloud:
@@ -1847,14 +1883,18 @@ Add the Guix packages to the home config:
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCxLYtICsUCWdr1YPrj5DtwA" youtube documentary)
         ;; penguinz0:
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCq6VFHwMzcMXbuKyG7SQYIg" youtube comedy gaming)
-        ;; People Make Games = no RSS
-        ;; Philosophy Tube = no RSS
+        ;; People Make Games
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCZB6V9fUov0Mx_us3MWWILg" youtube video gaming documentary)
+        ;; Philosophy Tube
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UC2PA-AKmVpU6NKCGtZq_rKQ" youtube video documentary)
         ;; Physics Girl:
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UC7DdEm33SyaTDtWYGO2CwdA" youtube physics science)
-        ;; Pottyondy Edina = no RSS
+        ;; Pottyondy Edina
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UC_fAjvoGnqySaNM6DRfFiCA" youtube video comedy)
         ;; Programmers are also human:
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCi8C7TNs2ohrc6hnRQ5Sn2w" youtube comedy programming)
-        ;; Protesilaos Stavrou = no RSS
+        ;; Protesilaos Stavrou
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UC0uTPqBCFIpZxlz_Lv1tk_g" youtube video opensource emacs programming coding)
         ;; Rammstein Official:
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCYp3rk70ACGXQ4gFAiMr1SQ" youtube music metal)
         ;; Real Real Japan:
@@ -1863,26 +1903,32 @@ Add the Guix packages to the home config:
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCxrqVfm7FUHSkboVbp1dr7w" youtube linux opensource)
         ;; Remény Farm:
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCNwlIVKlb833wIa1SniKF6w" youtube hungary farming)
-        ;; Ren = no RSS
+        ;; Ren
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCqq3VcwPGseErHUa0-xLInQ" youtube video music)
         ;; Renaissance Periodization:
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCfQgsKhHjSyRLOp9mnffqVg" youtube sports science)
-        ;; Rob Scallon = no RSS
+        ;; Rob Scallon
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCyDZai57BfE_N0SaBkKQyXg" youtube video music)
         ;; Ryan C. Gordon:
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCaz4VMH9qIwEya8LozbxzvQ" youtube gamedev opensource)
         ;; Saturday Night Live
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCqFzWxSCi39LnW1JKFR3efg" youtube comedy)
         ;; Scholar's Lore
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCm4eR95a524GYDUzz0dQ2OQ" youtube warhammer)
-        ;; Scott Manley = no RSS
-        ;; Serve The Home = no RSS
+        ;; Scott Manley
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCxzC4EngIsMrPmbm6Nxvb-A" youtube video space engineering) 
+        ;; Serve The Home
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCv6J_jJa8GJqFwQNgNrMuww" youtube video homelab)
         ;; Simone Giertz:
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UC3KEoMzNz8eYnwBC34RaKCQ" youtube engineering)
         ;; Ska Tune Network
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCaRCs994odU7vWKwZak4yXA" youtube music ska)
-        ;; Spacejunkie Zoom = no RSS
+        ;; Spacejunkie Zoom
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCrHuPkaYT35D1u-z33SDKug" youtube video space)
         ;; Spacejunkie Űrutazás:
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCCbfGK0rnXmjUGS1KgbKepA" youtube science space)
-        ;; Stand-up Maths = no RSS
+        ;; Stand-up Maths
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCSju5G2aFaWMqn-_0YBtq5A" youtube video comedy maths)
         ;; Starpower Drummer:
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCHPIPQTnEMeB9vW9uDc1yGA" youtube music dnb drums)
         ;; Stoned Meadow of Doom:
@@ -1893,10 +1939,12 @@ Add the Guix packages to the home config:
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCi7l9chXMljpUft67vw78qw" youtube music)
         ;; Taran Van Hemert:
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCd0ZD4iCXRXf18p3cA7EQfg" youtube video-editing)
-        ;; Ten Second Songs = no RSS
-        ;; The Back Focus = no RSS
+        ;; Ten Second Songs
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCm6r_b2K5jn1JGkwDcwJXrQ" youtube video music)
+        ;; The Back Focus
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UC7sg9FpMWMamzWE2lJPY-Dg" youtube video film movies)
         ;; The Charismatic Voice:
-        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCnkp4xDOwqqJD7sSM3xdUiQ" youtube music singing)
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCK5G-rUDSKKUXeMkrL7Bs1w" youtube music singing)
         ;; The Spiffing Brit:
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCRHXUZ0BxbkU2MYZgsuFgkQ" youtube gaming comedy)
         ;; The Taylor and Amy Show:
@@ -1904,17 +1952,19 @@ Add the Guix packages to the home config:
         ;; The Witcher:
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCzybXLxv08IApdjdN0mJhEg" youtube gaming)
         ;; The Primeagen:
-        ("https://www.youtube.com/feeds/videos.xml?channel_id=UC8ENHE5xdFSwx71u3fDH5Xw" youtube programming)
-        ;; Thoughtbot = no RSS
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCUyeluBRhGPCW4rPe_UvBZQ" youtube programming)
+        ;; Thoughtbot
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCUR1pFG_3XoZn3JNKjulqZg" youtube video programming coding)
         ;; Till Lindemann:
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCkjot4p29KLU0pwc0srHeGg" youtube music metal)
         ;; Too Many Zooz:
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCtjXVqMVzBIgU0SO8AV0vPg" youtube music brass)
-        ;; TronicsFix = no RSS
-        ;; Tóth Jakab = no RSS
+        ;; TronicsFix
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCfOrKQtC1tDfGf_fFVb8pYw" youtube video electronics repairing)
+        ;; Tóth Jakab
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCOVPox-i8NlRaoRb7HsjOpw" youtube video politics hungary)
         ;; Veritasium:
-        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCmafpEjYI9WZH32DT0ebB1g" youtube science documentary)
-        ;; Veronica Explains = no RSS
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCHnyfMqiRRG1u-2MsSQLbXA" youtube science documentary)
         ;; Voidzilla:
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UC28n0tlcNSa1iPe5mettocg" youtube scams documentary)
         ;; Vox:
@@ -1925,10 +1975,11 @@ Add the Guix packages to the home config:
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCHKlicSHzHbIXcEDkvlIIkA" youtube hungary documentary)
         ;; Wolfgang's Channel:
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCsnGwSIHyoYN0kiINAGUKxg" youtube linux opensource)
+        ;; Szekszárder:
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCQHCImKcC9HtXm5Sbl-uQwg" youtube video hungary documentary)
         ;; TODO find an RSS feed for these
         ;; https://lospec.com/ygloof
         ;; https://x.com/cyangmou
-
         ))
 
     :config
