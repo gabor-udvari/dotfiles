@@ -1,17 +1,21 @@
 #+title: Gábor Udvari's dotfiles
 #+author: Gábor Udvari
+#+export_file_name: ./build/dotfiles
 
 All the dotfiles are maintained in org-mode files as literate configuration. This was done in the hope that the different snippets can be understood and copied separately regardless of your own dotfiles solution. Feel free to browse through the different files and use whatever you like.
 
-* Installation
+* Requirements
 
-You can compile the whole config by running make in the repository. The Makefile will extract all the actual configuration files first, and then it will do a guix reconfigure based on the target. If ~guix~ is not found, then it will try to link the config files with ~stow~ or ~chezmoi~. You can find more explanation regarding these two steps below.
+For installation you will need the following software installed already:
 
-** 0. Requirements
+- ~make~
+- ~emacs~
+- one of the following:
+  - ~guix~
+  - ~stow~
+  - ~rsync~
 
-For installation you will need ~make~ and ~emacs~.
-
-*** Windows
+** Preparing the requirements on Windows
 
 Here are some steps to be able to bootstrap the above tools:
 
@@ -21,15 +25,15 @@ Here are some steps to be able to bootstrap the above tools:
    [[https://github.com/facebook/zstd/releases/latest]]
 3. Add the Zstd folder to your users environment variables. Press Windows+R, and launch the following command to open up the environment variable editing window:
 
-   #+BEGIN_SRC shell
+   #+begin_src shell
      rundll32.exe sysdm.cpl,EditEnvironmentVariables
-   #+END_SRC
+   #+end_src
 
    Once you added it, use the RefreshEnv.cmd from step 2 to update the variables.
 
 From this point onwards you have two options, either use MSYS2 or Cygwin packages. The difference between the two is that Cygwin aims to be an environment to simulate Unix, while MSYS2 packages are native Windows applications. A practical example of this is that the Cygwin packaged tmux only works if you launch it from the Cygwin packaged bash, but not from the MSYS2 packaged bash. Also Git for Windows is based on MSYS2 as well, so you might already have it installed.
 
-**** MSYS2
+*** MSYS2
 
 1. Save time and effort by installing Git for Windows. This will get you a good base and some additional packages.
    [[https://gitforwindows.org/]]
@@ -39,22 +43,22 @@ From this point onwards you have two options, either use MSYS2 or Cygwin package
    _NOTE_: there is a bug in curl 8.8.0, the below command will fail with an error message. Curl 8.7 and 8.9 are not affected.
    [[https://github.com/curl/curl/issues/13845]]
 
-   #+BEGIN_SRC shell
+   #+begin_src shell
      curl -L -O -w '%{filename_effective}' https://mirror.msys2.org/msys/x86_64/make-4.4.1-2-x86_64.pkg.tar.zst | xargs tar -C ~/.local --zstd -xvf
-   #+END_SRC
+   #+end_src
 
 3. Download the Rsync packages with the following commands, all the other dependencies are covered with Git for Windows:
 
-   #+BEGIN_SRC shell
+   #+begin_src shell
      curl -L -O -w '%{filename_effective}' https://mirror.msys2.org/msys/x86_64/rsync-3.3.0-1-x86_64.pkg.tar.zst | xargs tar -C ~/.local --zstd -xvf
      curl -L -O -w '%{filename_effective}' https://mirror.msys2.org/msys/x86_64/libxxhash-0.8.2-1-x86_64.pkg.tar.zst | xargs tar -C ~/.local --zstd -xvf
-   #+END_SRC
+   #+end_src
 
-**** Cygwin
+*** Cygwin
 
 Download and install the Cygwin, Gettext, Make packages with these commands:
 
-#+BEGIN_SRC shell
+#+begin_src shell
   mkdir -p ~/.local
   cd "$(mktemp -d)"
   export MIRROR='https://mirror.accum.se/mirror/cygwin/x86_64/release'
@@ -72,11 +76,11 @@ Download and install the Cygwin, Gettext, Make packages with these commands:
   curl -L -O -w '%{filename_effective}' "$MIRROR"/gmp/libgmp10/libgmp10-6.3.0-1.tar.zst | xargs tar -C ~/.local --zstd -xvf
   curl -L -O -w '%{filename_effective}' "$MIRROR"/libunistring/libunistring5/libunistring5-1.2-1.tar.xz | xargs tar -C ~/.local -xvJf
   curl -L -O -w '%{filename_effective}' "$MIRROR"/guile3.0/libguile3.0_1/libguile3.0_1-3.0.9-3.tar.xz | xargs tar -C ~/.local -xvJf
-#+END_SRC
+#+end_src
 
-**** Known issues with Windows
+*** Known issues with Windows
 
-***** Password prompts on MSYS2
+**** Password prompts on MSYS2
 
 If the password prompts are not showing up inside your Git Bash (MSYS2), eg. for the ~pass~ or ~passage~ programs, then you have two options:
 
@@ -103,7 +107,7 @@ If the password prompts are not showing up inside your Git Bash (MSYS2), eg. for
    -----END AGE ENCRYPTED FILE-----
    #+end_example
 
-***** Bash is running inside the default WSL distro instead of MSYS2 or Cygwin
+**** Bash is running inside the default WSL distro instead of MSYS2 or Cygwin
 
 If you install WSL, then Windows will put a ~bash.exe~ file inside the ~C:\Windows\System32~ folder. This folder is included in the system wide PATH environment variable, therefore it has the highest priority. So if you have a shell script with this shebang:
 
@@ -141,17 +145,21 @@ but this will:
   ...
 #+end_src
 
-*** Linux
+** Preparing the requirements with Guix
 
 If you already have ~guix~ installed on your system, then you can launch a shell with all of the required libraries with the following command:
 
-#+BEGIN_SRC shell
+#+begin_src shell
   guix shell --search-paths --manifest=manifest.scm
-#+END_SRC
+#+end_src
 
 The repository also has a direnv config file, if you also have that, then the above command will be run for you whenever you step into the directory of the repository.
 
-** 1. Entanglement
+* Installation
+
+You can compile the whole config by running ~make~ in the repository. The Makefile will run ~emacs~ to extract all the actual configuration files first, and then it will put them into the correct folder. If ~guix~ is found, then it will do a ~guix home reconfigure~. If ~guix~ is not found, then it will try to link the config files with ~stow~ or ~rsync~.
+
+** Extracting the configuration files
 
 You will need to start from an Emacs installation with org-mode configured. All the actual configuration files are stored in org-mode files and they need to be extracted into their own actual files.
 
@@ -159,19 +167,19 @@ You will need to start from an Emacs installation with org-mode configured. All 
   emacs --batch --eval "(require 'org)" --eval '(org-babel-tangle-file "README.org")'
 #+end_src
 
-** 2.A Guix reconfiguration
+** Linking the configuration files
 
-Once the configuration files are extracted from the org-mode documentations, either the Guix Home or the Guix System needs to be reconfigured depending what you want to refresh.
+Once the configuration files are present in the ~build~ folder, then they can be linked to their final place inside the users home folder. If ~guix~ is installed, then the guix home will be reconfigured to install every package and link the configuration files as well. If not, then ~stow~ will symlink the files, if also stow is not found, then ~rsync~ will simply copy the files based on their modified time.
+
+*** Guix home reconfiguration
+
+Once the configuration files are extracted from the org-mode documentations, the Guix Home needs to be reconfigured.
 
 #+begin_src shell
   guix home reconfigure -L build guix-home-config.scm
 #+end_src
 
-#+begin_src shell
-  guix system reconfigure -L build guix-system-config.scm
-#+end_src
-
-** 2.B Stow linking
+*** Stow linking
 
 https://www.gnu.org/software/stow/
 
@@ -183,21 +191,21 @@ If ~guix~ cannot be found, then ~make~ will search for ~stow~. If it finds ~stow
 
 *Note:* Stow can run under Windows, but the symbolic links created with Stow does not seem to work with the Windows version of Emacs. If you are on Windows use Rsync as described below.
 
-** 2.C Rsync linking
+*** Rsync copying
 
-If neither ~guix~ nor ~stow~ cannot be found, then ~make~ will search for ~rsync~. If it finds ~rsync~, then it will link all the ~build/home~ files to the users actual home directory.
+If neither ~guix~ nor ~stow~ can be found, then ~make~ will search for ~rsync~. If it finds ~rsync~, then it will copy all the ~build/home~ files to the users actual home directory.
 
-#+BEGIN_SRC shell
+#+begin_src shell
   rsync -avr build/home/ ~/
-#+END_SRC
+#+end_src
 
 * Windows notes
 
 The default folder for Emacs configuration in Windows is the ~AppData/Roaming~ folder. The dotfiles configuration will move them inside the usual ~~/.config/emacs~ folder. Because of this you need to launch Emacs with the following command:
 
-#+BEGIN_SRC shell
+#+begin_src shell
   runemacs --init-directory %USERPROFILE%/.config/emacs
-#+END_SRC
+#+end_src
 
 Additionally the ~server-auth-dir~ will be set to the same value as the no-littering package would put it. So if you need to create a shortcut for emacsclient, you need to do it like this:
 
