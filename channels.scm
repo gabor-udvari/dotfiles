@@ -4,7 +4,7 @@
         (url "https://codeberg.org/guix/guix.git")
         (branch "master")
         (commit
-          "7031794abef44c4e2f8dbd43dbad5e929ea6d3c6")
+          "c7efa748fab53d2ffcdcd71f3938036a9dd99e38")
         (introduction
           (make-channel-introduction
             "df14cacca9b95d69fdd3b6191e42df36af266bcd"
@@ -15,7 +15,7 @@
         (url "https://gitlab.com/guix-gaming-channels/games.git")
         (branch "master")
         (commit
-          "9f0daa2b1bd0dbfe634bb07398a8daf8b026adf3")
+          "b943b1e3cacffa8c9b7ea63d49f3f7d8fc3bee85")
         (introduction
           (make-channel-introduction
             "c23d64f1b8cc086659f8781b27ab6c7314c5cca5"
@@ -38,7 +38,7 @@
         (url "https://gitlab.com/nonguix/nonguix")
         (branch "master")
         (commit
-          "60ffd0353e70d5e371c4bfe2201c9d08c1c05e18")
+          "477f283914ca771a8622e16b73d845b87c63335d")
         (introduction
           (make-channel-introduction
             "897c1a470da759236cc11798f4e0a5f7d4d59fbc"
